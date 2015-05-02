@@ -35,7 +35,7 @@
 		(window.history && window.history.pushState) && (function() {
 			$(window).on("popstate", function(e) {
 				var state = e.originalEvent.state;
-				console.log("popstate", state);
+				app.cnlog("popstate", state);
 				app.switchView();
 			});
 			
