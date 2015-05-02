@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<!--
+  Theme: Tumblr Boilerplate
+  by @sanographix
+  http://www.sanographix.net
+  (c) 2014 Showkaku Sano
+  Free to use under the MIT license.
+-->
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>TITLE</title>
+  <meta name="viewport" content="width=device-width">
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <link rel="stylesheet" href="style.min.css">
+	
+  <!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+	<div class="background">
+		<video src="./img/parmanent.m4v" preload="auto" autoplay loop>
+			<img src="./img/pa_face.png" alt="" />
+		</video>
+		<img src="./img/pa_face.png" alt="" />
+		<div class="cover"></div>
+	</div>
+	<div class="container" id="container">
+		<header class="header" id="header">
+			<h1 class="title anime">
+				<span>K</span>
+				<span>E</span>
+				<span>E</span>
+				<span>S</span>
+				<span>H</span>
+				<span>K</span>
+				<span>A</span>
+				<span>S</span>
+			</h1>
+			<h2 class="title-sub anime"><span>soundservice</span></h2>
+		</header>
+		<div id="body" class="body autopagerize_page_element" role="main">
+			<ul class="contents" id="contents">
+				<li class="content home" id="home">
+					<!-- 新着 -->
+					<ul class="area-news" id="area_news">
+						<li class="news {TagsAsClasses} {PostType}">
+							<a href="{Permalink}">
+								<span class="date">{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}</span>
+								<span class="title">{Title}</span>
+							</a>
+						</li>
+						<li class="news {TagsAsClasses} {PostType}">
+							<a href="{Permalink}">
+								<span class="date">{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}</span>
+								<span class="title">{Title}</span>
+							</a>
+						</li>
+						<li>
+							<div class="btn-readmore">
+								<a class="linkstate" href="#posts">Read more</a>
+							</div>
+						</li>
+					</ul>
+				</li>
+				<li class="content posts hide" id="posts">
+					<!-- 投稿 -->
+					<article class="post {TagsAsClasses} {PostType}">
+						<div class="date">
+							<a href="{Permalink}">{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}</a>
+						</div>
+						<!-- post: テキスト -->
+						<header class="entry-header">
+							<h1 class="entry-title">
+								<a href="{Permalink}">{Title}</a>
+							</h1>
+						</header>
+						<div class="entry-content">
+							{Body}
+						</div>
+						<footer class="entry-footer">
+							<div class="rebloggedfrom">
+								<span class="meta-elements reblog-parent-name">
+									Reblogged from <a href="{ReblogParentURL}">
+									<img src="{ReblogParentPortraitURL-16}" class="favicon"/> {ReblogParentName}</a>
+								</span>
+								<span class="meta-elements reblog-root-name">
+									Originally posted by <a href="{ReblogRootURL}"><img src="{ReblogRootPortraitURL-16}" class="favicon"/> {ReblogRootName}</a>
+								</span>
+							</div>
+							<div class="meta meta-footer">
+								<span class="meta-elements timeago">
+									<a href="{Permalink}">{TimeAgo}</a>
+								</span>
+								<span class="meta-elements notecount">
+									<a href="{Permalink}">{NoteCount} Notes</a>
+								</span>
+								<span class="meta-elements hastags">
+										<a href="{TagURL}">#{Tag}</a>
+								</span>
+							</div>
+							<div class="tumblr-controls">
+								<ul class="like-and-reblog-buttons">
+									<li>{ReblogButton}</li>
+									<li>{LikeButton}</li>
+								</ul>
+							</div>
+						</footer>
+					</article>
+					<article class="post {TagsAsClasses} {PostType}">
+						<div class="date">
+							<a href="{Permalink}">{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}</a>
+						</div>
+						<!-- post: テキスト -->
+						<header class="entry-header">
+							<h1 class="entry-title">
+								<a href="{Permalink}">{Title}</a>
+							</h1>
+						</header>
+						<div class="entry-content">
+							<img src="https://www.dropbox.com/s/1jk10a01fiue6wh/pa_face.png?dl=0" alt="" />
+						</div>
+						<footer class="entry-footer">
+							<div class="rebloggedfrom">
+								<span class="meta-elements reblog-parent-name">
+									Reblogged from <a href="{ReblogParentURL}">
+									<img src="{ReblogParentPortraitURL-16}" class="favicon"/> {ReblogParentName}</a>
+								</span>
+								<span class="meta-elements reblog-root-name">
+									Originally posted by <a href="{ReblogRootURL}"><img src="{ReblogRootPortraitURL-16}" class="favicon"/> {ReblogRootName}</a>
+								</span>
+							</div>
+							<div class="meta meta-footer">
+								<span class="meta-elements timeago">
+									<a href="{Permalink}">{TimeAgo}</a>
+								</span>
+								<span class="meta-elements notecount">
+									<a href="{Permalink}">{NoteCount} Notes</a>
+								</span>
+								<span class="meta-elements hastags">
+										<a href="{TagURL}">#{Tag}</a>
+								</span>
+							</div>
+							<div class="tumblr-controls">
+								<ul class="like-and-reblog-buttons">
+									<li>{ReblogButton}</li>
+									<li>{LikeButton}</li>
+								</ul>
+							</div>
+						</footer>
+					</article>
+				</li>
+				<li class="content hide"></li>
+				<li class="content description hide" id="description">
+					<p>{Description}</p>
+				</li>
+			</ul>
+		</div>
+		<footer class="footer" id="footer">
+			<nav class="nav" role="navigation">
+				<ul>
+					<li class="btn-home"><a class="linkstate" href="/">Home</a></li>
+					<li class="btn-about"><a href="#">about</a></li>
+					<li><a class="linkstate" href="{URL}">{Label}</a></li>
+					<li><a class="linkstate" href="/archive">Archive</a></li>
+				</ul>
+			</nav>
+			<p class="copyright">
+				©{CopyrightYears} {Title}
+			</p>
+		</footer>
+	</div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>!window.jQuery &&	document.write(unescape("%3Cscript src='./js/jquery-2.1.1.min.js'%3E%3C/script%3E"));</script>
+<script src="./js/classApp.min.js"></script>
+<script src="./js/exec.js"></script>
+</body>
+</html>
