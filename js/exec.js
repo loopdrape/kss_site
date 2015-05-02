@@ -2,11 +2,14 @@
 	"use strict";
 	
 	window.app = new ClassApp("kss");
+	app.root = "http://keeshkassoundservice.tumblr.com/";
+	app.$gnav = $("#gnav");
 	app.$contents = $("#contents");
+	
 	app.switchView = function() {
 		var hash = location.hash;
 		(hash) || (hash = "#home");
-		((/\/post\//).test(location.href)) && (hash = "#posts");
+		((/\/post\/|\/tagged\//).test(location.href)) && (hash = "#posts");
 		app.$contents.children(".content").addClass("hide");
 		$(hash).removeClass("hide");
 		
@@ -14,6 +17,8 @@
 	};
 	
 	app._addEventListen = function() {
+		app.$gnav.find(".btn-home>a").toggleClass(".linkstate", (app.URL === app.root));
+		
 		// [video background]
 //		$("#video_wrap").load("video", function(e) {
 //			var $this = $(this);
@@ -23,7 +28,8 @@
 //		});
 		
 		// [add event listener]
-		$("#footer").on("click", ".btn-about>a", function(e) {
+		app.$gnav
+		.on("click", ".btn-about>a", function(e) {
 			e.preventDefault();
 			var
 				$this = $(this),

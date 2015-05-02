@@ -72,7 +72,8 @@
 	</div>
 	<div class="container" id="container">
 		<header class="header" id="header">
-			<h1 class="title anime">
+<!--			<h1 class="title anime">-->
+			<h1 class="title">
 				<span>K</span>
 				<span>E</span>
 				<span>E</span>
@@ -340,7 +341,7 @@
 								{block:HasTags}
 								<span class="meta-elements hastags">
 									{block:Tags}
-										<a href="{TagURL}">#{Tag}</a>
+										<a href="{TagURL}" class="lbl-tag">{Tag}</a>
 									{/block:Tags}
 								</span>
 								{/block:HasTags}
@@ -408,12 +409,12 @@
 					<!-- パーマリンクのページャ -->
 					{block:PermalinkPagination}
 					<div class="pagenation pagenation-permalink">
-						{block:NextPost}
-							<a href="{NextPost}" class="next" rel="next">Newer Post</a>
-						{/block:NextPost}
 						{block:PreviousPost}
-							<a href="{PreviousPost}">Older Post</a>
+							<a href="{PreviousPost}" class="pg-prev">Older Post</a>
 						{/block:PreviousPost}
+						{block:NextPost}
+							<a href="{NextPost}" class="pg-next" rel="next">Newer Post</a>
+						{/block:NextPost}
 					</div>
 					{/block:PermalinkPagination}
 					
@@ -440,7 +441,7 @@
 			</ul>
 		</div>
 		<footer class="footer" id="footer">
-			<nav class="nav" role="navigation">
+			<nav class="nav" id="gnav" role="navigation">
 				<ul>
 					<li class="btn-home"><a class="linkstate" href="/">Home</a></li>
 					<li class="btn-about"><a href="#">about</a></li>
