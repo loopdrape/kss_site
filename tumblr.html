@@ -72,6 +72,18 @@
 	</div>
 	<div class="container" id="container">
 		<header class="header" id="header">
+			<nav class="nav" id="gnav" role="navigation">
+				<ul>
+					<li class="btn-home"><a class="linkstate" href="/">Home</a></li>
+					<li class="btn-about"><a href="#">about</a></li>
+					{block:HasPages}
+					{block:Pages}
+					<li><a href="{URL}">{Label}</a></li>
+					{/block:Pages}
+					{/block:HasPages}
+					<li><a href="/archive">Archive</a></li>
+				</ul>
+			</nav>
 <!--			<h1 class="title anime">-->
 			<h1 class="title">
 				<span>K</span>
@@ -83,7 +95,7 @@
 				<span>A</span>
 				<span>S</span>
 			</h1>
-			<h2 class="title-sub anime"><span>soundservice</span></h2>
+			<h2 class="title-sub"><span>soundservice</span></h2>
 		</header>
 		<div id="body" class="body autopagerize_page_element" role="main">
 			<ul class="contents" id="contents">
@@ -441,18 +453,6 @@
 			</ul>
 		</div>
 		<footer class="footer" id="footer">
-			<nav class="nav" id="gnav" role="navigation">
-				<ul>
-					<li class="btn-home"><a class="linkstate" href="/">Home</a></li>
-					<li class="btn-about"><a href="#">about</a></li>
-					{block:HasPages}
-					{block:Pages}
-					<li><a href="{URL}">{Label}</a></li>
-					{/block:Pages}
-					{/block:HasPages}
-					<li><a href="/archive">Archive</a></li>
-				</ul>
-			</nav>
 			<p class="copyright">
 				&copy;{CopyrightYears} {Title}
 			</p>

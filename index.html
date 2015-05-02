@@ -31,7 +31,15 @@
 	</div>
 	<div class="container" id="container">
 		<header class="header" id="header">
-			<h1 class="title anime">
+			<nav class="nav" id="gnav" role="navigation">
+				<ul>
+					<li class="btn-home"><a class="linkstate" href="/">Home</a></li>
+					<li class="btn-about"><a href="#">about</a></li>
+					<li><a class="linkstate" href="{URL}">{Label}</a></li>
+					<li><a class="linkstate" href="/archive">Archive</a></li>
+				</ul>
+			</nav>
+			<h1 class="title">
 				<span>K</span>
 				<span>E</span>
 				<span>E</span>
@@ -41,7 +49,7 @@
 				<span>A</span>
 				<span>S</span>
 			</h1>
-			<h2 class="title-sub anime"><span>soundservice</span></h2>
+			<h2 class="title-sub"><span>soundservice</span></h2>
 		</header>
 		<div id="body" class="body autopagerize_page_element" role="main">
 			<ul class="contents" id="contents">
@@ -161,14 +169,6 @@
 			</ul>
 		</div>
 		<footer class="footer" id="footer">
-			<nav class="nav" role="navigation">
-				<ul>
-					<li class="btn-home"><a class="linkstate" href="/">Home</a></li>
-					<li class="btn-about"><a href="#">about</a></li>
-					<li><a class="linkstate" href="{URL}">{Label}</a></li>
-					<li><a class="linkstate" href="/archive">Archive</a></li>
-				</ul>
-			</nav>
 			<p class="copyright">
 				©{CopyrightYears} {Title}
 			</p>
