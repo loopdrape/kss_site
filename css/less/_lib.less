@@ -1,0 +1,265 @@
+/**
+ * [ lib ]
+ * ver. 1.2
+ */
+
+/**------------------------------------
+* default style*/
+* {
+	margin: 0;
+	padding: 0;
+	.box-sizing();
+}
+
+html {
+	font-size: 62.5%; /*10px*/
+}
+
+@clear_c: rgba(0, 0, 0, 0);
+
+/**--------------------------------
+* vender prefix */
+.animation(@name, @arg) {
+	animation: @name  @arg;
+	-webkit-animation: @name  @arg;
+	-moz-animation: @name  @arg;
+	-o-animation: @name  @arg;
+	-ms-animation: @name  @arg;
+}
+
+.animation-name(@arg) {
+	animation-name: @arg;
+	-webkit-animation-name: @arg;
+	-moz-animation-name: @arg;
+	-o-animation-name: @arg;
+	-ms-animation-name: @arg;
+}
+
+.animation-duration(@arg) {
+	animation-duration: @arg;
+	-webkit-animation-duration: @arg;
+	-moz-animation-duration: @arg;
+	-o-animation-duration: @arg;
+	-ms-animation-duration: @arg;
+}
+
+.animation-timing-function(@arg) {
+	animation-timing-function: @arg;
+	-webkit-animation-timing-function: @arg;
+	-moz-animation-timing-function: @arg;
+	-o-animation-timing-function: @arg;
+	-ms-animation-timing-function: @arg;
+}
+
+.animation-iteration-count(@arg) {
+	animation-iteration-count: @arg;
+	-webkit-animation-iteration-count: @arg;
+	-moz-animation-iteration-count: @arg;
+	-o-animation-iteration-count: @arg;
+	-ms-animation-iteration-count: @arg;
+}
+
+.animation-delay(@arg) {
+	animation-delay: @arg;
+	-webkit-animation-delay: @arg;
+	-moz-animation-delay: @arg;
+	-o-animation-delay: @arg;
+	-ms-animation-delay: @arg;
+}
+
+.keyframes(@name, @from, @to) {
+	@keyframes ~'@{name}' {
+		0% { @from(); } 100% { @to(); }
+	}
+	
+	@-webkit-keyframes ~'@{name}' {
+		0% { @from(); } 100% { @to(); }
+	}
+}
+
+.box-sizing() {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-o-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.box-shadow(@mode) when (@mode = none) {
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	-o-box-shadow: none;
+	-ms-box-shadow: none;
+	box-shadow: none;
+}
+
+.box-shadow(@mode, @x: 0, @y: 0, @blur: 1px, @spread: 1px, @bcolor: #000, @alpha: 100%) when (@mode = inset) {
+	-webkit-box-shadow: @x @y @blur @spread rgba(red(@bcolor), green(@bcolor), blue(@bcolor), @alpha) inset;
+	-moz-box-shadow: @x @y @blur @spread rgba(red(@bcolor), green(@bcolor), blue(@bcolor), @alpha) inset;
+	-o-box-shadow: @x @y @blur @spread rgba(red(@bcolor), green(@bcolor), blue(@bcolor), @alpha) inset;
+	-ms-box-shadow: @x @y @blur @spread rgba(red(@bcolor), green(@bcolor), blue(@bcolor), @alpha) inset;
+	box-shadow: @x @y @blur @spread rgba(red(@bcolor), green(@bcolor), blue(@bcolor), @alpha) inset;
+}
+
+.box-shadow(@x: 0, @y: 0, @blur: 1px, @spread: 1px, @bcolor: #000, @alpha: 100%) when not (@x = none) and not (@x = inset) {
+	-webkit-box-shadow: @x @y @blur @spread rgba(red(@bcolor), green(@bcolor), blue(@bcolor), @alpha);
+	-moz-box-shadow: @x @y @blur @spread rgba(red(@bcolor), green(@bcolor), blue(@bcolor), @alpha);
+	-o-box-shadow: @x @y @blur @spread rgba(red(@bcolor), green(@bcolor), blue(@bcolor), @alpha);
+	-ms-box-shadow: @x @y @blur @spread rgba(red(@bcolor), green(@bcolor), blue(@bcolor), @alpha);
+	box-shadow: @x @y @blur @spread rgba(red(@bcolor), green(@bcolor), blue(@bcolor), @alpha);
+}
+
+.gradient-top(@maincolor: #fff, @subcolor: #eee) {
+	background: @maincolor;
+	background: -webkit-gradient(linear, left bottom, left top, color-stop(@maincolor), color-stop(@subcolor));
+	background: -webkit-linear-gradient(center bottom, @maincolor, @subcolor);
+	background: -moz-linear-gradient(center bottom, @maincolor, @subcolor);
+	background: -o-linear-gradient(bottom, @maincolor, @subcolor);
+	background: -ms-linear-gradient(top, @maincolor, @subcolor);
+	background: linear-gradient(top, @maincolor, @subcolor);
+}
+
+.inline-block() {
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+}
+
+.transition(@arg) {
+	transition: @arguments;
+	-webkit-transition: @arguments;
+	-moz-transition: @arguments;
+	-o-transition: @arguments;
+	-ms-transition: @arguments;
+}
+
+.transform(@arg) {
+	transform: @arg;
+	-webkit-transform: @arg;
+	-moz-transform: @arg;
+	-o-transform: @arg;
+	-ms-transform: @arg;
+}
+
+.transform-origin(@arg) {
+	transform-origin: @arg;
+	-webkit-transform-origin: @arg;
+	-moz-transform-origin: @arg;
+	-o-transform-origin: @arg;
+	-ms-transform-origin: @arg;
+}
+
+.user-select(@arg: none) {
+	user-select: @arg;
+	-webkit-user-select: @arg;
+	-moz-user-select: @arg;
+	-o-user-select: @arg;
+	-ms-user-select: @arg;
+}
+
+.vertical-writing() {		/* 縦書 */
+	writing-mode: tb-rl;
+	-webkit-writing-mode: vertical-rl;
+	-moz-writing-mode: vertical-rl;
+	-o-writing-mode: vertical-rl;
+	writing-mode: vertical-rl;
+	text-align: justify;
+	text-justify: inter-ideograph;
+}
+
+/**------------------------------------
+* common mixin */
+
+.font-type-maru() {
+	font-family: "Lucida Grande", "segoe UI", "ヒラギノ丸ゴ ProN W4", "Hiragino Maru Gothic ProN", Meiryo, Arial, sans-serif;
+}
+
+.font-type-kaku() {
+	font-family: "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", Meiryo, "メイリオ", sans-serif;
+}
+
+.font-type-yu() {
+	font-family: "游ゴシック", YuGothic, "Hiragino Kaku Gothic ProN", Meiryo, "メイリオ", sans-serif;
+}
+
+/* web font */
+@import url(//fonts.googleapis.com/css?family=Poiret+One|Play|Inconsolata:400,700);
+.font-type-poiretone() {
+	font-family: 'Poiret One', cursive;
+}
+
+.font-type-play() {
+	font-family: 'Play', sans-serif;
+}
+
+.font-type-inconsolata() {
+	font-family: 'Inconsolata';
+}
+
+.font-type-maru() {
+	font-family: "Lucida Grande", "segoe UI", "ヒラギノ丸ゴ ProN W4", "Hiragino Maru Gothic ProN", Meiryo, Arial, sans-serif;
+}
+
+.font-type-kaku() {
+	font-family: "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", Meiryo, "メイリオ", sans-serif;
+}
+
+.blur-text(@txt_c) {
+	color: transparent;
+	text-shadow:
+		0 0 2px rgba(red(@txt_c), green(@txt_c), blue(@txt_c), .9),
+		0 15px 25px rgba(0, 0, 0, .3),
+		0 -2px 3px rgba(0, 0, 0, .1),
+		0 -5px 10px rgba(255, 255, 255, .5),
+		0 5px 10px rgba(0, 0, 0, .3),
+		0 3px 4px rgba(255, 255, 255, .2),
+		0 0 20px rgba(255, 255, 255, .45);
+}
+
+.clearfix() {
+	zoom: 1;
+	&:after {
+		clear: both;
+		content: "";
+		display: block;
+		height: 0;
+		overflow: hidden;
+	}
+}
+
+.background-dot(@x: 1em, @y: 1em, @color: rgba(0, 0, 0, .1), @bgc: rgba(255, 255, 255, .1)) {
+	background-image: -webkit-gradient(
+		radial,
+		center center, 0,
+		center center, 3,
+		from(@color),
+		color-stop(.75, @color),
+		to(@bgc)
+	);
+	background-image: -moz-radial-gradient(
+		center,
+		circle closest-side,
+		@color,
+		@color 50%,
+		@bgc 50%,
+		@bgc
+	);
+	background-image: -o-radial-gradient(
+		center,
+		circle closest-side,
+		@color,
+		@color 50%,
+		@bgc 50%,
+		@bgc
+	);
+	background-image: radial-gradient(
+		center,
+		circle closest-side,
+		@color,
+		@color 50%,
+		@bgc 50%,
+		@bgc
+	);
+	
+	background-size: @x @y;
+}
