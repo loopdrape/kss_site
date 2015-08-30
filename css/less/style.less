@@ -1,6 +1,7 @@
-// out: ./style.min.css, compress: true, strictMath: true
+// out: ../style.min.css, compress: true, strictMath: true
 @import (less) "./_normalize";
 @import (less) "./_lib";
+@import "//fonts.googleapis.com/earlyaccess/notosansjapanese.css";
 
 @theme_c: #fcfdff;
 @sub_c: #040b1c;
@@ -10,7 +11,7 @@
 .style-btn(@txc, @bgc, @actv_txc, @actv_bgc) {
 	display: table;
 	
-	&>* {
+	& > * {
 		background-color: @bgc;
 		border: 1px @txc solid;
 		color: @txc;
@@ -41,8 +42,17 @@
 	}
 }
 
-.hide {
-	display: none !important;
+/**------------------------------------
+* default style*/
+* {
+	margin: 0;
+	padding: 0;
+	.box-sizing();
+}
+
+html {
+	background-color: @sub_c;
+	font-size: 62.5%; /*10px*/
 }
 
 body {
@@ -53,10 +63,12 @@ ul {
 	list-style: none;
 }
 
-p {
-	margin: 0;
+.hide {
+	display: none !important;
 }
 
+/**------------------------------------
+* background (video) */
 .background {
 	position: fixed;
 	top: 0;
@@ -67,7 +79,7 @@ p {
 	overflow: hidden;
 	padding: 44px 0 18px;
 	
-	&>video {
+	& > video {
 		display: block;
 		position: relative;
 		top: 50%;
@@ -77,7 +89,7 @@ p {
 		.transform(translate3d(-50%, -50%, 0));
 	}
 	
-	&>img {
+	& > img {
 		display: none;
 		height: 100%;
 		left: 40%;
@@ -86,16 +98,16 @@ p {
 		.transform(translate3d(-50%, -50%, 0));
 		
 		@media (orientation: landscape) {
-//			height: auto;
+			height: auto;
 		}
 	}
 	
 	@media(max-width: @vp_switch) {
-		&>video {
+		& > video {
 			display: none;
 		}
 		
-		&>img {
+		& > img {
 			display: block;
 		}
 	}
@@ -111,6 +123,8 @@ p {
 	}
 }
 
+/**------------------------------------
+* page style*/
 .container {
 	background-color: @theme_c;
 	color: @theme_c;
@@ -127,8 +141,8 @@ p {
 }
 
 .header {
-	cursor: default;
 	.user-select(none);
+	cursor: default;
 	padding: 0 0 5px;
 	position: fixed;
 	text-align: center;
@@ -136,21 +150,20 @@ p {
 	width: 100%;
 	z-index: 1;
 	
-	
 	.nav {
 		background-color: @sub_c;
 		padding: 1px 0;
 		
-		&>ul {
+		& > ul {
 			display: table;
 			list-style: none;
 			margin-left: 1em;
 			
-			&>li {
+			& > li {
 				.style-btn(@theme_c, transparent, @sub_c, @theme_c);
 				display: table-cell;
 				
-				&>* {
+				& > * {
 					border-color: transparent;
 					display: inline-block;
 					line-height: 1.5;
@@ -161,7 +174,7 @@ p {
 	
 	.title {
 		.blur-text(@theme_c);
-		font-size: 4.0rem;
+		font-size: 4rem;
 		letter-spacing: .01em;
 		line-height: 1;
 		margin: 10px;
@@ -169,30 +182,30 @@ p {
 		white-space: nowrap;
 		
 		@media(min-width: @vp_switch) {
-			font-size: 8.0rem;
+			font-size: 8rem;
 		}
 	}
 	
 	.title-sub {
 		.blur-text(@theme_c);
-		font-size: 2.0rem;
+		font-size: 2rem;
 		font-weight: 700;
 		letter-spacing: .1em;
 		line-height: 1;
 		margin: 2px 0 0;
 		
 		@media(min-width: @vp_switch) {
-			font-size: 4.0rem;
+			font-size: 4rem;
 		}
 		
-		&>span {
-			.animation-delay(1.0s);
+		& > span {
+			.animation-delay(1s);
 		}
 	}
 }
 
 .anime {
-	&>span {
+	& > span {
 		.animation(anime, 5.0s ease-in-out infinite alternate);
 		
 		&:nth-child(2) {
@@ -270,20 +283,17 @@ p {
 	
 	.content {
 		margin: 0 auto;
-		
-		@media (orientation: portrait) {
-			width: 100%;
-		}
 	}
 		
 	.description {
 		background-color: fade(@theme_c, 90%);
 		border-radius: 2px;
 		color: @sub_c;
+		max-width: 520px;
 		padding: 1em;
 		position: relative;
 		text-align: left;
-		width: 30em;
+		width: 100%;
 		z-index: 1;
 	}
 	
@@ -328,46 +338,48 @@ p {
 			margin: 0 0 0 auto;
 			.style-btn(@theme_c, transparent, @sub_c, fade(@theme_c, 80%));
 			
-			&>* {
+			& > * {
 				padding: .5em;
 			}
 		}
 	}
 }
 
+/**------------------------------------
+* post */
 .posts {
-	max-width: 520px;
+	max-width: 720px;
+}
+
+.post {
+	background-color: fade(@sub_c, 85%);
+	border-radius: 4px;
+	margin: 10px auto 0;
+	padding: 10px;
 	width: 100%;
 	
-	.post {
-		background-color: fade(@sub_c, 85%);
-		border-radius: 2px;
-		margin: 10px auto 0;
-		padding: 10px;
-		
-		&:first-child {
-			margin-top: 0;
-		}
-		
-		a {
-			color: @theme_c;
-			text-decoration: none;
-		}
-		
-		img,
-		video,
-		iframe {
-			display: block;
-			max-width: 100%;
-			margin: 0 auto;
-		}
-		
-		@media (min-width: @vp_switch + 1px) {
-			min-width: @vp_switch;
-		}
-		
-		@media (orientation: portrait) and (max-width: @vp_switch) {
-			width: 95%;
-		}
+	&:first-child {
+		margin-top: 0;
+	}
+	
+	a {
+		color: @theme_c;
+		text-decoration: none;
+	}
+	
+	img,
+	video,
+	iframe {
+		display: block;
+		max-width: 100%;
+		margin: 0 auto;
+	}
+	
+	@media (min-width: @vp_switch) {
+		font-family: "Noto Sans Japanese", serif;
+	}
+	
+	@media (orientation: portrait) and (max-width: @vp_switch) {
+		width: 95%;
 	}
 }
