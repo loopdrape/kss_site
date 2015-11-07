@@ -72,30 +72,11 @@
 	</div>
 	<div class="container" id="container">
 		<header class="header" id="header">
-			<nav class="nav" id="gnav" role="navigation">
-				<ul>
-					<li class="btn-home"><a class="linkstate" href="/">Home</a></li>
-					<li class="btn-about"><a href="#">about</a></li>
-					{block:HasPages}
-					{block:Pages}
-					<li><a href="{URL}">{Label}</a></li>
-					{/block:Pages}
-					{/block:HasPages}
-					<li><a href="/archive">Archive</a></li>
-				</ul>
-			</nav>
-<!--			<h1 class="title anime">-->
-			<h1 class="title">
-				<span>K</span>
-				<span>E</span>
-				<span>E</span>
-				<span>S</span>
-				<span>H</span>
-				<span>K</span>
-				<span>A</span>
-				<span>S</span>
-			</h1>
-			<h2 class="title-sub"><span>soundservice</span></h2>
+<!--			<div class="title is-anime">-->
+			<div class="title">
+				<h1 class="title-main"><span>K</span><span>E</span><span>E</span><span>S</span><span>H</span><span>K</span><span>A</span><span>S</span></h1>
+				<h2 class="title-sub"><span>soundservice</span></h2>
+			</div>
 		</header>
 		<div id="body" class="body autopagerize_page_element" role="main">
 			<ul class="contents" id="contents">
@@ -183,7 +164,7 @@
 				</li>
 				<li class="content posts hide" id="posts">
 					{block:TagPage}
-					<h2 class="tagged">Posts tagged "{Tag}"</h2>
+					<h2 class="tagged {TagsAsClasses}">{Tag}</h2>
 					{/block:TagPage}
 					<!-- 投稿 -->
 					{block:Posts}
@@ -453,14 +434,24 @@
 			</ul>
 		</div>
 		<footer class="footer" id="footer">
-			<p class="copyright">
-				&copy;{CopyrightYears} {Title}
-			</p>
+			<nav class="nav" id="gnav" role="navigation">
+				<ul>
+					<li><a href="/">Home</a></li>
+					<li><a href="#" class="btn-about">about</a></li>
+					{block:HasPages}
+					{block:Pages}
+					<li><a href="{URL}">{Label}</a></li>
+					{/block:Pages}
+					{/block:HasPages}
+					<li><a href="/archive">Archive</a></li>
+				</ul>
+			</nav>
+			<p class="copyright">©{CopyrightYears} {Title}</p>
 		</footer>
 	</div>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>!window.jQuery && document.write(unescape("%3Cscript src='//loopdrape.github.io/kss_site/js/jquery-2.1.1.min.js"));</script>
-<script src="//loopdrape.github.io/kss_site/js/classApp.min.js"></script>
+<script src="//loopdrape.github.io/kss_site/js/applicationBase.min.js"></script>
 <script src="//loopdrape.github.io/kss_site/js/exec.min.js"></script>
 </body>
 </html>

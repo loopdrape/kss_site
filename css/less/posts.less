@@ -1,0 +1,46 @@
+//out: null, main: style.less
+/**------------------------------------
+* post */
+.content.posts {
+	max-width: 720px;
+}
+
+.post {
+	background-color: fade(@theme_c, 60%);
+	border-radius: 4px;
+	margin: 0 auto;
+	padding: 10px;
+	width: 100%;
+	
+	+ .post {
+		margin-top: 50px;
+	}
+	
+	a {
+		color: @sub_c;
+		text-decoration: none;
+		
+		@media (min-width: @vp_switch) {
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+	
+	img,
+	video,
+	iframe {
+		display: block;
+		max-width: 100%;
+		margin: 0 auto;
+	}
+	
+	@media (min-width: (@vp_switch + 1px)) {
+		.font-type-kaku();
+		font-family: "Noto Sans Japanese";
+	}
+	
+	@media (orientation: portrait) and (max-width: @vp_switch) {
+		width: 95%;
+	}
+}
