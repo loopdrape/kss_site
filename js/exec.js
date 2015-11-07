@@ -3,13 +3,14 @@
 	
 	window.app = new ClassApp("kss");
 	app.root = "http://keeshkassoundservice.tumblr.com/";
+	app.$header = $("#header");
 	app.$gnav = $("#gnav");
 	app.$contents = $("#contents");
 	
 	app.switchView = function() {
 		var hash = location.hash;
 		(hash) || (hash = "#home");
-		((/\/post\/|\/tagged\//).test(location.href)) && (hash = "#posts");
+		(/\/post\/|\/tagged\//).test(location.href) && (hash = "#posts");
 		app.$contents.children(".content").addClass("hide");
 		$(hash).removeClass("hide");
 		

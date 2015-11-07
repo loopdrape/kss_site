@@ -365,6 +365,12 @@ ul {
 	a {
 		color: @sub_c;
 		text-decoration: none;
+		
+		@media (min-width: @vp_switch) {
+			&:hover {
+				text-decoration: underline;
+			}
+		}
 	}
 	
 	img,
