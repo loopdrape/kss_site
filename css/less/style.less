@@ -12,6 +12,7 @@
 	display: table;
 	
 	> * {
+		.transition(all .2s);
 		background-color: @bgc;
 		border: 1px @txc solid;
 		color: @txc;
@@ -22,7 +23,7 @@
 		padding: .5em 1em;
 		text-decoration: none;
 		vertical-align: middle;
-		.transition(all .2s);
+		width: 100%;
 		
 		&.active {
 			background-color: @actv_bgc;
@@ -37,6 +38,46 @@
 		@media(min-width: @vp_switch) {
 			&:hover {
 				.active();
+			}
+		}
+	}
+}
+
+.styleGridBoxes(@ratio, @bdc, @box_h: 100%) {
+	.clearfix();
+	
+	> li {
+		border: solid rgba(red(@bdc), green(@bdc), blue(@bdc), .8);;
+		border-width: 1px 1px 1px 0;
+		float: left;
+		width: (100% / @ratio);
+		
+		&:nth-child(@{ratio}) ~ li {
+			border-top-width: 0;
+		}
+		
+		&:nth-child(@{ratio}n + 1) {
+			border-left-width: 1px;
+		}
+		
+		> * {
+			display: block;
+			position: relative;
+			
+			&:before {
+				content: "";
+				display: block;
+				padding-top: @box_h;
+			}
+			
+			> * {
+				.transform(translate(-50%, -50%));
+				display: block;
+				left: 50%;
+				position: absolute;
+				text-align: center;
+				top: 50%;
+				
 			}
 		}
 	}
@@ -125,6 +166,7 @@ ul {
 
 /**------------------------------------
 * page style*/
+@btn_tumblr_h: 35px;
 .container {
 	.font-type-play();
 	background-color: @theme_c;
@@ -132,18 +174,18 @@ ul {
 	font-size: 1.5rem;
 	height: 100vh;
 	overflow: hidden;
-	padding: 96px 0 90px;
+	padding: (95px + @btn_tumblr_h) 0 10vh;
 	width: 100%;
 	
 	.posts& {
-		padding-top: 50px;
+		padding-top: (30px + @btn_tumblr_h);
 	}
 	
 	@media (min-width: (@vp_switch + 1px)) {
-		padding-top: 192px;
+		padding-top: (155px + @btn_tumblr_h);
 		
 		.posts& {
-			padding-top: 80px;
+			padding-top: (55px + @btn_tumblr_h);
 		}
 	}
 }
@@ -151,8 +193,8 @@ ul {
 .header {
 	.user-select(none);
 	cursor: default;
-	padding: 0 0 5px;
-	position: fixed;
+	padding: @btn_tumblr_h 0 5px;
+	position: absolute;
 	text-align: center;
 	top: 0;
 	width: 100%;
@@ -161,11 +203,14 @@ ul {
 	.title-main {
 		.blur-text(@theme_c);
 		font-size: 4rem;
-		letter-spacing: .3em;
 		line-height: 1;
 		margin: 10px;
 		text-transform: uppercase;
 		white-space: nowrap;
+		
+		span + span {
+			margin-left: .3em;
+		}
 		
 		@media(min-width: (@vp_switch + 1px)) {
 			font-size: 8rem;
@@ -231,7 +276,7 @@ ul {
 	
 	.posts & {
 		background-color: @sub_c;
-		padding-top: 5px;
+		padding-top: 5px + @btn_tumblr_h;
 		
 		.title-main {
 			display: inline-block;
@@ -264,6 +309,7 @@ ul {
 });
 
 .footer {
+	background-color: @sub_c;
 	color: @theme_c;
 	bottom: 0;
 	font-size: 1.6rem;
@@ -273,14 +319,19 @@ ul {
 	width: 100%;
 	
 	.nav {
-		background-color: rgba(red(@sub_c), green(@sub_c), blue(@sub_c), .8);
 		padding: 1px 0;
 		
 		> ul {
+			.styleGridBoxes(5, @theme_c, 10vh);
+			
+			a {
+				color: @theme_c;
+				text-decoration: none;
+			}
+/*
 			border: solid rgba(red(@theme_c), green(@theme_c), blue(@theme_c), .8);;
 			border-width: 1px 0 1px;
 			display: table;
-			list-style: none;
 			width: 100%;
 			
 			> li {
@@ -289,19 +340,18 @@ ul {
 				
 				> * {
 					border-color: transparent;
-					display: inline-block;
 					line-height: 1.5;
 				}
 			}
+*/
 		}
 	}
 	
 	.copyright {
-		background-color: @sub_c;
 		color: @theme_c;
-		font-size: 1.3rem;
+		font-size: 1.2rem;
 		line-height: 1;
-		padding: 8px 0;
+		padding: 9px 0;
 	}
 }
 
@@ -309,10 +359,14 @@ ul {
 	height: 100%;
 	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;
-	padding: 0 10px;
+	padding: 0 10px 30px;
 	position: relative;
 	text-align: center;
 	z-index: 0;
+	
+	.posts & {
+		padding-top: 25px;
+	}
 	
 	.contents {
 		position: relative;
@@ -320,23 +374,35 @@ ul {
 	}
 	
 	.content {
+		.transition(opacity .4s);
 		margin: 0 auto;
+		
+		&.fadeOut {
+			opacity: 0;
+		}
 	}
 		
 	.description {
 		background-color: fade(@theme_c, 90%);
 		border-radius: 2px;
 		color: @sub_c;
-		max-width: 520px;
+		left: 0;
+		margin: auto;
 		padding: 1em;
-		position: relative;
+		position: absolute;
+		right: 0;
 		text-align: left;
-		width: 100%;
+		top: 0;
+		width: 520px;
 		z-index: 1;
+		
+		.posts & {
+			top: 25px
+		}
 	}
 	
 	.area-news {
-		bottom: 0;
+		bottom: 10px;
 		position: absolute;
 		text-align: left;
 		width: 15em;

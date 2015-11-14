@@ -403,10 +403,10 @@
 					{block:PermalinkPagination}
 					<div class="pagenation pagenation-permalink">
 						{block:PreviousPost}
-							<a href="{PreviousPost}" class="pg-prev">Older Post</a>
+							<a href="{PreviousPost}" class="pg-prev"></a>
 						{/block:PreviousPost}
 						{block:NextPost}
-							<a href="{NextPost}" class="pg-next" rel="next">Newer Post</a>
+							<a href="{NextPost}" class="pg-next" rel="next"></a>
 						{/block:NextPost}
 					</div>
 					{/block:PermalinkPagination}
@@ -415,7 +415,7 @@
 					{block:Pagination}
 					<div class="pagenation pagenation-index">
 						{block:PreviousPage}
-						<a href="{PreviousPage}">Prev</a>
+						<a href="{PreviousPage}" class="prev">Prev</a>
 						{/block:PreviousPage}
 						{block:JumpPagination length="5"}
 							{block:CurrentPage}<span class="current-page">{PageNumber}</span>{/block:CurrentPage}
@@ -428,7 +428,7 @@
 					{/block:Pagination}
 				</li>
 				<li class="content hide"></li>
-				<li class="content description hide" id="description">
+				<li class="content description fadeOut hide" id="description">
 					<p>{Description}</p>
 				</li>
 			</ul>
@@ -437,7 +437,7 @@
 			<nav class="nav" id="gnav" role="navigation">
 				<ul>
 					<li><a href="/">Home</a></li>
-					<li><a href="#" class="btn-about">about</a></li>
+					<li><a href="#about" class="btn-about">about</a></li>
 					{block:HasPages}
 					{block:Pages}
 					<li><a href="{URL}">{Label}</a></li>
