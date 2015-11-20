@@ -16,10 +16,11 @@
 					var rtn = arr.lastIndexOf(root.dev);
 					if(rtn < 0) {
 						rtn = arr.lastIndexOf(root.prod);
-						app.LOG = false;
+//						app.LOG = false;
 					}
 					return rtn + 1;
 				}();
+				app.config(idx);
 			return arr.slice(0, idx).join("/") + "/";
 		}()
 	};
