@@ -8,57 +8,59 @@
 -->
 <html lang="ja">
 <head>
-  {MobileAppHeaders}
-  <meta charset="utf-8">
-  <title>{Title}{block:SearchPage} ({lang:Search results for SearchQuery}){/block:SearchPage}{block:PermalinkPage}{block:PostSummary} — {PostSummary}{/block:PostSummary}{/block:PermalinkPage}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="">
-  <meta name="keywords" content="">
-  <link rel="shortcut icon" href="{Favicon}">
-  <link rel="alternate" type="application/rss+xml" href="{RSS}">
-  <link rel="apple-touch-icon-precomposed" href="{PortraitURL-128}">
-  <link rel="canonical" href="{Permalink}"/>
-  <link rel="stylesheet" href="http://loopdrape.github.io/kss_site/css/style.min.css">
+	{MobileAppHeaders}
+	<meta charset="utf-8">
+	<title>{Title}{block:SearchPage} ({lang:Search results for SearchQuery}){/block:SearchPage}{block:PermalinkPage}{block:PostSummary} — {PostSummary}{/block:PostSummary}{/block:PermalinkPage}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<link rel="shortcut icon" href="{Favicon}">
+	<link rel="alternate" type="application/rss+xml" href="{RSS}">
+	<link rel="apple-touch-icon-precomposed" href="{PortraitURL-128}">
+	<link rel="canonical" href="{Permalink}"/>
+	<link rel="stylesheet" href="http://loopdrape.github.io/kss_site/css/style.min.css">
 
-  <!-- OGP -->
-  <meta property="og:title" content="{block:PostSummary}{PostSummary} - {/block:PostSummary}{Title}" />
-  <meta property="og:type" content="article" />
-  <meta property="og:image" content="{PortraitURL-128}" />
-  <!-- Twitter tags -->
-  <meta name="twitter:image" content="{PortraitURL-128}" />
-   <!-- photo だったら og-image は photoURL にする -->
-  {block:PermalinkPage}
-    {block:Posts}
-      {block:Photo}
-        <meta property="og:image" content="{PhotoURL-HighRes}" />
-      {/block:Photo}
-      {block:Photoset}
-        {block:Photos}
-        <meta property="og:image" content="{PhotoURL-HighRes}" />
-        {/block:Photos}
-      {/block:Photoset}
-    {/block:Posts}
-  {/block:PermalinkPage}
-  <meta property="og:site_name" content="{Title}" />
-  {block:Description}
-    <meta property="og:description" content="{MetaDescription}">
-  {/block:Description}
-  {block:IfGoogleAuthor}
-    <link rel="author" href="{text:Google Author}" />
-  {/block:IfGoogleAuthor}
-  {block:IndexPage}
-    <link rel="canonical" href="{BlogURL}"/>
-    <meta property="og:url" content="{BlogURL}" />
-  {/block:IndexPage}
-  {block:PermalinkPage}
-    <link rel="canonical" href="{Permalink}"/>
-    <meta property="og:url" content="{Permalink}" />
-  {/block:PermalinkPage}
+	<!-- OGP -->
+	<meta property="og:title" content="{block:PostSummary}{PostSummary} - {/block:PostSummary}{Title}" />
+	<meta property="og:type" content="article" />
+	<meta property="og:image" content="{PortraitURL-128}" />
+	<!-- Twitter tags -->
+	<meta name="twitter:image" content="{PortraitURL-128}" />
+	 <!-- photo だったら og-image は photoURL にする -->
+	{block:PermalinkPage}
+		{block:Posts}
+			{block:Photo}
+				<meta property="og:image" content="{PhotoURL-HighRes}" />
+			{/block:Photo}
+			{block:Photoset}
+				{block:Photos}
+				<meta property="og:image" content="{PhotoURL-HighRes}" />
+				{/block:Photos}
+			{/block:Photoset}
+		{/block:Posts}
+	{/block:PermalinkPage}
+	<meta property="og:site_name" content="{Title}" />
+	{block:Description}
+		<meta property="og:description" content="{MetaDescription}">
+	{/block:Description}
+	{block:IfGoogleAuthor}
+		<link rel="author" href="{text:Google Author}" />
+	{/block:IfGoogleAuthor}
+	{block:IndexPage}
+		<link rel="canonical" href="{BlogURL}"/>
+		<meta property="og:url" content="{BlogURL}" />
+	{/block:IndexPage}
+	{block:PermalinkPage}
+		<link rel="canonical" href="{Permalink}"/>
+		<meta property="og:url" content="{Permalink}" />
+	{/block:PermalinkPage}
 	
-  <!-- HTML5 Shiv -->
-  <!--[if lt IE 9]>
-  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
+	<script src="//loopdrape.github.io/kss_site/js/applicationBase.min.js"></script>
+	<script src="//loopdrape.github.io/kss_site/js/initApp.min.js"></script>
+	<!-- HTML5 Shiv -->
+	<!--[if lt IE 9]>
+	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
 </head>
 
 <body class="{block:IndexPage}page-index{/block:IndexPage}{block:PermalinkPage}page-permalink page-{PostID}{/block:PermalinkPage}">
@@ -451,7 +453,6 @@
 	</div>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>!window.jQuery && document.write(unescape("%3Cscript src='//loopdrape.github.io/kss_site/js/jquery-2.1.1.min.js"));</script>
-<script src="//loopdrape.github.io/kss_site/js/applicationBase.min.js"></script>
 <script src="//loopdrape.github.io/kss_site/js/exec.min.js"></script>
 </body>
 </html>

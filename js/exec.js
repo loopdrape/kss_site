@@ -1,8 +1,9 @@
-(function($) {
+;(function($) {
 	"use strict";
 	
-	window.app = new ApplicationBase("kss");
-	app.root = "http://keeshkassoundservice.tumblr.com/";
+	if(!app) {
+		return false;
+	}
 	
 	$(function() {
 		app.$container = $("#container");
@@ -20,9 +21,7 @@
 		};
 		app.$description = $("#description");
 	});
-	
-	app.enablePopState = (window.history && window.history.pushState) ? true : false;
-	
+		
 	app.switchView = function() {
 		var hash = location.hash;
 		(hash === "#about") && app.$gnav.find(".btn-about").trigger("click");
@@ -37,7 +36,8 @@
 	
 	app._addEventListen = function() {
 /*
-		app.$gnav.find(".btn-home>a").toggleClass(".linkstate", (app.URL === app.root));
+		app.$gnav.find(".btn-home>a")
+		.toggleClass(".linkstate", (app.URL === app.config.root));
 		
 		// [video background]
 		$("#video_wrap").load("video", function(e) {

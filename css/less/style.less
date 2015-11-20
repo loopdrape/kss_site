@@ -1,14 +1,10 @@
 // out: ../style.min.css, compress: true, strictMath: true
 @import (less) "./_normalize";
 @import (less) "./_lib";
+@import (less) "./_setting";
 @import "//fonts.googleapis.com/earlyaccess/notosansjapanese.css";
 
-@theme_c: #fcfdff;
-@sub_c: #040b1c;
-@vp_switch: 768px;
-
-
-.style-btn(@txc, @bgc, @actv_txc, @actv_bgc) {
+.styleBtn(@txc, @bgc, @actv_txc, @actv_bgc) {
 	display: table;
 	
 	> * {
@@ -335,7 +331,7 @@ ul {
 			width: 100%;
 			
 			> li {
-				.style-btn(@theme_c, transparent, @sub_c, @theme_c);
+				.styleBtn(@theme_c, transparent, @sub_c, @theme_c);
 				display: table-cell;
 				
 				> * {
@@ -440,7 +436,7 @@ ul {
 		
 		.btn-readmore {
 			margin: 0 0 0 auto;
-			.style-btn(@theme_c, transparent, @sub_c, fade(@theme_c, 80%));
+			.styleBtn(@theme_c, transparent, @sub_c, fade(@theme_c, 80%));
 			
 			> * {
 				padding: .5em;

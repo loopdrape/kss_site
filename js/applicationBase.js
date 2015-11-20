@@ -7,7 +7,7 @@
 	}
 	
 	var proto = ApplicationBase.prototype = {
-		_ver: "1.0.1",
+		_ver: "1.0.7",
 		name: "",
 		LOG: true,
 		cnLog: function() {
@@ -29,6 +29,8 @@
 		_GET: {},
 		ACTION_URL:  "",
 		browser: getBrowser(),
+		device: getDevice(),
+		enablePushState: (history && history.pushState) ? true : false,
 		ajaxErrorCallback: function(XMLHttpRequest, textStatus, errorThrown) {
 			proto.cnWarn(
 				"通信失敗",
@@ -37,11 +39,33 @@
 				textStatus,
 				errorThrown.message
 			);
+			var msg = "サーバーとの通信に失敗しました" + XMLHttpRequest.responseText +
+								"<br><b>Status</b>: " + XMLHttpRequest.status;
+			(textStatus) && (msg += " (" + textStatus + ")");
+			(errorThrown.message) && (msg += "<br><br><b>Error message</b>: " + errorThrown.message);
+			return msg;
+		},
+		
+		// [constructor]
+		_initialize: function(arg) {
+			if(typeof arg === "string") {
+				if(arg.slice(0, 4) === "http" ||
+					 arg.slice(0, 1) === "." ||
+					 arg.slice(0, 1) === "/") {
+					this.ACTION_URL = arg;
+				} else {
+					this.name = arg;
+				}
+			}
+			
+			this.URL = location.origin + location.pathname;
+			this._GET = this.parseQueryString(window.location.search);
 		},
 		
 		/**** utility ****/
 		pathInfo: function(path) {
 			if(typeof path !== "string") {
+				proto.cnWarn("pathInfo", "arguments[0] must be string.");
 				return false;
 			}
 			var
@@ -53,12 +77,30 @@
 			return {
 				dirname: pathParts.slice(0, -1).join("/"),
 				basename: basename,
-				extension: (arr.length > 1) ? arr[1] : "",
-				filename: arr[0]
+				extension: (arr.length > 1) ? arr[arr.length - 1] : "",
+				filename: arr.slice(0, arr.length - 1).join(".")
 			};
+		},
+		/**
+		* 第1引数の文字列内の{dirname}, {basename}, {extension}, {filename}を置換
+		* @param [String] str: 置換対象の文字列
+		* @param [String] path: ファイルのパス
+		* @return [String]
+		*/
+		replacePathinfo: function(str, path) {
+			if(typeof str !== "string" || typeof path !== "string") {
+				return str;
+			}
+			var pathInfo = this.pathInfo(path);
+			str = str.replace(/\{dirname\}/g, pathInfo.dirname);
+			str = str.replace(/\{basename\}/g, pathInfo.basename);
+			str = str.replace(/\{extension\}/g, pathInfo.extension);
+			str = str.replace(/\{filename\}/g, pathInfo.filename);
+			return str;
 		},
 		parseQueryString: function(search) {
 			if(typeof search !== "string") {
+				proto.cnWarn("parseQueryString", "arguments[0] must be string.");
 				return false;
 			}
 			
@@ -67,16 +109,19 @@
 				obj = {},
 				i, tmp;
 			
-			// 先頭が"?"であれば取り除く
-			if(query.slice(0, 1) === "?") {
-				query = query.slice(1);
+			// searchがURL形式だった場合の対処
+			query = proto.pathInfo(query).basename;
+			// 最初に出現する?以前は取り除く
+			i = query.indexOf("?") + 1;
+			if(i) {
+				query = query.slice(i);
 			}
 			
 			if(query) {
 				query = query.split("&");
 				for(i = 0; i < query.length; i++) {
 					tmp = query[i].split("=");
-					obj[tmp[0]] = tmp[1];
+					obj[tmp[0]] = tmp.slice(1).join("=");
 				}
 			}
 			
@@ -84,6 +129,7 @@
 		},
 		createQueryString: function(obj) {
 			if(typeof obj !== "object") {
+				proto.cnWarn("createQueryString", "arguments[0] must be object.");
 				return false;
 			}
 			
@@ -102,53 +148,46 @@
 			
 			return query;
 		},
-		textareaParse: function(str) {
+		textareaParse: function(str, isBlock) {
+			if(typeof str !== "string") {
+				proto.cnWarn("textareaParse", "arguments[0] must be string.");
+				return false;
+			}
+			(typeof isBlock === "boolean") || (isBlock = false);
+			
 			var
 				arr = str.split(/\r\n|\r|\n/),	// 改行コードで分割
 				len = arr.length,
 				txts = [],
-				span = document.createElement("span"),
+				elm = document.createElement( isBlock ? "p" : "span"),
 				i;
 			
 			for(i = 0; i < len; i++) {
-				span.innerHTML = arr[i];
-				txts.push( span.outerHTML );
+				(arr[i]) || (arr[i] = "&nbsp;");
+				elm.innerHTML = arr[i];
+				txts.push( elm.outerHTML );
 			}
 			
-			return txts.join("<br/>");
+			return txts.join( isBlock ? "" : "<br/>");
 		},
 		// 画像のプリロード
-		_loadedImgs: {},
+		preloadedImgs: {},
 		imgPreload: function(src, cb) {
 			var
-				loadedImgs = this._loadedImgs,
+				loadedImgs = this.preloadedImgs,
 				img = new Image();
+			
 			img.src = src;
-			img.onerror = function() {
+			img.onerror = function(e) {
 				proto.cnWarn("preload error: " + src);
+				cb(false, src, img, e);
 			};
 			img.onload = function(e) {
 				loadedImgs[src] = img;
 				if(typeof cb === "function") {
-					cb(src, img, e);
+					cb(true, src, img, e);
 				}
 			};
-		},
-	
-		// [constructor]
-		_initialize: function(arg) {
-			if(typeof arg === "string") {
-				if(arg.slice(0, 4) === "http" ||
-					 arg.slice(0, 1) === "." ||
-					 arg.slice(0, 1) === "/") {
-					this.ACTION_URL = arg;
-				} else {
-					this.name = arg;
-				}
-			}
-			
-			this.URL = location.origin + location.pathname;
-			this._GET = this.parseQueryString(window.location.search);
 		}
 	};
 	
@@ -211,12 +250,37 @@
 		return name;
 	}
 	
-	Number.zeroPadding = function(num, length){
-//		return (new Array(length).join("0") + num).slice(-length);
+	function getDevice() {
+		var
+			ua = window.navigator.userAgent.toLowerCase(),
+			device = ["pc"];
+		
+		if(	ua.indexOf('iphone') !== -1 ||
+				ua.indexOf('ipad') !== -1 ||
+				ua.indexOf('ipod') !== -1) {
+			device[0] = "sp";
+			device.push("ios");
+		} else
+		if(	 ua.indexOf('android ') !== -1) {
+			device[0] = "sp";
+			device.push("android");
+		} else
+		if(	 ua.indexOf('windows phone ') !== -1 ) {
+			device[0] = "sp";
+			device.push("windows");
+		}
+		
+		return device;
+	}
+	
+	Number.zeroPadding = function(num, length) {
+/* IE8で異なる動作をするため×
 		return num.toLocaleString( "ja-JP", {
 			useGrouping: false,
 			minimumIntegerDigits: length
 		});
+*/
+		return (new Array(length).join("0") + num).slice(-length);
 	};
 	
 	// for IE
@@ -450,12 +514,45 @@
 		}
 		
 		if(!Object.keys) {	// LTE IE8
-			Object.keys = function(obj) {
-				return $.map(obj, function(val, key) {
-						return key;
-				});
+			Object.keys = (function () {
+				var hasOwnProperty = Object.prototype.hasOwnProperty,
+						hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
+						dontEnums = [
+							'toString',
+							'toLocaleString',
+							'valueOf',
+							'hasOwnProperty',
+							'isPrototypeOf',
+							'propertyIsEnumerable',
+							'constructor'
+						],
+						dontEnumsLength = dontEnums.length;
+				
+				return function (obj) {
+					if (typeof obj !== 'object' && typeof obj !== 'function' || obj === null) throw new TypeError('Object.keys called on non-object');
+					
+					var result = [];
+					
+					for (var prop in obj) {
+						if (hasOwnProperty.call(obj, prop)) result.push(prop);
+					}
+					
+					if (hasDontEnumBug) {
+						for (var i=0; i < dontEnumsLength; i++) {
+							if (hasOwnProperty.call(obj, dontEnums[i])) result.push(dontEnums[i]);
+						}
+					}
+					return result;
+				};
+			})();
+		}
+		
+		if(!String.prototype.trim) {
+			String.prototype.trim = function () {
+				return this.replace(/^\s+|\s+$/g, "");
 			};
 		}
+		
 		if(!Date.now) {
 			Date.now = function () {
 				return new Date().getTime();
