@@ -3,7 +3,7 @@
 	
 	var
 		root ={
-			prod: "http://keeshkassoundservice.tumblr.com/",
+			prod: "keeshkassoundservice.tumblr.com",
 			dev: "root"
 		};
 	
