@@ -2,52 +2,28 @@
 	"use strict";
 	
 	var
-		root ={
+		rootdir ={
 			prod: "keeshkassoundservice.tumblr.com",
-			dev: "root"
+			test: "_test",
+			dev: "kss_site"
 		};
 	
-	window.app = new ApplicationBase("kss");
-	app.config = {
-		rootpath: function() {
-			var
-				arr = app.URL.split("/"),
-				idx = function() {
-					var rtn = arr.lastIndexOf(root.dev);
-					if(rtn < 0) {
-						rtn = arr.lastIndexOf(root.prod);
-//						app.LOG = false;
-					}
-					return rtn + 1;
-				}();
-				app.config(idx);
-			return arr.slice(0, idx).join("/") + "/";
-		}()
-	};
+	window.app = new window.WebAppBase("KSS", rootdir);
+	(app._environment === "prod") && (app.LOG = false);
 	
-	var pageDirLv = app.URL.replace(app.config.rootpath, "").split("/").length;
-	app._relativePath = (pageDirLv === 1) ? "." : function() {
+	app.writeHTML = function(htmlFile, cache) {
 		var
-			tmp = [],
-			len = pageDirLv - 1,
-			i;
-		for(i = 0; i < len; i++) {
-			tmp.push("..");
-		}
-		return tmp.join("/");
-	}();
-	
-	app.writeHTML = function(htmlFile) {
-		var
-			isAutopath = ( (/^\/|^\./).test(htmlFile) ) ? false : true,
+			literal = /\{root\}/g,	// {root}
+			isAutopath = ( literal.test(htmlFile) || (/^\/|^\./).test(htmlFile) ) ? false : true,
 			req = {
 				type: "GET",
 				url: (isAutopath) ? app._relativePath + "/" + htmlFile : htmlFile,
 				async: false
 			},
-			xmlHttp = new XMLHttpRequest(),
-			literal = /\{root\}/g;	// {root}
+			xmlHttp = new XMLHttpRequest();
 		
+		req.url = req.url.replace(literal, app._relativePath);
+		(cache) || ( req.url += "?_=" + String( (new Date()).valueOf() ) );
 		xmlHttp.open(req.type, req.url, req.async);
 		xmlHttp.send(null);
 		document.write(xmlHttp.responseText.replace(literal, app._relativePath));
@@ -62,8 +38,8 @@
 				(arrLoaded.length === len) && app.cnLog("preload success.", arrLoaded);
 			};
 		
-		arrImgs = [
-			// プリロード画像の記述
+		arrImgs = (app.URL.split("/").indexOf("sys") >= 0) ? [] : [
+			// 管理システム以外の場合
 		];
 		len = arrImgs.length;
 		
@@ -71,4 +47,9 @@
 			app.imgPreload(app._relativePath + arrImgs[i], loaded);
 		}
 	})();
+	
+	// Google Analytics
+	(window.loadGoogleAnalytics) && (function(trackingID) {
+		(app._environment === "prod") && window.loadGoogleAnalytics(trackingID);
+	})("");
 })();

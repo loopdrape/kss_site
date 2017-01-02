@@ -2,13 +2,89 @@
 	"use strict";
 	
 	// 定義
-	function ApplicationBase() {
+	function WebAppBase() {
 		this._initialize.apply(this, arguments);
 	}
 	
-	var proto = ApplicationBase.prototype = {
-		_ver: "1.0.7",
+	var proto = WebAppBase.prototype = {
+		_ver: "1.1.3",
 		name: "",
+		ACTION_URL:  "",
+		_environment: "",
+		_GET: {},
+		
+		// [constructor]
+		_initialize: function(str, rootdir) {
+			if(typeof str === "string") {
+				if(str.slice(0, 4) === "http" ||
+					 str.slice(0, 1) === "." ||
+					 str.slice(0, 1) === "/") {
+					this.ACTION_URL = str;
+				} else {
+					this.name = str;
+				}
+			} else
+			if(typeof str === "object" && !rootdir) {
+				rootdir = str;
+			}
+			
+			this.URL = location.origin + location.pathname;
+			this._GET = this.parseQueryString(window.location.search);
+			this.browser = this.__getBrowser();
+			this.device = this.__getDevice();
+			this.config = {};
+			
+			// set rootpath
+			rootdir || (rootdir = location.host);
+			(function() {
+				var arr, idx;
+				arr = this.URL.split("/");
+				
+				if(typeof rootdir === "object") {
+					rootdir.dev || (rootdir.dev = "dev");
+					rootdir.test || (rootdir.test = "test");
+					rootdir.prod || (rootdir.prod = location.host);
+					
+					idx = arr.lastIndexOf(rootdir.dev);
+					this._environment = "dev";
+					if(idx < 0) {
+						idx = arr.lastIndexOf(rootdir.test);
+						this._environment = "test";
+						if(idx < 0) {
+							idx = arr.lastIndexOf(rootdir.prod);
+							this._environment = "prod";
+						}
+					}
+					
+				} else
+				if(typeof rootdir === "string") {
+					idx = arr.lastIndexOf(rootdir);
+					this._environment = "prod";
+				}
+				
+				this.config.rootpath = arr.slice(0, idx + 1).join("/") + "/";
+				this.config.rootdir = arr[idx];
+			}).call(this);
+			
+			// set relativePath
+			this.config.rootpath && (function() {
+				var t = {}, i;
+				t.pageDirLv = this.URL.replace(this.config.rootpath, "").split("/").length;
+				if(t.pageDirLv === 1) {
+					this._relativePath = ".";
+					
+				} else {
+					t.arr = [];
+					t.len = t.pageDirLv - 1;
+					for(i = 0; i < t.len; i++) {
+						t.arr.push("..");
+					}
+					this._relativePath = t.arr.join("/");
+				}
+			}).call(this);
+		},
+		
+		// **** methods for log ****
 		LOG: true,
 		cnLog: function() {
 			// app.LOGがtrueの時だけconsole.logを出力する
@@ -25,60 +101,203 @@
 				console.warn.apply(console, args);
 			}
 		},
-		URL: "",
-		_GET: {},
-		ACTION_URL:  "",
-		browser: getBrowser(),
-		device: getDevice(),
-		enablePushState: (history && history.pushState) ? true : false,
+		
+		// **** base param & metohds ****
+		enablePushState: (history && history.pushState && history.state !== undefined) ? true : false,
+		pushState: function(dataObj, url) {
+			if(this.enablePushState) {
+				try {
+					history.pushState(dataObj, this.name, url);
+				} catch(e) {
+					this.cnWarn("history.pushState", e);
+					return false;
+				}
+				
+				return this;
+			}
+			return false;
+		},
+		replaceState: function(dataObj, url) {
+			if(this.enablePushState) {
+				try {
+					history.replaceState(dataObj, this.name, url);
+				} catch(e) {
+					this.cnWarn("history.replaceState", e);
+					return false;
+				}
+					
+				return this;
+			}
+			return false;
+		},
+		getVersion: function() {
+			return this._ver;
+		},
+		__getBrowser: function() {
+			var
+				ua = window.navigator.userAgent.toLowerCase(),
+				ver = window.navigator.appVersion.toLowerCase(),
+				name = [];
+			
+			if(ua.indexOf("msie") != -1) {
+				name.push("ie");
+				
+				if(ver.indexOf("msie 10.") != -1) {
+					name.push(10);
+				} else
+				if(ver.indexOf("msie 9.") != -1) {
+					name.push(9);
+				} else {
+					name.push(8);
+					name.push("under");
+				}
+			} else
+			if(ua.indexOf("trident") != -1) {
+				name.push("ie");
+				name.push(11);
+				name.push("over");
+				
+			} else if (ua.indexOf("chrome") != -1) {
+				name.push("chrome");
+				
+			} else if (ua.indexOf("safari") != -1) {
+				name.push("safari");
+				
+			} else if (ua.indexOf("opera") != -1) {
+				name.push("opera");
+				
+			} else if (ua.indexOf("firefox") != -1) {
+				name.push("firefox");
+			}
+			return name;
+		},
+		__getDevice: function() {
+			var
+				ua = window.navigator.userAgent.toLowerCase(),
+				device = ["pc"];
+			
+			if(	ua.indexOf('iphone') !== -1 ||
+					ua.indexOf('ipad') !== -1 ||
+					ua.indexOf('ipod') !== -1) {
+				device[0] = "sp";
+				device.push("ios");
+			} else
+			if(	 ua.indexOf('android ') !== -1) {
+				device[0] = "sp";
+				device.push("android");
+			} else
+			if(	 ua.indexOf('windows phone ') !== -1 ) {
+				device[0] = "sp";
+				device.push("windows");
+			}
+			
+			return device;
+		},
 		ajaxErrorCallback: function(XMLHttpRequest, textStatus, errorThrown) {
-			proto.cnWarn(
+			(this instanceof WebAppBase && this._environment !== "prod") && this.cnWarn(
 				"通信失敗",
 				XMLHttpRequest.responseText,
 				XMLHttpRequest.status,
 				textStatus,
 				errorThrown.message
 			);
-			var msg = "サーバーとの通信に失敗しました" + XMLHttpRequest.responseText +
-								"<br><b>Status</b>: " + XMLHttpRequest.status;
+			var msg = "サーバーとの通信に失敗しました";
+			msg += "<br><b>Status</b>: " + XMLHttpRequest.status;
 			(textStatus) && (msg += " (" + textStatus + ")");
-			(errorThrown.message) && (msg += "<br><br><b>Error message</b>: " + errorThrown.message);
+			if(this._environment !== "prod") {
+				(XMLHttpRequest.responseText) && (msg += "<br>" + XMLHttpRequest.responseText);
+				(errorThrown.message) && (msg += "<br><br><b>Error message</b>: " + errorThrown.message);
+			}
 			return msg;
 		},
 		
-		// [constructor]
-		_initialize: function(arg) {
-			if(typeof arg === "string") {
-				if(arg.slice(0, 4) === "http" ||
-					 arg.slice(0, 1) === "." ||
-					 arg.slice(0, 1) === "/") {
-					this.ACTION_URL = arg;
-				} else {
-					this.name = arg;
-				}
-			}
-			
-			this.URL = location.origin + location.pathname;
-			this._GET = this.parseQueryString(window.location.search);
+		// **** utility ****
+		zeroPadding: function(num, length) {
+/* IE8で異なる動作をするため×
+			return num.toLocaleString( "ja-JP", {
+				useGrouping: false,
+				minimumIntegerDigits: length
+			});
+*/
+			return (new Array(length).join("0") + num).slice(-length);
 		},
-		
-		/**** utility ****/
-		pathInfo: function(path) {
-			if(typeof path !== "string") {
-				proto.cnWarn("pathInfo", "arguments[0] must be string.");
+		isInteger: function(num) {
+			return (typeof num === "number" && Math.round(num) === num);
+		},
+		isFunction: function(fn) {
+			return (typeof fn === "function");
+		},
+		hasHalfKana: function(str) {
+			if(typeof str !== "string") {
+				this.cnWarn("hasHalfKana", "arguments[0] must be string.");
 				return false;
 			}
-			var
-				delimiter = (new RegExp("/").exec(path)) ? "/" : "\\",
-				pathParts = path.split(delimiter),
-				basename = pathParts.slice(-1)[0],
-				arr = basename.split(".");
+			
+			return (/[ｦｧ-ｯｰｱ-ﾝﾞﾟ]/).test(str);
+		},
+		hasHalfChar: function(str, denyHalfKana) {
+			if(typeof str !== "string") {
+				this.cnWarn("hasHalfChar", "arguments[0] must be string.");
+				return false;
+			}
+			
+			(typeof denyHalfKana !== "number") && (denyHalfKana = 0);
+			if( !denyHalfKana && this.hasHalfKana(str) ) {
+				return true;
+			}
+			
+			var c, i, len = str.length, re = /[｡｢｣､･]/;
+			for(i = 0; i < len; i++) {
+				c = str.charAt(i);
+				// 1文字ずつ文字コードをエスケープし、その長さが4文字+2文字(%u)未満なら半角
+				if( window.escape(c).length < 6 || re.test(c) ) {
+					return true;
+				}
+			}
+			return false;
+		},
+		hasFullChar: function(str) {
+			if(typeof str !== "string") {
+				this.cnWarn("hasFullChar", "arguments[0] must be string.");
+				return false;
+			}
+			
+			var c, i, len = str.length, re = /[｡｢｣､･]/, flg = 0;
+			for(i = 0; i < len; i++) {
+				c = str.charAt(i);
+				// 1文字ずつ文字コードをエスケープし、その長さが4文字+2文字(%u)以上なら全角
+				if( window.escape(c).length >= 6 && !re.test(c) && !this.hasHalfKana(c) ) {
+					return true;
+				}
+			}
+			return false;
+		},
+		pathInfo: function(path) {
+			if(typeof path !== "string") {
+				this.cnWarn("pathInfo", "arguments[0] must be string.");
+				return false;
+			}
+			
+			var t = {
+				_a: document.createElement("a")
+			};
+			
+			t._a.href = path || "./";
+			path = path.replace(t._a.search, "").replace(t._a.hash, "");
+			
+			t.delimiter = (new RegExp("/").exec(path)) ? "/" : "\\",
+			t.pathParts = path.split(t.delimiter),
+			t.basename = t.pathParts.slice(-1)[0],
+			t.arr = t.basename.split(".");
+			t.idx = t.arr.length - 1;
 			
 			return {
-				dirname: pathParts.slice(0, -1).join("/"),
-				basename: basename,
-				extension: (arr.length > 1) ? arr[arr.length - 1] : "",
-				filename: arr.slice(0, arr.length - 1).join(".")
+				dirname: t.pathParts.slice(0, -1).join("/"),
+				basename: t.basename,
+				extension: (t.arr.length > 1) ? t.arr[t.idx] : "",
+				filename: t.arr.slice(0, t.idx).join("."),
+				search: t._a.search,
+				hash: t._a.hash
 			};
 		},
 		/**
@@ -100,27 +319,31 @@
 		},
 		parseQueryString: function(search) {
 			if(typeof search !== "string") {
-				proto.cnWarn("parseQueryString", "arguments[0] must be string.");
+				this.cnWarn("parseQueryString", "arguments[0] must be string.");
 				return false;
 			}
 			
 			var
-				query = decodeURIComponent(search),
 				obj = {},
-				i, tmp;
+				query, i, j, tmp;
 			
-			// searchがURL形式だった場合の対処
-			query = proto.pathInfo(query).basename;
-			// 最初に出現する?以前は取り除く
-			i = query.indexOf("?") + 1;
-			if(i) {
-				query = query.slice(i);
-			}
+			// searchがURL形式じゃない場合の対処
+			(search.indexOf("?") < 0) && (search = "?" + search);
+			
+			// urlのsearch部分を取得
+			query = this.pathInfo(search).search;
+			
+			// 最初に出現する?は取り除く
+			query = query.replace(/^\?/, "");
 			
 			if(query) {
 				query = query.split("&");
 				for(i = 0; i < query.length; i++) {
 					tmp = query[i].split("=");
+					for(j = 0; j < tmp.length; j++) {
+						tmp[j] = decodeURIComponent(tmp[j]);
+					}
+					
 					obj[tmp[0]] = tmp.slice(1).join("=");
 				}
 			}
@@ -129,7 +352,7 @@
 		},
 		createQueryString: function(obj) {
 			if(typeof obj !== "object") {
-				proto.cnWarn("createQueryString", "arguments[0] must be object.");
+				this.cnWarn("createQueryString", "arguments[0] must be object.");
 				return false;
 			}
 			
@@ -142,7 +365,7 @@
 				arr.push(k + "=" + encodeURIComponent(obj[k]));
 			}
 			
-			if(arr.length > 0) {
+			if(arr.length) {
 				query = "?" + arr.join("&");
 			}
 			
@@ -150,7 +373,7 @@
 		},
 		textareaParse: function(str, isBlock) {
 			if(typeof str !== "string") {
-				proto.cnWarn("textareaParse", "arguments[0] must be string.");
+				this.cnWarn("textareaParse", "arguments[0] must be string.");
 				return false;
 			}
 			(typeof isBlock === "boolean") || (isBlock = false);
@@ -174,12 +397,13 @@
 		preloadedImgs: {},
 		imgPreload: function(src, cb) {
 			var
+				_self = this,
 				loadedImgs = this.preloadedImgs,
 				img = new Image();
 			
 			img.src = src;
 			img.onerror = function(e) {
-				proto.cnWarn("preload error: " + src);
+				_self.cnWarn("preload error: " + src);
 				cb(false, src, img, e);
 			};
 			img.onload = function(e) {
@@ -188,6 +412,24 @@
 					cb(true, src, img, e);
 				}
 			};
+		},
+		// インスタンス生成
+		newCall: function(Func) {
+			return new (Function.prototype.bind.apply(Func, arguments))();
+		},
+		// プロトタイプ継承
+		inherits: function(ctor, superCtor) {
+			if (ctor === undefined || ctor === null) {
+				throw new TypeError("The constructor to `inherits` must not be null or undefined.");
+			}
+			if (superCtor === undefined || superCtor === null) {
+				throw new TypeError("The super constructor to `inherits` must not be null or undefined.");
+			}
+			if (superCtor.prototype === undefined) {
+				throw new TypeError("The super constructor to `inherits` must have a prototype.");
+			}
+			ctor.super_ = superCtor;
+			Object.setPrototypeOf(ctor.prototype, superCtor.prototype);
 		}
 	};
 	
@@ -215,76 +457,66 @@
 		};
 	})();
 	
-	window.ApplicationBase = ApplicationBase;
+	window.WebAppBase = WebAppBase;
 	
-	function getBrowser() {
-		var
-			ua = window.navigator.userAgent.toLowerCase(),
-			ver = window.navigator.appVersion.toLowerCase(),
-			name = [];
+	// [for IE]
+	(function(browser) {
+		if (!Function.prototype.bind) {
+			Function.prototype.bind = function (oThis) {
+				if(typeof this !== "function") {
+					// closest thing possible to the ECMAScript 5 internal IsCallable function
+					throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+				}
+				
+				var aArgs = Array.prototype.slice.call(arguments, 1),
+						fToBind = this,
+						FNOP = function () {},
+						fBound = function () {
+							return fToBind.apply(
+								this instanceof FNOP && oThis ? this : oThis,
+								aArgs.concat(Array.prototype.slice.call(arguments))
+							);
+						};
+				
+				FNOP.prototype = this.prototype;
+				fBound.prototype = new FNOP();
+				
+				return fBound;
+			};
+		}
 		
-		if(ua.indexOf("msie") != -1) {
-			name.push("ie");
-			if(ver.indexOf("msie 10.") != -1) {
-				name.push("10");
-			} else
-			if(ver.indexOf("msie 9.") != -1) {
-				name.push("9");
+		if(!Object.setPrototypeOf) {
+			if(Object.defineProperty && (browser[0] !== "ie" || parseInt(browser[1]) > 8)) {
+				Object.defineProperty(Object, "setPrototypeOf", {
+					value: function setPrototypeOf(obj, parentProto) {
+						obj.__proto__ = parentProto;
+					},
+					writable: true,
+					configurable: true
+				});
 			} else {
-				name.push("8");
-				name.push("under");
+				Object.setPrototypeOf = function(obj, parentProto) {
+					obj.__proto__ = parentProto;
+				};
 			}
-		}else if(ua.indexOf("trident") != -1){
-			name.push("ie");
-			name.push("11");
-			name.push("over");
-		}else if (ua.indexOf("chrome") != -1){
-				name.push("chrome");
-		}else if (ua.indexOf("safari") != -1){
-				name.push("safari");
-		}else if (ua.indexOf("opera") != -1){
-				name.push("opera");
-		}else if (ua.indexOf("firefox") != -1){
-				name.push("firefox");
-		}
-		return name;
-	}
-	
-	function getDevice() {
-		var
-			ua = window.navigator.userAgent.toLowerCase(),
-			device = ["pc"];
-		
-		if(	ua.indexOf('iphone') !== -1 ||
-				ua.indexOf('ipad') !== -1 ||
-				ua.indexOf('ipod') !== -1) {
-			device[0] = "sp";
-			device.push("ios");
-		} else
-		if(	 ua.indexOf('android ') !== -1) {
-			device[0] = "sp";
-			device.push("android");
-		} else
-		if(	 ua.indexOf('windows phone ') !== -1 ) {
-			device[0] = "sp";
-			device.push("windows");
 		}
 		
-		return device;
-	}
-	
-	Number.zeroPadding = function(num, length) {
-/* IE8で異なる動作をするため×
-		return num.toLocaleString( "ja-JP", {
-			useGrouping: false,
-			minimumIntegerDigits: length
-		});
-*/
-		return (new Array(length).join("0") + num).slice(-length);
-	};
-	
-	// for IE
-	(function() {
+		if (!Object.getPrototypeOf) {
+			if(Object.defineProperty && (browser[0] !== "ie" || parseInt(browser[1]) > 8)) {
+				Object.defineProperty(Object, "getPrototypeOf", {
+					value: function getPrototypeOf(obj) {
+						return obj.__proto__;
+					},
+					writable: true,
+					configurable: true
+				});
+			} else {
+				Object.getPrototypeOf = function(obj) {
+					return obj.__proto__;
+				};
+			}
+		}
+		
 		if(!location.origin) {	// LTE IE10
 			location.origin = location.protocol + "\/\/" + location.hostname;
 		}
@@ -564,5 +796,5 @@
 		if (typeof window.console.log !== "function") {
 			window.console.log = function() {};
 		}
-	})();
+	})( proto.__getBrowser() );
 })();

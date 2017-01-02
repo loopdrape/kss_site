@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <!--
   Theme: Tumblr Boilerplate
   by @sanographix
@@ -6,171 +7,205 @@
   (c) 2014 Showkaku Sano
   Free to use under the MIT license.
 -->
-<html lang="ja">
-<head>
-	<meta charset="utf-8">
-	<title>TITLE</title>
-	<meta name="viewport" content="width=device-width">
-	<meta name="description" content="">
-	<meta name="keywords" content="">
-	<link rel="stylesheet" href="./css/style.min.css">
-	<script src="./js/applicationBase.min.js"></script>
-	<script src="./js/initApp.min.js"></script>
-  <!--[if lt IE 9]>
-  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
-</head>
 
-<body>
-	<div class="background">
-		<video preload="auto" autobuffer autoplay muted loop poster="./img/pa_face.png">
-			<source type="video/mp4" src="./img/parmanent.mp4">
-			<span class="no-video"></span>
-		</video>
-		<img src="./img/pa_face.png" alt="" />
-		<div class="cover"></div>
-	</div>
-	<div class="container" id="container">
-		<header class="header" id="header">
-<!--			<div class="title is-anime">-->
-			<div class="title">
-				<h1 class="title-main"><span>K</span><span>E</span><span>E</span><span>S</span><span>H</span><span>K</span><span>A</span><span>S</span></h1>
-				<h2 class="title-sub"><span>soundservice</span></h2>
-			</div>
-		</header>
-		<div id="body" class="body autopagerize_page_element" role="main">
-			<ul class="contents" id="contents">
-				<li class="content home" id="home">
-					<!-- 新着 -->
-					<ul class="area-news" id="area_news">
-						<li class="news {TagsAsClasses} {PostType}">
-							<a href="{Permalink}">
-								<span class="date">{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}</span>
-								<span class="title">{Title}</span>
-							</a>
-						</li>
-						<li class="news {TagsAsClasses} {PostType}">
-							<a href="{Permalink}">
-								<span class="date">{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}</span>
-								<span class="title">{Title}</span>
-							</a>
-						</li>
-						<li>
-							<div class="btn-readmore">
-								<a class="linkstate" href="#posts">Read more</a>
-							</div>
-						</li>
-					</ul>
-				</li>
-				<li class="content posts hide" id="posts">
-					<!-- 投稿 -->
-					<article class="post {TagsAsClasses} {PostType}">
-						<div class="date">
-							<a href="{Permalink}">{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}</a>
-						</div>
-						<!-- post: テキスト -->
-						<header class="entry-header">
-							<h1 class="entry-title">
-								<a href="{Permalink}">{Title}</a>
-							</h1>
-						</header>
-						<div class="entry-content">
-							{Body}
-						</div>
-						<footer class="entry-footer">
-							<div class="rebloggedfrom">
-								<span class="meta-elements reblog-parent-name">
-									Reblogged from <a href="{ReblogParentURL}">
-									<img src="{ReblogParentPortraitURL-16}" class="favicon"/> {ReblogParentName}</a>
-								</span>
-								<span class="meta-elements reblog-root-name">
-									Originally posted by <a href="{ReblogRootURL}"><img src="{ReblogRootPortraitURL-16}" class="favicon"/> {ReblogRootName}</a>
-								</span>
-							</div>
-							<div class="meta meta-footer">
-								<span class="meta-elements timeago">
-									<a href="{Permalink}">{TimeAgo}</a>
-								</span>
-								<span class="meta-elements notecount">
-									<a href="{Permalink}">{NoteCount} Notes</a>
-								</span>
-								<span class="meta-elements hastags">
-										<a href="{TagURL}">#{Tag}</a>
-								</span>
-							</div>
-							<div class="tumblr-controls">
-								<ul class="like-and-reblog-buttons">
-									<li>{ReblogButton}</li>
-									<li>{LikeButton}</li>
-								</ul>
-							</div>
-						</footer>
-					</article>
-					<article class="post {TagsAsClasses} {PostType}">
-						<div class="date">
-							<a href="{Permalink}">{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}</a>
-						</div>
-						<!-- post: テキスト -->
-						<header class="entry-header">
-							<h1 class="entry-title">
-								<a href="{Permalink}">{Title}</a>
-							</h1>
-						</header>
-						<div class="entry-content">
-							<img src="https://www.dropbox.com/s/1jk10a01fiue6wh/pa_face.png?dl=0" alt="" />
-						</div>
-						<footer class="entry-footer">
-							<div class="rebloggedfrom">
-								<span class="meta-elements reblog-parent-name">
-									Reblogged from <a href="{ReblogParentURL}">
-									<img src="{ReblogParentPortraitURL-16}" class="favicon"/> {ReblogParentName}</a>
-								</span>
-								<span class="meta-elements reblog-root-name">
-									Originally posted by <a href="{ReblogRootURL}"><img src="{ReblogRootPortraitURL-16}" class="favicon"/> {ReblogRootName}</a>
-								</span>
-							</div>
-							<div class="meta meta-footer">
-								<span class="meta-elements timeago">
-									<a href="{Permalink}">{TimeAgo}</a>
-								</span>
-								<span class="meta-elements notecount">
-									<a href="{Permalink}">{NoteCount} Notes</a>
-								</span>
-								<span class="meta-elements hastags">
-										<a href="{TagURL}">#{Tag}</a>
-								</span>
-							</div>
-							<div class="tumblr-controls">
-								<ul class="like-and-reblog-buttons">
-									<li>{ReblogButton}</li>
-									<li>{LikeButton}</li>
-								</ul>
-							</div>
-						</footer>
-					</article>
-				</li>
-				<li class="content hide"></li>
-				<li class="content description fadeOut hide" id="description">
-					<p>{Description}</p>
-				</li>
-			</ul>
+<html lang="ja" prefix="og: http://ogp.me/ns#">
+<head>
+	<meta charset="UTF-8">
+
+	<!-- Variables -->
+	<meta name="text:Google Author" content="" />
+
+	<meta name="if:Enable Like Button" content="1" />
+	<meta name="if:Enable Tweet Button" content="1" />
+	<meta name="if:Enable Plus1 Button" content="1" />
+
+	<title>Top</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--
+	<link rel="shortcut icon" href="{Favicon}">
+	<link rel="alternate" type="application/rss+xml" href="{RSS}">
+	<link rel="apple-touch-icon" href="{PortraitURL-128}">
+	<link rel="canonical" href="{Permalink}"/>
+-->
+
+	<!-- OGP -->
+<!--
+	<meta property="og:title" content="{block:PostSummary}{PostSummary} - {/block:PostSummary}{Title}" />
+	<meta property="og:type" content="article" />
+	<meta property="og:image" content="{PortraitURL-128}" />
+-->
+	<!-- Twitter tags -->
+<!--	<meta name="twitter:image" content="{PortraitURL-128}" />-->
+	 <!-- photo だったら og-image は photoURL にする -->
+<!--
+	{block:PermalinkPage}
+		{block:Posts}
+			{block:Photo}
+				<meta property="og:image" content="{PhotoURL-HighRes}" />
+			{/block:Photo}
+			{block:Photoset}
+				{block:Photos}
+				<meta property="og:image" content="{PhotoURL-HighRes}" />
+				{/block:Photos}
+			{/block:Photoset}
+		{/block:Posts}
+	{/block:PermalinkPage}
+	<meta property="og:site_name" content="{Title}" />
+	{block:Description}
+		<meta property="og:description" content="{MetaDescription}">
+	{/block:Description}
+	{block:IfGoogleAuthor}
+		<link rel="author" href="{text:Google Author}" />
+	{/block:IfGoogleAuthor}
+	{block:IndexPage}
+		<link rel="canonical" href="{BlogURL}"/>
+		<meta property="og:url" content="{BlogURL}" />
+	{/block:IndexPage}
+	{block:PermalinkPage}
+		<link rel="canonical" href="{Permalink}"/>
+		<meta property="og:url" content="{Permalink}" />
+	{/block:PermalinkPage}
+-->
+
+<!--	<style>{CustomCSS}</style>-->
+	<link rel="stylesheet" href="./css/style.min.css" />
+	<!--[if lt IE 9]>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<![endif]-->
+	<script src="./js/loadGoogleAnalytics.min.js"></script>
+	<script src="./js/webAppBase-1.1.3.min.js"></script>
+	<script src="./js/app.init.min.js"></script>
+</head>
+<body class="{block:IndexPage}page-index{/block:IndexPage}{block:DayPage} page-day{/block:DayPage}{block:TagPage} page-tag{/block:TagPage}{block:SearchPage} page-search{/block:SearchPage}{block:PermalinkPage}page-permalink page-{PostID}{/block:PermalinkPage}">
+
+	<header class="site-header" id="header">
+		<h1 class="site-title">
+			<a href="/" title="K"></a>
+		</h1>
+	</header>
+
+	<nav class="site-nav" role="navigation">
+		<ul>
+			<li><a href="/">Home</a></li>
+			<li><a href="./">{Label}</a></li>
+			<li><a href="/archive">Archive</a></li>
+		</ul>
+	</nav>
+
+	<div id="site_body" class="site-body autopagerize_page_element" role="main">
+		<h2 class="main-title">
+			<a href="/">
+				<em class="title-main"><span>K</span><span>E</span><span>E</span><span>S</span><span>H</span><span>K</span><span>A</span><span>S</span></em>
+				<em class="title-sub"><span>soundservice</span></em>
+			</a>
+		</h2>
+
+		<div class="background">
+			<video preload="auto" autobuffer autoplay muted loop poster="http://loopdrape.github.io/kss_site/img/pa_face.png">
+				<source type="video/mp4" src="http://loopdrape.github.io/kss_site/img/parmanent.mp4">
+				<span class="no-video"></span>
+			</video>
+			<img src="http://loopdrape.github.io/kss_site/img/pa_face.png" alt="" />
+			<div class="cover"></div>
 		</div>
-		<footer class="footer" id="footer">
-			<nav class="nav" id="gnav" role="navigation">
-				<ul>
-					<li><a href="/"><span>Home</span></a></li>
-					<li><a href="/#about" class="btn-about"><span>about</span></a></li>
-					<li><a href="/"><span>Live</span></a></li>
-					<li><a href="/"><span>Sound</span></a></li>
-					<li><a href="{URL}"><span>{Label}</span></a></li>
-					<li><a href="/archive"><span>Archive</span></a></li>
-				</ul>
-			</nav>
-			<p class="copyright">©{CopyrightYears} {Title}</p>
-		</footer>
+		<ul class="area-news" id="area_news">
+		{block:Posts}
+			<li class="news {TagsAsClasses} {PostType}">
+				<a href="{Permalink}">
+				{block:Date}
+					<span class="date">{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}</span>
+				{/block:Date}
+				{block:Text}
+					<!-- post: テキスト -->
+					{block:Title}
+					<span>{Title}</span>
+					{/block:Title}
+				{/block:Text}
+
+				{block:Photo}
+					<!-- post: 画像 -->
+					{block:Caption}
+					<img src="{PhotoURL-HighRes}" alt="{PhotoAlt}"/>
+					<span>{Caption}</span>
+					{/block:Caption}
+				{/block:Photo}
+
+				{block:Photoset}
+					<!-- post: フォトセット -->
+					{block:Caption}
+					<span>{Caption}</span>
+					{/block:Caption}
+				{/block:Photoset}
+
+				{block:Quote}
+					<!-- post: 引用 -->
+					<span>{Quote}</span>
+				{/block:Quote}
+
+				{block:Link}
+					<!-- post: リンク -->
+					<span>{Name}</span>
+				{/block:Link}
+
+				{block:Chat}
+					<!-- post: チャット -->
+					{block:Title}
+					<span>{Title}</span>
+					{/block:Title}
+				{/block:Chat}
+
+				{block:Video}
+					<!-- post: ビデオ -->
+					{block:Caption}
+					<span>{Caption}</span>
+					{/block:Caption}
+				{/block:Video}
+
+				{block:Audio}
+					<!-- post: オーディオ -->
+					{block:Caption}
+					{AudioPcontentBlack}
+					<span>{Caption}</span>
+					{/block:Caption}
+				{/block:Audio}
+
+				{block:Answer}
+					<!-- post: Answer -->
+					<span>{Question}</span>
+				{/block:Answer}
+
+				{block:ContentSource}
+					<!-- Content Source -->
+					{block:NoSourceLogo}
+					<span>{SourceTitle}</span>
+					{/block:NoSourceLogo}
+				{/block:ContentSource}
+				</a>
+			</li>
+		{/block:Posts}
+		</ul>
+		
+<!--		<p class="description">{Description}</p>-->
 	</div>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script>!window.jQuery &&	document.write(unescape("%3Cscript src='./js/jquery-2.1.1.min.js'%3E%3C/script%3E"));</script>
-<script src="./js/exec.js"></script>
+
+	<footer class="site-footer" id="footer">
+		<span class="copyright">©2017 KEESHKAS soundservice</span>
+	</footer>
+
+	<script src="//code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+
+<!--
+ {block:IfEnableLikeButton}
+	<div id="fb-root"></div>
+	<script>(function(d, s, id) {
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) return;
+		js = d.createElement(s); js.id = id;
+		js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));</script>
+ {/block:IfEnableLikeButton}
+-->
+
 </body>
 </html>

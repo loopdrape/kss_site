@@ -21,19 +21,19 @@
 		vertical-align: middle;
 		width: 100%;
 		
-		&.active {
+		&.is-active {
 			background-color: @actv_bgc;
 			border-color: @actv_bgc;
 			color: @actv_txc;
 		}
 		
 		&:active {
-			.active();
+			.is-active();
 		}
 		
 		@media(min-width: @vp_switch) {
 			&:hover {
-				.active();
+				.is-active();
 			}
 		}
 	}
@@ -84,7 +84,7 @@
 * {
 	margin: 0;
 	padding: 0;
-	.box-sizing();
+	.box-sizing(border);
 }
 
 html {
@@ -163,7 +163,7 @@ ul {
 /**------------------------------------
 * page style*/
 @btn_tumblr_h: 35px;
-.container {
+body {
 	.font-type-play();
 	background-color: @theme_c;
 	color: @sub_c;
@@ -173,20 +173,20 @@ ul {
 	padding: (95px + @btn_tumblr_h) 0 10vh;
 	width: 100%;
 	
-	.posts& {
-		padding-top: (30px + @btn_tumblr_h);
-	}
-	
 	@media (min-width: (@vp_switch + 1px)) {
 		padding-top: (155px + @btn_tumblr_h);
-		
-		.posts& {
-			padding-top: (55px + @btn_tumblr_h);
-		}
 	}
 }
 
-.header {
+.site-header {
+}
+
+.site-body {
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
+}
+
+.main-title {
 	.user-select(none);
 	cursor: default;
 	padding: @btn_tumblr_h 0 5px;
@@ -226,69 +226,45 @@ ul {
 		}
 	}
 	
-	.title {
-		&.is-anime {
-			.title-main {
-				> span {
-					.animation(title, 5.0s ease-in-out infinite alternate);
-					
-					&:nth-child(2) {
-						.animation-delay(.15s);
-					}
-					
-					&:nth-child(3) {
-						.animation-delay(.30s);
-					}
-					
-					&:nth-child(4) {
-						.animation-delay(.45s);
-					}
-					
-					&:nth-child(5) {
-						.animation-delay(.60s);
-					}
-					
-					&:nth-child(6) {
-						.animation-delay(.75s);
-					}
-					
-					&:nth-child(7) {
-						.animation-delay(.90s);
-					}
-					
-					&:nth-child(8) {
-						.animation-delay(1.05s);
-					}
-				}
-			}
-			
-			.title-sub {
-				> span {
-					.animation(title, 1s ease-in-out infinite alternate);
-				}
-			}
-		}
-	}
-	
-	.posts & {
-		background-color: @sub_c;
-		padding-top: 5px + @btn_tumblr_h;
-		
+	&.is-anime {
 		.title-main {
-			display: inline-block;
-			font-size: 2.5rem;
-			margin: auto;
-			
-			@media(min-width: (@vp_switch + 1px)) {
-				font-size: 5rem;
+			> span {
+				.animation(title, 5.0s ease-in-out infinite alternate);
+				
+				&:nth-child(2) {
+					.animation-delay(.15s);
+				}
+				
+				&:nth-child(3) {
+					.animation-delay(.30s);
+				}
+				
+				&:nth-child(4) {
+					.animation-delay(.45s);
+				}
+				
+				&:nth-child(5) {
+					.animation-delay(.60s);
+				}
+				
+				&:nth-child(6) {
+					.animation-delay(.75s);
+				}
+				
+				&:nth-child(7) {
+					.animation-delay(.90s);
+				}
+				
+				&:nth-child(8) {
+					.animation-delay(1.05s);
+				}
 			}
 		}
 		
 		.title-sub {
-			display: inline-block;
-			margin: 0;
-			position: relative;
-			top: -1px;
+			> span {
+				.animation(title, 1s ease-in-out infinite alternate);
+			}
 		}
 	}
 }
@@ -304,7 +280,7 @@ ul {
 		0 0 0 rgba(255, 255, 255, 0);
 });
 
-.footer {
+.site-footer {
 	background-color: @sub_c;
 	color: @theme_c;
 	bottom: 0;
@@ -314,134 +290,11 @@ ul {
 	z-index: 1;
 	width: 100%;
 	
-	.nav {
-		padding: 1px 0;
-		
-		> ul {
-			.styleGridBoxes(5, @theme_c, 10vh);
-			
-			a {
-				color: @theme_c;
-				text-decoration: none;
-			}
-/*
-			border: solid rgba(red(@theme_c), green(@theme_c), blue(@theme_c), .8);;
-			border-width: 1px 0 1px;
-			display: table;
-			width: 100%;
-			
-			> li {
-				.styleBtn(@theme_c, transparent, @sub_c, @theme_c);
-				display: table-cell;
-				
-				> * {
-					border-color: transparent;
-					line-height: 1.5;
-				}
-			}
-*/
-		}
-	}
-	
 	.copyright {
 		color: @theme_c;
 		font-size: 1.2rem;
 		line-height: 1;
 		padding: 9px 0;
-	}
-}
-
-.body {
-	height: 100%;
-	overflow-y: scroll;
-	-webkit-overflow-scrolling: touch;
-	padding: 0 10px 30px;
-	position: relative;
-	text-align: center;
-	z-index: 0;
-	
-	.posts & {
-		padding-top: 25px;
-	}
-	
-	.contents {
-		position: relative;
-		min-height: 100%;
-	}
-	
-	.content {
-		.transition(opacity .4s);
-		margin: 0 auto;
-		
-		&.fadeOut {
-			opacity: 0;
-		}
-	}
-		
-	.description {
-		background-color: fade(@theme_c, 90%);
-		border-radius: 2px;
-		color: @sub_c;
-		left: 0;
-		margin: auto;
-		padding: 1em;
-		position: absolute;
-		right: 0;
-		text-align: left;
-		top: 0;
-		width: 520px;
-		z-index: 1;
-		
-		.posts & {
-			top: 25px
-		}
-	}
-	
-	.area-news {
-		bottom: 10px;
-		position: absolute;
-		text-align: left;
-		width: 15em;
-		z-index: 0;
-		
-		@media(min-width: (@vp_switch + 1px)) {
-			width: 20em;
-		}
-		
-		.news {
-			background-color: fade(@theme_c, 60%);
-			border-radius: 2px;
-			margin: 0 auto 10px 0;
-			padding: .5em;
-			
-			&:first-child {
-				margin-top: 0;
-			}
-			
-			a {
-				color: @sub_c;
-				display: block;
-				text-decoration: none;
-			}
-			
-			.date {
-				font-size: 1.3rem;
-				
-				&::after {
-					content: "";
-					display: block;
-				}
-			}
-		}
-		
-		.btn-readmore {
-			margin: 0 0 0 auto;
-			.styleBtn(@theme_c, transparent, @sub_c, fade(@theme_c, 80%));
-			
-			> * {
-				padding: .5em;
-			}
-		}
 	}
 }
 

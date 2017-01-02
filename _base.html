@@ -19,20 +19,25 @@
 	<meta name="if:Enable Tweet Button" content="1" />
 	<meta name="if:Enable Plus1 Button" content="1" />
 
-	<title>{block:PermalinkPage}{block:PostSummary}{PostSummary} // {/block:PostSummary}{/block:PermalinkPage}{Title}{block:SearchPage} ({lang:Search results for SearchQuery}){/block:SearchPage}</title>
+	<title>Top</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--
 	<link rel="shortcut icon" href="{Favicon}">
 	<link rel="alternate" type="application/rss+xml" href="{RSS}">
 	<link rel="apple-touch-icon" href="{PortraitURL-128}">
 	<link rel="canonical" href="{Permalink}"/>
+-->
 
 	<!-- OGP -->
+<!--
 	<meta property="og:title" content="{block:PostSummary}{PostSummary} - {/block:PostSummary}{Title}" />
 	<meta property="og:type" content="article" />
 	<meta property="og:image" content="{PortraitURL-128}" />
+-->
 	<!-- Twitter tags -->
-	<meta name="twitter:image" content="{PortraitURL-128}" />
+<!--	<meta name="twitter:image" content="{PortraitURL-128}" />-->
 	 <!-- photo だったら og-image は photoURL にする -->
+<!--
 	{block:PermalinkPage}
 		{block:Posts}
 			{block:Photo}
@@ -60,15 +65,16 @@
 		<link rel="canonical" href="{Permalink}"/>
 		<meta property="og:url" content="{Permalink}" />
 	{/block:PermalinkPage}
+-->
 
 <!--	<style>{CustomCSS}</style>-->
-	<link rel="stylesheet" href="//loopdrape.github.io/kss_site/css/style.min.css" />
+	<link rel="stylesheet" href="./css/style.min.css" />
 	<!--[if lt IE 9]>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
 	<![endif]-->
-	<script src="//loopdrape.github.io/kss_site/js/loadGoogleAnalytics.min.js"></script>
-	<script src="//loopdrape.github.io/kss_site/js/webAppBase-1.1.3.min.js"></script>
-	<script src="//loopdrape.github.io/kss_site/js/app.init.min.js"></script>
+	<script src="./js/loadGoogleAnalytics.min.js"></script>
+	<script src="./js/webAppBase-1.1.3.min.js"></script>
+	<script src="./js/app.init.min.js"></script>
 </head>
 <body class="{block:IndexPage}page-index{/block:IndexPage}{block:DayPage} page-day{/block:DayPage}{block:TagPage} page-tag{/block:TagPage}{block:SearchPage} page-search{/block:SearchPage}{block:PermalinkPage}page-permalink page-{PostID}{/block:PermalinkPage}">
 
@@ -441,11 +447,12 @@
 {/block:Pagination}
 
 	<footer class="site-footer" id="footer">
-		<span class="copyright">©{CopyrightYears} {Title}</span>
+		<span class="copyright">©2017 KEESHKAS soundservice</span>
 	</footer>
 
 	<script src="//code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 
+<!--
  {block:IfEnableLikeButton}
 	<div id="fb-root"></div>
 	<script>(function(d, s, id) {
@@ -456,6 +463,7 @@
 		fjs.parentNode.insertBefore(js, fjs);
 	}(document, 'script', 'facebook-jssdk'));</script>
  {/block:IfEnableLikeButton}
+-->
 
 </body>
 </html>
