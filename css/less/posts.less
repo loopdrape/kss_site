@@ -20,7 +20,7 @@
 		color: @sub_c;
 		text-decoration: none;
 		
-		@media (min-width: @vp_switch) {
+		@media (min-width: (@mq_w+1px)) {
 			&:hover {
 				text-decoration: underline;
 			}
@@ -35,12 +35,11 @@
 		margin: 0 auto;
 	}
 	
-	@media (min-width: (@vp_switch + 1px)) {
-		.font-type-kaku();
-		font-family: "Noto Sans Japanese";
+	@media (min-width: (@mq_w + 1px)) {
+		.font-type-noto();
 	}
 	
-	@media (orientation: portrait) and (max-width: @vp_switch) {
+	@media (orientation: portrait) and (max-width: @mq_w) {
 		width: 95%;
 	}
 }

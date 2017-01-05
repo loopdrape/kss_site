@@ -30,7 +30,7 @@
 	};
 	
 	// 共通画像のプリロード
-	(function() {
+	false && (function() {
 		var
 			arrImgs, arrLoaded, i, len,
 			loaded = function(flg, src) {

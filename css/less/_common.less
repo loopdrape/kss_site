@@ -1,0 +1,177 @@
+// out:null;
+@import (less) "./_base";
+
+.importNotoSansJP();
+
+@import url(//fonts.googleapis.com/css?family=Poiret+One|Play|Inconsolata:400,700);
+.font-type-poiretone() {
+	font-family: 'Poiret One', cursive;
+}
+
+.font-type-play() {
+	font-family: 'Play', sans-serif;
+}
+
+.font-type-inconsolata() {
+	font-family: 'Inconsolata', sans-serif;
+}
+
+/**------------------------------------
+* common style */
+html {
+	background-color: @sub_c;
+}
+
+@btn_tumblr_h: 35px;
+body {
+	.font-type-play();
+	background-color: @base_bgc;
+	color: @base_txc;
+	font-size: 1.5rem;
+	height: 100vh;
+	line-height: 1.4;
+	overflow: hidden;
+	padding: (95px + @btn_tumblr_h) 0 10vh;
+	width: 100%;
+	-webkit-text-size-adjust: 100%;
+	
+	@media (min-width: (@mq_w + 1px)) {
+		font-size: 1.4rem;
+		padding-top: (155px + @btn_tumblr_h);
+	}
+}
+
+.hx {
+	.user-select(none);
+	cursor: default;
+	line-height: 1.2;
+	margin: 0 auto @block_pad;
+}
+
+h1 {
+	&:extend(.hx);
+	font-size: 26px;
+	font-weight: 400;
+	
+	@media screen and (max-width: @mq_w) {
+		font-size: 24px;
+	}
+}
+
+h2 {
+	&:extend(.hx);
+	font-size: 22px;
+	
+	@media screen and (max-width: @mq_w) {
+		font-size: 20px;
+	}
+}
+
+h3 {
+	&:extend(.hx);
+	border-bottom: 1px solid @base_bdc;
+	font-size: 20px;
+	padding-bottom: 2px;
+	
+	@media screen and (max-width: @mq_w) {
+		font-size: 18px;
+	}
+}
+
+h4 {
+	&:extend(.hx);
+	font-size: 18px;
+	padding-bottom: 2px;
+	
+	@media screen and (max-width: @mq_w) {
+		font-size: 16px;
+	}
+}
+
+h5 {
+	&:extend(.hx);
+	font-size: 1em;
+	font-weight: 400;
+}
+
+h6 {
+	&:extend(.hx);
+	font-size: 1em;
+}
+
+p {
+	line-height: 1.6;
+	
+	+ p {
+		margin-top: 1em;
+	}
+}
+
+dl,
+dd {
+	margin: 0;
+}
+
+a {
+	color: @link_txc;
+	
+	&.is-current {
+		pointer-events: none;
+	}
+	
+	&.is-hover {
+		color: @link_hvc;
+	}
+}
+
+.btn {
+	.style-btn(@btn_bgc, lighten(@theme_c, 32%));
+	min-width: 150px;
+	
+	.browser-ie & {
+		> * {
+			padding-top: 1px;
+		}
+	}
+}
+
+.area-btns {
+	.style-btns(@btn_bgc, lighten(@theme_c, 32%));
+	border-spacing: @block_pad 0;
+	margin-top: @block_space * 2;
+	
+	> li {
+		min-width: 150px;
+		
+		@media screen and (max-width: @mq_w) {
+			min-width: 120px;
+		}
+	}
+	
+	.browser-ie & {
+		> * {
+			padding-bottom: 4px;
+		}
+	}
+}
+
+.section {
+	+ .section {
+		margin-top: @block_space * 2;
+		
+		@media screen and (max-width: @mq_w) {
+			margin-top: @block_space;
+		}
+	}
+}
+
+.site-body {
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
+}
+
+// header
+@import (less) "./_header";
+
+// footer
+@import (less) "./_footer";

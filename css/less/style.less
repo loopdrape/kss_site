@@ -1,46 +1,9 @@
 // out: ../style.min.css, compress: true, strictMath: true
-@import (less) "./_normalize";
-@import (less) "./_lib";
+@import (less) "./_common";
 @import (less) "./_setting";
-@import "//fonts.googleapis.com/earlyaccess/notosansjapanese.css";
-
-.styleBtn(@txc, @bgc, @actv_txc, @actv_bgc) {
-	display: table;
-	
-	> * {
-		.transition(all .2s);
-		background-color: @bgc;
-		border: 1px @txc solid;
-		color: @txc;
-		cursor: pointer;
-		display: table-cell;
-		min-height: 44px;
-		min-width: 44px;
-		padding: .5em 1em;
-		text-decoration: none;
-		vertical-align: middle;
-		width: 100%;
-		
-		&.is-active {
-			background-color: @actv_bgc;
-			border-color: @actv_bgc;
-			color: @actv_txc;
-		}
-		
-		&:active {
-			.is-active();
-		}
-		
-		@media(min-width: @vp_switch) {
-			&:hover {
-				.is-active();
-			}
-		}
-	}
-}
 
 .styleGridBoxes(@ratio, @bdc, @box_h: 100%) {
-	.clearfix();
+	&:extend(.clearfix all);
 	
 	> li {
 		border: solid rgba(red(@bdc), green(@bdc), blue(@bdc), .8);;
@@ -79,108 +42,6 @@
 	}
 }
 
-/**------------------------------------
-* default style*/
-* {
-	margin: 0;
-	padding: 0;
-	.box-sizing(border);
-}
-
-html {
-	background-color: @sub_c;
-	font-size: 62.5%; /*10px*/
-}
-
-body {
-	width: 100%;
-}
-
-ul {
-	list-style: none;
-}
-
-.hide {
-	display: none !important;
-}
-
-/**------------------------------------
-* background (video) */
-.background {
-	height: 100vh;
-	left: 0;
-	overflow: hidden;
-	padding: 0 0 18px;
-	position: fixed;
-	top: 0;
-	width: 100vw;
-	z-index: 0;
-	
-	> video {
-		.transform(translate3d(-50%, -50%, 0));
-		display: block;
-		left: 50%;
-		min-height: 100%;
-		min-width: 100%;
-		position: relative;
-		top: 50%;
-	}
-	
-	> img {
-		.transform(translate3d(-50%, -50%, 0));
-		display: none;
-		height: 100%;
-		left: 40%;
-		position: relative;
-		top: 50%;
-		
-		@media (orientation: landscape) {
-			height: auto;
-		}
-	}
-	
-	@media(max-width: @vp_switch) {
-		> video {
-			display: none;
-		}
-		
-		> img {
-			display: block;
-		}
-	}
-	
-	.cover {
-		@url_ptn: "https://www.dropbox.com/s/3wfy9od7k3mbrdr/pattern.png?dl=0";
-		background-image: url(@url_ptn);
-		height: 100%;
-		left: 0;
-		position: absolute;
-		top: 0;
-		width: 100%;
-	}
-}
-
-/**------------------------------------
-* page style*/
-@btn_tumblr_h: 35px;
-body {
-	.font-type-play();
-	background-color: @theme_c;
-	color: @sub_c;
-	font-size: 1.5rem;
-	height: 100vh;
-	overflow: hidden;
-	padding: (95px + @btn_tumblr_h) 0 10vh;
-	width: 100%;
-	
-	@media (min-width: (@vp_switch + 1px)) {
-		padding-top: (155px + @btn_tumblr_h);
-	}
-}
-
-.site-header {
-}
-
 .site-body {
 	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;
@@ -196,6 +57,15 @@ body {
 	width: 100%;
 	z-index: 1;
 	
+	> a {
+		display: block;
+		text-decoration: none;
+	}
+	
+	em {
+		font-style: normal;
+	}
+	
 	.title-main {
 		.blur-text(@theme_c);
 		font-size: 4rem;
@@ -208,7 +78,7 @@ body {
 			margin-left: .3em;
 		}
 		
-		@media(min-width: (@vp_switch + 1px)) {
+		@media(min-width: (@mq_w + 1px)) {
 			font-size: 8rem;
 		}
 	}
@@ -221,7 +91,7 @@ body {
 		line-height: 1;
 		margin: 2px 0 0;
 		
-		@media(min-width: (@vp_switch + 1px)) {
+		@media(min-width: (@mq_w + 1px)) {
 			font-size: 4rem;
 		}
 	}
@@ -280,21 +150,59 @@ body {
 		0 0 0 rgba(255, 255, 255, 0);
 });
 
-.site-footer {
-	background-color: @sub_c;
-	color: @theme_c;
-	bottom: 0;
-	font-size: 1.6rem;
+/**------------------------------------
+* background (video) */
+.background {
+	height: 100vh;
+	left: 0;
+	overflow: hidden;
+	padding: 0 0 18px;
 	position: fixed;
-	text-align: center;
-	z-index: 1;
-	width: 100%;
+	top: 0;
+	width: 100vw;
+	z-index: 0;
 	
-	.copyright {
-		color: @theme_c;
-		font-size: 1.2rem;
-		line-height: 1;
-		padding: 9px 0;
+	> video {
+		.transform( translate3d(-50%, -50%, 0) );
+		display: block;
+		left: 50%;
+		min-height: 100%;
+		min-width: 100%;
+		position: relative;
+		top: 50%;
+	}
+	
+	> img {
+		.transform( translate3d(-50%, -50%, 0) );
+		display: none;
+		height: 100%;
+		left: 40%;
+		position: relative;
+		top: 50%;
+		
+		@media (orientation: landscape) {
+			height: auto;
+		}
+	}
+	
+	@media(max-width: @mq_w) {
+		> video {
+			display: none;
+		}
+		
+		> img {
+			display: block;
+		}
+	}
+	
+	.cover {
+		@url_ptn: "https://www.dropbox.com/s/3wfy9od7k3mbrdr/pattern.png?dl=0";
+		background-image: url(@url_ptn);
+		height: 100%;
+		left: 0;
+		position: absolute;
+		top: 0;
+		width: 100%;
 	}
 }
 

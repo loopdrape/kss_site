@@ -76,30 +76,40 @@
 	<script src="./js/webAppBase-1.1.3.min.js"></script>
 	<script src="./js/app.init.min.js"></script>
 </head>
-<body class="{block:IndexPage}page-index{/block:IndexPage}{block:DayPage} page-day{/block:DayPage}{block:TagPage} page-tag{/block:TagPage}{block:SearchPage} page-search{/block:SearchPage}{block:PermalinkPage}page-permalink page-{PostID}{/block:PermalinkPage}">
+<body class="page-index">
 
-	<header class="site-header" id="header">
+	<header class="site-header" id="site_header">
 		<h1 class="site-title">
 			<a href="/" title="K"></a>
 		</h1>
 	</header>
 
-	<nav class="site-nav" role="navigation">
+	<nav class="site-nav" id="site_nav" role="navigation">
 		<ul>
 			<li><a href="/">Home</a></li>
-			<li><a href="./">{Label}</a></li>
+			<li><a href="/tagged/blog">Blog</a></li>
+			<li><a href="/tagged/sound">Sound</a></li>
+			<li><a href="/tagged/photo">Photo</a></li>
+			<li><a href="/tagged/movie">Movie</a></li>
+			<li><a href="/tagged/goods">Goods</a></li>
 			<li><a href="/archive">Archive</a></li>
 		</ul>
 	</nav>
 
-	<div id="site_body" class="site-body autopagerize_page_element" role="main">
+	<div class="site-body autopagerize_page_element" id="site_body" role="main">
+<!--	{block:IndexPage}-->
 		<h2 class="main-title">
 			<a href="/">
 				<em class="title-main"><span>K</span><span>E</span><span>E</span><span>S</span><span>H</span><span>K</span><span>A</span><span>S</span></em>
 				<em class="title-sub"><span>soundservice</span></em>
 			</a>
 		</h2>
+<!--	{block:Description}-->
+		<p class="description" id="description">{Description}</p>
+<!--	{/block:Description}-->
+<!--	{/block:IndexPage}-->
 
+<!--	{block:IndexPage}-->
 		<div class="background">
 			<video preload="auto" autobuffer autoplay muted loop poster="http://loopdrape.github.io/kss_site/img/pa_face.png">
 				<source type="video/mp4" src="http://loopdrape.github.io/kss_site/img/parmanent.mp4">
@@ -109,7 +119,7 @@
 			<div class="cover"></div>
 		</div>
 		<ul class="area-news" id="area_news">
-		{block:Posts}
+<!--		{block:Posts}-->
 			<li class="news {TagsAsClasses} {PostType}">
 				<a href="{Permalink}">
 				{block:Date}
@@ -182,17 +192,19 @@
 				{/block:ContentSource}
 				</a>
 			</li>
-		{/block:Posts}
+<!--		{/block:Posts}-->
 		</ul>
 		
 <!--		<p class="description">{Description}</p>-->
 	</div>
+<!--	{/block:IndexPage}-->
 
 	<footer class="site-footer" id="footer">
 		<span class="copyright">©2017 KEESHKAS soundservice</span>
 	</footer>
 
 	<script src="//code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+	<script src="./js/app.ready.min.js"></script>
 
 <!--
  {block:IfEnableLikeButton}

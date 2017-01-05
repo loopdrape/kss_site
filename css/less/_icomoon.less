@@ -1,0 +1,221 @@
+//out: null
+@fonts_path: "./fonts";
+
+/**------------------------------------
+* icon font */
+@font-face {
+	font-family: "icomoon";
+	src: url("@{fonts_path}/icomoon.eot?8jrxif");
+	src: url("@{fonts_path}/icomoon.eot?#iefix8jrxif") format("embedded-opentype"),
+			 url("@{fonts_path}/icomoon.ttf?8jrxif") format("truetype"),
+			 url("@{fonts_path}/icomoon.woff?8jrxif") format("woff"),
+			 url("@{fonts_path}/icomoon.svg?8jrxif#icomoon") format("svg");
+	font-weight: normal;
+	font-style: normal;
+}
+
+.icon-common() {
+	font-family: "icomoon";
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	position: relative;
+	text-transform: none;
+	line-height: 1;
+	
+	// Better Font Rendering ===========
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icomoon(@pos) when (@pos = left) {
+	&:before {
+		.icon-common();
+		margin-right: .4em;
+	}
+}
+
+.icomoon(@pos) when (@pos = right) {
+	&:after {
+		.icon-common();
+		margin-left: .4em;
+	}
+}
+
+.icomoon-left {
+	.icomoon(left);
+}
+
+.icomoon-right {
+	.icomoon(right);
+}
+
+.setIconMoon(@cntnt, @pos: left) when (@pos = left) {
+	&:extend(.icomoon-left all);
+	
+	&:before {
+		content: @cntnt;
+	}
+}
+
+.setIconMoon(@cntnt, @pos) when (@pos = right) {
+	&:extend(.icomoon-right all);
+	
+	&:after {
+		content: @cntnt;
+	}
+}
+
+.icon-home-before {
+	.setIconMoon("\e900");
+}
+
+.icon-home-after {
+	.setIconMoon("\e900", right);
+}
+
+.icon-image-before {
+	.setIconMoon("\e90d");
+}
+
+.icon-image-after {
+	.setIconMoon("\e90d", right);
+}
+
+.icon-print-before {
+	.setIconMoon("\e954");
+}
+
+.icon-print-after {
+	.setIconMoon("\e954", right);
+}
+
+.icon-download-before {
+	.setIconMoon("\e95e");
+}
+
+.icon-download-after {
+	.setIconMoon("\e95e", right);
+}
+
+.icon-upload-before {
+	.setIconMoon("\e95f");
+}
+
+.icon-upload-after {
+	.setIconMoon("\e95f", right);
+}
+
+.icon-mail-before {
+	.setIconMoon("\e0e1");
+}
+
+.icon-mail-after {
+	.setIconMoon("\e0e1", right);
+}
+
+.icon-config-before {
+	.setIconMoon("\e994");
+}
+
+.icon-config-after {
+	.setIconMoon("\e994", right);
+}
+
+.icon-close-before {
+	.setIconMoon("\e90f");
+}
+
+.icon-close-after {
+	.setIconMoon("\e90f", right);
+}
+
+.icon-delete-before {
+	.setIconMoon("\e9ad");
+}
+
+.icon-delete-after {
+	.setIconMoon("\e9ad", right);
+}
+
+.icon-minus-before {
+	.setIconMoon("\ea0b");
+}
+
+.icon-minus-after {
+	.setIconMoon("\ea0b", right);
+}
+
+.icon-plus-before {
+	.setIconMoon("\ea0a");
+}
+
+.icon-plus-after {
+	.setIconMoon("\ea0a", right);
+}
+
+.icon-menu-before {
+	.setIconMoon("\e5d2");
+}
+
+.icon-menu-after {
+	.setIconMoon("\e5d2", right);
+}
+
+.icon-search-before {
+	.setIconMoon("\e8b6");
+}
+
+.icon-search-after{
+	.setIconMoon("\e8b6", right);
+}
+
+/* arrow icons */
+.icon-arrow-t-before {
+	.setIconMoon("\e912");
+}
+
+.icon-arrow-t-after {
+	.setIconMoon("\e912", right);
+}
+
+.icon-arrow-r-before {
+	.setIconMoon("\e913");
+}
+
+.icon-arrow-r-after {
+	.setIconMoon("\e913", right);
+}
+
+.icon-arrow-b-before {
+	.setIconMoon("\e914");
+}
+
+.icon-arrow-b-after {
+	.setIconMoon("\e914", right);
+}
+
+.icon-arrow-l-before {
+	.setIconMoon("\e915");
+}
+
+.icon-arrow-l-after {
+	.setIconMoon("\e915", right);
+}
+
+.icon-arrow-bold-r-before {
+	.setIconMoon("\e910");
+}
+
+.icon-arrow-bold-r-after{
+	.setIconMoon("\e910", right);
+}
+
+.icon-arrow-bold-l-before {
+	.setIconMoon("\e911");
+}
+
+.icon-arrow-bold-l-after{
+	.setIconMoon("\e911", right);
+}
