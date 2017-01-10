@@ -79,14 +79,136 @@
 <body class="page-index">
 
 	<header class="site-header" id="site_header">
-		<h1 class="site-title">
-			<a href="/" title="K"></a>
-		</h1>
+		<div class="content">
+			<h1 class="site-title">
+				<a href="/" class="icon-keeshkas" title="{Title}"></a>
+			</h1>
+			<div class="links icon-close icon-more-after" id="sns_links">
+				<ul class="link-list">
+					<li class="list-item"><a href="https://www.facebook.com/keeshkas.s.s" class="icon-facebook" target="_blank"></a></li>
+					<li class="list-item"><a href="https://twitter.com/KEESHKAS_sndsvc" class="icon-twitter" target="_blank"></a></li>
+					<li class="list-item"><a href="https://www.instagram.com/keeshkas/" class="icon-instagram" target="_blank"></a></li>
+					<li class="list-item"><a href="https://www.youtube.com/channel/UCmWrlNVGJ9hoRJlwVW5NqOA" class="icon-youtube" target="_blank"></a></li>
+					<li class="list-item"><a href="https://soundcloud.com/keeshkas-soundservice" class="icon-soundcloud" target="_blank"></a></li>
+				</ul>
+			</div>
+		</div>
 	</header>
+
+	<div class="site-body autopagerize_page_element" id="site_body" role="main">
+<!--	{block:IndexPage}-->
+		<div class="section" data-section="title">
+			<h2 class="main-title">
+				<em class="title-main"><span>K</span><span>E</span><span>E</span><span>S</span><span>H</span><span>K</span><span>A</span><span>S</span></em>
+				<em class="title-sub"><span>soundservice</span></em>
+			</h2>
+			
+<!--
+			{block:TagPage}
+			<h2 class="tagged">{Tag}</h2>
+			{/block:TagPage}
+-->
+			
+			<div class="main-background">
+				<video preload="auto" autobuffer autoplay muted loop poster="http://loopdrape.github.io/kss_site/img/pa_face.png">
+					<source type="video/mp4" src="http://loopdrape.github.io/kss_site/img/parmanent.mp4">
+					<span class="no-video"></span>
+				</video>
+				<img src="http://loopdrape.github.io/kss_site/img/pa_face.png" alt="" />
+				<div class="cover"></div>
+			</div>
+<!--	{block:Description}-->
+			<p class="description" id="description">{Description}</p>
+<!--	{/block:Description}-->
+		</div>
+		
+		<div class="section" data-section="posts">
+			<ul class="posts-list" id="post_list">
+	<!--		{block:Posts}-->
+				<li class="post-thumb {TagsAsClasses} {PostType}">
+					<a href="{Permalink}">
+					{block:Date}
+						<span class="date">{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}</span>
+					{/block:Date}
+					{block:Text}
+						<!-- post: テキスト -->
+						{block:Title}
+						<span>{Title}</span>
+						{/block:Title}
+					{/block:Text}
+
+					{block:Photo}
+						<!-- post: 画像 -->
+						{block:Caption}
+	<!--					<img src="{PhotoURL-HighRes}" alt="{PhotoAlt}"/>-->
+						<img src="./img/pa_face.png" alt="{PhotoAlt}"/>
+						<span>{Caption}</span>
+						{/block:Caption}
+					{/block:Photo}
+
+					{block:Photoset}
+						<!-- post: フォトセット -->
+						{block:Caption}
+						<span>{Caption}</span>
+						{/block:Caption}
+					{/block:Photoset}
+
+					{block:Quote}
+						<!-- post: 引用 -->
+						<span>{Quote}</span>
+					{/block:Quote}
+
+					{block:Link}
+						<!-- post: リンク -->
+						<span>{Name}</span>
+					{/block:Link}
+
+					{block:Chat}
+						<!-- post: チャット -->
+						{block:Title}
+						<span>{Title}</span>
+						{/block:Title}
+					{/block:Chat}
+
+					{block:Video}
+						<!-- post: ビデオ -->
+						{block:Caption}
+						<span>{Caption}</span>
+						{/block:Caption}
+					{/block:Video}
+
+					{block:Audio}
+						<!-- post: オーディオ -->
+						{block:Caption}
+						{AudioPcontentBlack}
+						<span>{Caption}</span>
+						{/block:Caption}
+					{/block:Audio}
+
+					{block:Answer}
+						<!-- post: Answer -->
+						<span>{Question}</span>
+					{/block:Answer}
+
+					{block:ContentSource}
+						<!-- Content Source -->
+						{block:NoSourceLogo}
+						<span>{SourceTitle}</span>
+						{/block:NoSourceLogo}
+					{/block:ContentSource}
+					</a>
+				</li>
+	<!--		{/block:Posts}-->
+			</ul>
+		</div>
+		
+	</div>
+<!--	{/block:IndexPage}-->
 
 	<nav class="site-nav" id="site_nav" role="navigation">
 		<ul>
 			<li><a href="/">Home</a></li>
+			<li><a href="/tagged/info">Info</a></li>
 			<li><a href="/tagged/blog">Blog</a></li>
 			<li><a href="/tagged/sound">Sound</a></li>
 			<li><a href="/tagged/photo">Photo</a></li>
@@ -96,111 +218,8 @@
 		</ul>
 	</nav>
 
-	<div class="site-body autopagerize_page_element" id="site_body" role="main">
-<!--	{block:IndexPage}-->
-		<h2 class="main-title">
-			<a href="/">
-				<em class="title-main"><span>K</span><span>E</span><span>E</span><span>S</span><span>H</span><span>K</span><span>A</span><span>S</span></em>
-				<em class="title-sub"><span>soundservice</span></em>
-			</a>
-		</h2>
-<!--	{block:Description}-->
-		<p class="description" id="description">{Description}</p>
-<!--	{/block:Description}-->
-<!--	{/block:IndexPage}-->
-
-<!--	{block:IndexPage}-->
-		<div class="background">
-			<video preload="auto" autobuffer autoplay muted loop poster="http://loopdrape.github.io/kss_site/img/pa_face.png">
-				<source type="video/mp4" src="http://loopdrape.github.io/kss_site/img/parmanent.mp4">
-				<span class="no-video"></span>
-			</video>
-			<img src="http://loopdrape.github.io/kss_site/img/pa_face.png" alt="" />
-			<div class="cover"></div>
-		</div>
-		<ul class="area-news" id="area_news">
-<!--		{block:Posts}-->
-			<li class="news {TagsAsClasses} {PostType}">
-				<a href="{Permalink}">
-				{block:Date}
-					<span class="date">{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}</span>
-				{/block:Date}
-				{block:Text}
-					<!-- post: テキスト -->
-					{block:Title}
-					<span>{Title}</span>
-					{/block:Title}
-				{/block:Text}
-
-				{block:Photo}
-					<!-- post: 画像 -->
-					{block:Caption}
-					<img src="{PhotoURL-HighRes}" alt="{PhotoAlt}"/>
-					<span>{Caption}</span>
-					{/block:Caption}
-				{/block:Photo}
-
-				{block:Photoset}
-					<!-- post: フォトセット -->
-					{block:Caption}
-					<span>{Caption}</span>
-					{/block:Caption}
-				{/block:Photoset}
-
-				{block:Quote}
-					<!-- post: 引用 -->
-					<span>{Quote}</span>
-				{/block:Quote}
-
-				{block:Link}
-					<!-- post: リンク -->
-					<span>{Name}</span>
-				{/block:Link}
-
-				{block:Chat}
-					<!-- post: チャット -->
-					{block:Title}
-					<span>{Title}</span>
-					{/block:Title}
-				{/block:Chat}
-
-				{block:Video}
-					<!-- post: ビデオ -->
-					{block:Caption}
-					<span>{Caption}</span>
-					{/block:Caption}
-				{/block:Video}
-
-				{block:Audio}
-					<!-- post: オーディオ -->
-					{block:Caption}
-					{AudioPcontentBlack}
-					<span>{Caption}</span>
-					{/block:Caption}
-				{/block:Audio}
-
-				{block:Answer}
-					<!-- post: Answer -->
-					<span>{Question}</span>
-				{/block:Answer}
-
-				{block:ContentSource}
-					<!-- Content Source -->
-					{block:NoSourceLogo}
-					<span>{SourceTitle}</span>
-					{/block:NoSourceLogo}
-				{/block:ContentSource}
-				</a>
-			</li>
-<!--		{/block:Posts}-->
-		</ul>
-		
-<!--		<p class="description">{Description}</p>-->
-	</div>
-<!--	{/block:IndexPage}-->
-
 	<footer class="site-footer" id="footer">
-		<span class="copyright">©2017 KEESHKAS soundservice</span>
+		<p class="copyright">©2017 KEESHKAS soundservice</p>
 	</footer>
 
 	<script src="//code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>

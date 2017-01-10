@@ -259,6 +259,14 @@
 	-ms-box-shadow: @x @y @blur @spread rgba(red(@bcolor), green(@bcolor), blue(@bcolor), @alpha);
 }
 
+.filter(@arg) {
+	filter: @arguments;
+	-webkit-filter: @arguments;
+	-moz-filter: @arguments;
+	-o-filter: @arguments;
+	-ms-filter: @arguments;
+}
+
 .gradient-top(@maincolor: #fff, @subcolor: #eee) {
 	background: @maincolor;
 	background: linear-gradient(top, @maincolor, @subcolor);

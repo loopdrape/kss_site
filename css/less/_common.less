@@ -1,5 +1,6 @@
 // out:null;
-@import (less) "./_base";
+@import (less) "./lib/_base";
+@import (less) "./_icomoon";
 
 .importNotoSansJP();
 
@@ -20,24 +21,25 @@
 * common style */
 html {
 	background-color: @sub_c;
+	
+	@media screen and (min-width:(@mq_w + 1px)){
+		min-width: auto;
+	}
 }
 
 @btn_tumblr_h: 35px;
 body {
 	.font-type-play();
-	background-color: @base_bgc;
+	background-color: transparent;
 	color: @base_txc;
 	font-size: 1.5rem;
-	height: 100vh;
 	line-height: 1.4;
-	overflow: hidden;
-	padding: (95px + @btn_tumblr_h) 0 10vh;
+	padding: (@header_h + 2px) 0 0;
 	width: 100%;
 	-webkit-text-size-adjust: 100%;
 	
 	@media (min-width: (@mq_w + 1px)) {
 		font-size: 1.4rem;
-		padding-top: (155px + @btn_tumblr_h);
 	}
 }
 
@@ -100,6 +102,7 @@ h6 {
 }
 
 p {
+	.font-type-noto();
 	line-height: 1.6;
 	
 	+ p {
@@ -157,7 +160,7 @@ a {
 
 .section {
 	+ .section {
-		margin-top: @block_space * 2;
+		margin-top: (@block_space * 2);
 		
 		@media screen and (max-width: @mq_w) {
 			margin-top: @block_space;
@@ -166,8 +169,14 @@ a {
 }
 
 .site-body {
+	background-color: @base_bgc;
+	position: relative;
 	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;
+}
+
+.site-nav {
+	display: none;
 }
 
 // header
@@ -175,3 +184,36 @@ a {
 
 // footer
 @import (less) "./_footer";
+
+.area-go-pageTop {
+	.transition(opacity .2s);
+	bottom: @block_space;
+	opacity: .6;
+	position: fixed;
+	right: @block_space;
+	
+	&:active {
+		opacity: .9;
+	}
+	
+	@media screen and (min-width: (@mq_w + 1px)) {
+		&:hover {
+			opacity: .8;
+		}
+	}
+	
+	> .go-pageTop {
+		.box-shadow(0, 2px, 4px, 0, #000, .6);
+		.user-select(none);
+		background-color: @sub_c;
+		border-radius: 50%;
+		color: @theme_c;
+		display: block;
+		font-size: 2rem;
+		height: (@block_space * 2);
+		line-height: 1;
+		text-align: center;
+		text-decoration: none;
+		width: (@block_space * 2);
+	}
+}

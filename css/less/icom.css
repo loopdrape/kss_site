@@ -1,0 +1,144 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?vyzwun');
+  src:  url('fonts/icomoon.eot?vyzwun#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?vyzwun') format('truetype'),
+    url('fonts/icomoon.woff?vyzwun') format('woff'),
+    url('fonts/icomoon.svg?vyzwun#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+	.icon-keeshkas:before {
+		content: "\e900";
+	}
+	.icon-t-shirt-silhouette:before {
+		content: "\e901";
+	}
+	.icon-image:before {
+		content: "\e90d";
+	}
+	.icon-sound:before {
+		content: "\e910";
+	}
+	.icon-home:before {
+		content: "\e902";
+	}
+	.icon-movie:before {
+		content: "\e914";
+	}
+	.icon-volume-high:before {
+		content: "\ea26";
+	}
+	.icon-volume-mute:before {
+		content: "\ea2a";
+	}
+	.icon-facebook:before {
+		content: "\ea90";
+	}
+	.icon-instagram:before {
+		content: "\ea92";
+	}
+	.icon-twitter:before {
+		content: "\ea96";
+	}
+	.icon-youtube:before {
+		content: "\ea9d";
+	}
+	.icon-soundcloud:before {
+		content: "\eac3";
+	}
+	.icon-allow-left:before {
+		content: "\e408";
+	}
+	.icon-allow-right:before {
+		content: "\e409";
+	}
+	.icon-allow-top:before {
+		content: "\e5ce";
+	}
+	.icon-allow-bottom:before {
+		content: "\e5cf";
+	}
+	.icon-plus:before {
+		content: "\e145";
+	}
+	.icon-allow2-left:before {
+		content: "\e5c4";
+	}
+	.icon-allow2-bottom:before {
+		content: "\e5db";
+	}
+	.icon-allow2-right:before {
+		content: "\e5c8";
+	}
+	.icon-allow2-top:before {
+		content: "\e5d8";
+	}
+	.icon-blog:before {
+		content: "\e0b7";
+	}
+	.icon-close:before {
+		content: "\e5cd";
+	}
+	.icon-archive:before {
+		content: "\e53b";
+	}
+	.icon-discography:before {
+		content: "\e030";
+	}
+	.icon-mail:before {
+		content: "\e0e1";
+	}
+	.icon-menu:before {
+		content: "\e5d2";
+	}
+	.icon-more:before {
+		content: "\e5d3";
+	}
+	.icon-info:before {
+		content: "\e031";
+	}
+	.icon-center:before {
+		content: "\e837";
+	}
+	.icon-minus:before {
+		content: "\e15b";
+	}
+	.icon-search:before {
+		content: "\e8b6";
+	}
+	.icon-config:before {
+		content: "\e8b8";
+	}
+	.icon-share:before {
+		content: "\e80d";
+	}
+	.icon-not-smoking:before {
+		content: "\eb4a";
+	}
+	.icon-smoking:before {
+		content: "\eb4b";
+	}
+	.icon-zoom-in:before {
+		content: "\e8ff";
+	}
+	.icon-zoom-out:before {
+		content: "\e903";
+	}
+

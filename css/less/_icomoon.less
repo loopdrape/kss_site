@@ -32,14 +32,12 @@
 .icomoon(@pos) when (@pos = left) {
 	&:before {
 		.icon-common();
-		margin-right: .4em;
 	}
 }
 
 .icomoon(@pos) when (@pos = right) {
 	&:after {
 		.icon-common();
-		margin-left: .4em;
 	}
 }
 
@@ -67,15 +65,23 @@
 	}
 }
 
-.icon-home-before {
+.icon-keeshkas {
 	.setIconMoon("\e900");
 }
 
-.icon-home-after {
+.icon-keeshkas-after {
 	.setIconMoon("\e900", right);
 }
 
-.icon-image-before {
+.icon-home {
+	.setIconMoon("\e902");
+}
+
+.icon-home-after {
+	.setIconMoon("\e902", right);
+}
+
+.icon-image {
 	.setIconMoon("\e90d");
 }
 
@@ -83,31 +89,23 @@
 	.setIconMoon("\e90d", right);
 }
 
-.icon-print-before {
-	.setIconMoon("\e954");
+.icon-goods {
+	.setIconMoon("\e901");
 }
 
-.icon-print-after {
-	.setIconMoon("\e954", right);
+.icon-goods-after {
+	.setIconMoon("\e901", right);
 }
 
-.icon-download-before {
-	.setIconMoon("\e95e");
+.icon-sound {
+	.setIconMoon("\e910");
 }
 
-.icon-download-after {
-	.setIconMoon("\e95e", right);
+.icon-sound-after {
+	.setIconMoon("\e910", right);
 }
 
-.icon-upload-before {
-	.setIconMoon("\e95f");
-}
-
-.icon-upload-after {
-	.setIconMoon("\e95f", right);
-}
-
-.icon-mail-before {
+.icon-mail {
 	.setIconMoon("\e0e1");
 }
 
@@ -115,47 +113,47 @@
 	.setIconMoon("\e0e1", right);
 }
 
-.icon-config-before {
-	.setIconMoon("\e994");
+.icon-config {
+	.setIconMoon("\e8b8");
 }
 
 .icon-config-after {
-	.setIconMoon("\e994", right);
+	.setIconMoon("\e8b8", right);
 }
 
-.icon-close-before {
-	.setIconMoon("\e90f");
+.icon-movie {
+	.setIconMoon("\e914");
 }
 
-.icon-close-after {
-	.setIconMoon("\e90f", right);
+.icon-movie-after {
+	.setIconMoon("\e914", right);
 }
 
-.icon-delete-before {
-	.setIconMoon("\e9ad");
-}
-
-.icon-delete-after {
-	.setIconMoon("\e9ad", right);
-}
-
-.icon-minus-before {
-	.setIconMoon("\ea0b");
-}
-
-.icon-minus-after {
-	.setIconMoon("\ea0b", right);
-}
-
-.icon-plus-before {
-	.setIconMoon("\ea0a");
+.icon-plus {
+	.setIconMoon("\e145");
 }
 
 .icon-plus-after {
-	.setIconMoon("\ea0a", right);
+	.setIconMoon("\e145", right);
 }
 
-.icon-menu-before {
+.icon-minus {
+	.setIconMoon("\e15b");
+}
+
+.icon-minus-after {
+	.setIconMoon("\e15b", right);
+}
+
+.icon-close {
+	.setIconMoon("\e5cd");
+}
+
+.icon-close-after {
+	.setIconMoon("\e5cd", right);
+}
+
+.icon-menu {
 	.setIconMoon("\e5d2");
 }
 
@@ -163,59 +161,236 @@
 	.setIconMoon("\e5d2", right);
 }
 
-.icon-search-before {
+.icon-search {
 	.setIconMoon("\e8b6");
 }
 
-.icon-search-after{
+.icon-search-after {
 	.setIconMoon("\e8b6", right);
 }
 
+.icon-info {
+	.setIconMoon("\e031");
+}
+
+.icon-info-after {
+	.setIconMoon("\e031", right);
+}
+
+.icon-blog {
+	.setIconMoon("\e0b7");
+}
+
+.icon-blog-after {
+	.setIconMoon("\e0b7", right);
+}
+
+.icon-archive {
+	.setIconMoon("\e53b");
+}
+
+.icon-archive-after {
+	.setIconMoon("\e53b", right);
+}
+
+.icon-discography {
+	.setIconMoon("\e030");
+}
+
+.icon-discography-after {
+	.setIconMoon("\e030", right);
+}
+
+.icon-center {
+	.setIconMoon("\e837");
+}
+
+.icon-center-after {
+	.setIconMoon("\e837", right);
+}
+
+.icon-smoking {
+	.setIconMoon("\eb4b");
+}
+
+.icon-smoking-after {
+	.setIconMoon("\eb4b", right);
+}
+
+.icon-unsmoking {
+	.setIconMoon("\eb4a");
+}
+
+.icon-unsmoking-after {
+	.setIconMoon("\eb4a", right);
+}
+
+.icon-vol {
+	&[data-vol="on"] {
+		.setIconMoon("\ea26");
+	}
+	
+	&[data-vol="off"] {
+		.setIconMoon("\ea2a");
+	}
+}
+
+.icon-vol-after {
+	&[data-vol="on"] {
+		.setIconMoon("\ea26", right);
+	}
+	
+	&[data-vol="off"] {
+		.setIconMoon("\ea2a", right);
+	}
+}
+
+.icon-zoom {
+	&[data-zoom="in"] {
+		.setIconMoon("\e8ff");
+	}
+	
+	&[data-zoom="out"] {
+		.setIconMoon("\e903");
+	}
+}
+
+.icon-zoom-after {
+	&[data-zoom="in"] {
+		.setIconMoon("\e8ff", right);
+	}
+	
+	&[data-zoom="out"] {
+		.setIconMoon("\e903", right);
+	}
+}
+
+.icon-more {
+	.setIconMoon("\e5d3");
+}
+
+.icon-more-after {
+	.setIconMoon("\e5d3", right);
+}
+
+.icon-share {
+	.setIconMoon("\e80d");
+}
+
+.icon-share-after {
+	.setIconMoon("\e80d", right);
+}
+
+
+.icon-facebook {
+	.setIconMoon("\ea90");
+}
+
+.icon-facebook-after {
+	.setIconMoon("\ea90", right);
+}
+
+.icon-instagram {
+	.setIconMoon("\ea92");
+}
+
+.icon-instagram-after {
+	.setIconMoon("\ea92", right);
+}
+
+.icon-twitter {
+	.setIconMoon("\ea96");
+}
+
+.icon-twitter-after {
+	.setIconMoon("\ea96", right);
+}
+
+.icon-youtube {
+	.setIconMoon("\ea9d");
+}
+
+.icon-youtube-after {
+	.setIconMoon("\ea9d", right);
+}
+
+.icon-soundcloud {
+	.setIconMoon("\eac3");
+}
+
+.icon-soundcloud-after {
+	.setIconMoon("\eac3", right);
+}
+
 /* arrow icons */
-.icon-arrow-t-before {
-	.setIconMoon("\e912");
+.icon-arrow {
+	&[data-arrow="t"] {
+		.setIconMoon("\e5ce");
+	}
+	
+	&[data-arrow="r"] {
+		.setIconMoon("\e409");
+	}
+	
+	&[data-arrow="b"] {
+		.setIconMoon("\e5cf");
+	}
+	
+	&[data-arrow="l"] {
+		.setIconMoon("\e408");
+	}
 }
 
-.icon-arrow-t-after {
-	.setIconMoon("\e912", right);
+.icon-arrow-after {
+	&[data-arrow="t"] {
+		.setIconMoon("\e5ce", right);
+	}
+	
+	&[data-arrow="r"] {
+		.setIconMoon("\e409", right);
+	}
+	
+	&[data-arrow="b"] {
+		.setIconMoon("\e5cf", right);
+	}
+	
+	&[data-arrow="l"] {
+		.setIconMoon("\e408", right);
+	}
 }
 
-.icon-arrow-r-before {
-	.setIconMoon("\e913");
+.icon-arrow2 {
+	&[data-arrow="t"] {
+		.setIconMoon("\e5d8");
+	}
+	
+	&[data-arrow="r"] {
+		.setIconMoon("\e5c8");
+	}
+	
+	&[data-arrow="b"] {
+		.setIconMoon("\e5db");
+	}
+	
+	&[data-arrow="l"] {
+		.setIconMoon("\e5c4");
+	}
 }
 
-.icon-arrow-r-after {
-	.setIconMoon("\e913", right);
-}
-
-.icon-arrow-b-before {
-	.setIconMoon("\e914");
-}
-
-.icon-arrow-b-after {
-	.setIconMoon("\e914", right);
-}
-
-.icon-arrow-l-before {
-	.setIconMoon("\e915");
-}
-
-.icon-arrow-l-after {
-	.setIconMoon("\e915", right);
-}
-
-.icon-arrow-bold-r-before {
-	.setIconMoon("\e910");
-}
-
-.icon-arrow-bold-r-after{
-	.setIconMoon("\e910", right);
-}
-
-.icon-arrow-bold-l-before {
-	.setIconMoon("\e911");
-}
-
-.icon-arrow-bold-l-after{
-	.setIconMoon("\e911", right);
+.icon-arrow-after2 {
+	&[data-arrow="t"] {
+		.setIconMoon("\e5d8", right);
+	}
+	
+	&[data-arrow="r"] {
+		.setIconMoon("\e5c8", right);
+	}
+	
+	&[data-arrow="b"] {
+		.setIconMoon("\e5db", right);
+	}
+	
+	&[data-arrow="l"] {
+		.setIconMoon("\e5c4", right);
+	}
 }
