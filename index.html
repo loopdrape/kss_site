@@ -77,25 +77,23 @@
 	<script src="./js/app.init.min.js"></script>
 </head>
 <body class="page-index">
-
-	<header class="site-header" id="site_header">
-		<div class="content">
-			<h1 class="site-title">
-				<a href="/" class="icon-keeshkas" title="{Title}"></a>
-			</h1>
-			<div class="links icon-close icon-more-after" id="sns_links">
-				<ul class="link-list">
+	<div class="wrapper" id="wrapper">
+		<header class="site-header" id="site_header">
+			<div class="content">
+				<h1 class="site-title">
+					<a href="/" class="icon-keeshkas" title="{Title}"></a>
+				</h1>
+				<fieldset class="btn-toggle"><input type="checkbox" id="show_sns_links"><label for="show_sns_links" class="icon-more icon-close-after"></label></fieldset>
+				<ul class="link-list" id="sns_links">
 					<li class="list-item"><a href="https://www.facebook.com/keeshkas.s.s" class="icon-facebook" target="_blank"></a></li>
 					<li class="list-item"><a href="https://twitter.com/KEESHKAS_sndsvc" class="icon-twitter" target="_blank"></a></li>
 					<li class="list-item"><a href="https://www.instagram.com/keeshkas/" class="icon-instagram" target="_blank"></a></li>
-					<li class="list-item"><a href="https://www.youtube.com/channel/UCmWrlNVGJ9hoRJlwVW5NqOA" class="icon-youtube" target="_blank"></a></li>
 					<li class="list-item"><a href="https://soundcloud.com/keeshkas-soundservice" class="icon-soundcloud" target="_blank"></a></li>
+					<li class="list-item"><a href="https://www.youtube.com/channel/UCmWrlNVGJ9hoRJlwVW5NqOA" class="icon-youtube" target="_blank"></a></li>
 				</ul>
 			</div>
-		</div>
-	</header>
+		</header>
 
-	<div class="site-body autopagerize_page_element" id="site_body" role="main">
 <!--	{block:IndexPage}-->
 		<div class="section" data-section="title">
 			<h2 class="main-title">
@@ -110,26 +108,29 @@
 -->
 			
 			<div class="main-background">
-				<video preload="auto" autobuffer autoplay muted loop poster="http://loopdrape.github.io/kss_site/img/pa_face.png">
+				<video id="main_bg_video" preload="auto" autobuffer autoplay muted loop poster="http://loopdrape.github.io/kss_site/img/pa_face.png">
 					<source type="video/mp4" src="http://loopdrape.github.io/kss_site/img/parmanent.mp4">
 					<span class="no-video"></span>
 				</video>
-				<img src="http://loopdrape.github.io/kss_site/img/pa_face.png" alt="" />
+				<img id="main_bg_image" src="http://loopdrape.github.io/kss_site/img/pa_face.png" alt="" />
 				<div class="cover"></div>
 			</div>
 <!--	{block:Description}-->
 			<p class="description" id="description">{Description}</p>
 <!--	{/block:Description}-->
 		</div>
+<!--	{/block:IndexPage}-->
 		
-		<div class="section" data-section="posts">
-			<ul class="posts-list" id="post_list">
+		<div class="section" data-section="posts" role="main">
+<!--	{block:IndexPage}-->
+			<ul class="posts-list autopagerize_page_element" id="post_list">
 	<!--		{block:Posts}-->
 				<li class="post-thumb {TagsAsClasses} {PostType}">
 					<a href="{Permalink}">
 					{block:Date}
 						<span class="date">{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}</span>
 					{/block:Date}
+
 					{block:Text}
 						<!-- post: テキスト -->
 						{block:Title}
@@ -200,27 +201,26 @@
 				</li>
 	<!--		{/block:Posts}-->
 			</ul>
-		</div>
-		
-	</div>
 <!--	{/block:IndexPage}-->
+		</div>
 
-	<nav class="site-nav" id="site_nav" role="navigation">
-		<ul>
-			<li><a href="/">Home</a></li>
-			<li><a href="/tagged/info">Info</a></li>
-			<li><a href="/tagged/blog">Blog</a></li>
-			<li><a href="/tagged/sound">Sound</a></li>
-			<li><a href="/tagged/photo">Photo</a></li>
-			<li><a href="/tagged/movie">Movie</a></li>
-			<li><a href="/tagged/goods">Goods</a></li>
-			<li><a href="/archive">Archive</a></li>
-		</ul>
-	</nav>
+		<nav class="site-nav" id="site_nav" role="navigation">
+			<ul>
+				<li><a href="/">Home</a></li>
+				<li><a href="/tagged/info">Info</a></li>
+				<li><a href="/tagged/blog">Blog</a></li>
+				<li><a href="/tagged/sound">Sound</a></li>
+				<li><a href="/tagged/photo">Photo</a></li>
+				<li><a href="/tagged/movie">Movie</a></li>
+				<li><a href="/tagged/goods">Goods</a></li>
+				<li><a href="/archive">Archive</a></li>
+			</ul>
+		</nav>
 
-	<footer class="site-footer" id="footer">
-		<p class="copyright">©2017 KEESHKAS soundservice</p>
-	</footer>
+		<footer class="site-footer" id="site_footer">
+			<p class="copyright">©2017 KEESHKAS soundservice</p>
+		</footer>
+	</div>
 
 	<script src="//code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 	<script src="./js/app.ready.min.js"></script>

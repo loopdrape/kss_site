@@ -18,7 +18,7 @@
 }
 
 /**------------------------------------
-* common style */
+* base style */
 html {
 	background-color: @sub_c;
 	
@@ -30,13 +30,19 @@ html {
 @btn_tumblr_h: 35px;
 body {
 	.font-type-play();
+	.transition(transform .2s);
 	background-color: transparent;
 	color: @base_txc;
 	font-size: 1.5rem;
+	height: 100vh;
 	line-height: 1.4;
-	padding: (@header_h + 2px) 0 0;
+	overflow: hidden;
 	width: 100%;
 	-webkit-text-size-adjust: 100%;
+	
+	&.is-slide-left {
+		.transform( translate3d(-80px, 0, 0) );
+	}
 	
 	@media (min-width: (@mq_w + 1px)) {
 		font-size: 1.4rem;
@@ -168,15 +174,19 @@ a {
 	}
 }
 
-.site-body {
+/**------------------------------------
+* parts style */
+.wrapper {
 	background-color: @base_bgc;
+	height: 100%;
+	overflow: auto;
 	position: relative;
-	overflow-y: scroll;
-	-webkit-overflow-scrolling: touch;
+//	overflow-y: scroll;
+//	-webkit-overflow-scrolling: touch;
 }
 
 .site-nav {
-	display: none;
+//	display: none;
 }
 
 // header
@@ -185,12 +195,18 @@ a {
 // footer
 @import (less) "./_footer";
 
-.area-go-pageTop {
-	.transition(opacity .2s);
+.scroll-to-pageTop {
+	.transition(opacity .4s);
 	bottom: @block_space;
 	opacity: .6;
 	position: fixed;
 	right: @block_space;
+	z-index: 999;
+	
+	&.is-hide {
+		opacity: 0;
+		pointer-events: none;
+	}
 	
 	&:active {
 		opacity: .9;
@@ -202,18 +218,26 @@ a {
 		}
 	}
 	
-	> .go-pageTop {
+	> .btn-exec {
 		.box-shadow(0, 2px, 4px, 0, #000, .6);
 		.user-select(none);
-		background-color: @sub_c;
+		background-color: shade(@sub_c, 10%);
 		border-radius: 50%;
 		color: @theme_c;
 		display: block;
-		font-size: 2rem;
+		font-size: 4rem;
 		height: (@block_space * 2);
-		line-height: 1;
+		line-height: (@block_space * 2);
 		text-align: center;
 		text-decoration: none;
 		width: (@block_space * 2);
+		
+		> span {
+			display: block;
+			
+			&:before {
+				top: 1px;
+			}
+		}
 	}
 }

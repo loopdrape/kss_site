@@ -19,13 +19,26 @@
 		});
 */
 		
-		$("#sns_links").on("click", function() {
-			$(this).toggleClass("is-open");
+		$("#show_sns_links").on("change", function() {
+			app.parts.$body.toggleClass("is-slide-left", this.checked);
 		});
 		
 		app.parts.$nav
 		.on("click", ".btn-about", function(e) {
 			e.preventDefault();
+		});
+		
+		app.isTop && app.parts.$window.on("resize", function(e, isTrigger) {
+			!!app.parts.$wrapper._timer && clearTimeout(app.parts.$wrapper._timer);
+			app.parts.$wrapper._timer = setTimeout(function() {
+				var t = {
+					wh: app.parts.$window.height(),
+					th: app.parts.$secTitle.height()
+				};
+				app.parts.$wrapper.css({
+					"padding-top": (t.wh * 0.6 < t.th) ? t.th : ""
+				});
+			}, 200);
 		});
 		
 		return this;
@@ -35,28 +48,50 @@
 	$(function() {
 		app.parts = {
 			$window: $(window),
-			$body: $(document.body),
-			$header: $("#site_header"),
+			$body: app._addDeviceInfoClass(document.body),
+			$wrapper: $("#wrapper"),
+			$siteHeader: $("#site_header"),
 			$nav: $("#site_nav"),
 			$description: $("#description"),
-			$footer: $("#site_footer")
+			$siteFooter: $("#site_footer")
 		};
 		
 		// トップページ判定
-		(function(clsList) {
-			app.isTop = (
-						clsList.indexOf("page-day") +
-						clsList.indexOf("page-tag") +
-						clsList.indexOf("page-search")
-					) < 0;
-			app.isTop && app.parts.$body.addClass("page-top");
+		app.isTop = (function(clsList) {
+			return (
+				clsList.indexOf("page-day") +
+				clsList.indexOf("page-tag") +
+				clsList.indexOf("page-search")
+			) < 0;
 		})( app.parts.$body.get(0).className.split(" ") );
 		
-		app._addDeviceInfoClass("body");
+		app.LOG = true;
+		app.isTop && (function() {
+			var methods = [];
+			app.parts.$body.addClass("page-top");
+			app.parts.$secTitle = app.parts.$wrapper
+			.children(".section[data-section='title']");
+			
+			methods.push( $.Deferred(function(df) {
+				$("#main_bg_video").on("load", df.resolve);
+				setTimeout(df.resolve, 1000);
+				return df.promise();
+			}) );
+			methods.push( $.Deferred(function(df) {
+				$("#main_bg_image").on("load", df.resolve);
+				setTimeout(df.resolve, 1000);
+				return df.promise();
+			}) );
+			$.when(methods).then(function() {
+				app.parts.$window.trigger("resize", [true]);
+				setTimeout(function() {
+					app.parts.$body.addClass("is-ready");
+				}, 100);
+			});
+		})();
 		
 		// ページトップへ戻るボタン
-		app.parts.$areaGoPageTop =
-			app._initGoPageTop("<span class='icon-arrow' data-arrow='t'></span>");
+		app._initScrollToPageTop("<span class='icon-arrow' data-arrow='t'></span>");
 		
 		// スムーススクロール
 		app._initSmoothScroll(function() {
@@ -74,12 +109,23 @@
 	* 端末情報をクラス名として登録
 	*/
 	app._addDeviceInfoClass = function(selector) {
-		(typeof selector === "string") || (selector = "body");
-		var addClassName = "device-" + this.device[0];
+		!selector && (selector = document.body);
+		var $target, addClassName;
+		if(selector instanceof jQuery) {
+			$target = selector;
+		} else {
+			$target = $(selector);
+		}
+		
+		if(!$target.length) {
+			return $target;
+		}
+		
+		addClassName = "device-" + this.device[0];
 		(this.device.length > 1) && (addClassName += " os-" + this.device[1]);
 		addClassName += " browser-" + this.browser[0];
 		(this.browser.length > 1) && (addClassName += " " + this.browser.join(""));
-		return $(selector).addClass(addClassName);
+		return $target.addClass(addClassName);
 	};
 	
 	/*----------------
@@ -120,39 +166,39 @@
 	/*----------------
 	* scroll to pageTop button
 	*/
-	app._initGoPageTop = function(arg) {
-		arg = arg.replace(/\{root\}/g, app._relativePath);
+	app._initScrollToPageTop = function(strHtml) {
+		strHtml = strHtml.replace(/\{root\}/g, app._relativePath);
 		
-		var
-			viewSwitch = 100,
-			$areaGoPageTop = $("<div/>").addClass("area-go-pageTop")
-			.append(
-				$("<a/>").addClass("go-pageTop hoverTarget").attr("href", "#")
-				.html( $.parseHTML(arg) )
-				.on("click", function(e) {
-					e.preventDefault();
-					
-					//ページトップへ移動する
-					$("html, body").animate({
-						scrollTop: 0
-					}, {
-						duration: "slow"
-					});
-				})
-			);
+		var $scrollToPageTop = $("<div/>").addClass("scroll-to-pageTop is-hide")
+		.append(
+			$("<a/>").addClass("btn-exec").attr("href", "#")
+			.html( $.parseHTML(strHtml) )
+			.on("click", function(e) {
+				e.preventDefault();
+				
+				//ページトップへ移動する
+//				$("html, body").animate({
+				app.parts.$wrapper.animate({
+					scrollTop: 0
+				}, {
+					duration: "slow"
+				});
+			})
+		);
 		
-		$areaGoPageTop.appendTo("body");
+		app.parts.$scrollToPageTop = $scrollToPageTop.attr({
+			"data-trigger": 100
+		}).appendTo(app.parts.$body);
 		
-		app.parts.$window.on("scroll", function() {
+//		app.parts.$window.on("scroll", function() {
+		app.parts.$wrapper.on("scroll", function() {
 			// ボタンの表示・非表示の切り替え
-			if( $(this).scrollTop() > viewSwitch ) {
-				$areaGoPageTop.fadeIn("slow");
-			} else {
-				$areaGoPageTop.fadeOut("slow");
-			}
+			var viewSwitch = app.parts.$scrollToPageTop.data("trigger");
+			(typeof viewSwitch === "number") || ( viewSwitch = parseInt(viewSwitch) );
+			app.parts.$scrollToPageTop.toggleClass("is-hide", $(this).scrollTop() < viewSwitch);
 		}).trigger("scroll");
 		
-		return $areaGoPageTop;
+		return this;
 	};
 	
 	/*----------------
@@ -178,4 +224,43 @@
 		return this;
 	};
 
+	/*----------------
+	* footerをbodyの最下部に表示させる
+	*/
+	$.fn.footerFix = function() {
+		var
+			$this = this,
+			$elmWrap = $this.parent(),
+			addCss;
+		
+		$this.getAddStyle = function() {
+			var rtn = {
+				"min-height": $(window).outerHeight() - 1,
+				"padding-bottom": $this.outerHeight(true)
+			};
+			$elmWrap.isBorderBox || (rtn["min-height"] -= rtn["padding-bottom"]);
+			return rtn;
+		};
+		($elmWrap.length > 1) && ($elmWrap = $elmWrap.eq(0));
+		$elmWrap.isBorderBox = ($elmWrap.css("box-sizing") === "border-box") ? true : false;
+		addCss = $this.getAddStyle();
+		($elmWrap.css("position") === "static") && (addCss.position = "relative");
+		$elmWrap.css(addCss);
+		
+		// for window resize event
+		$(window).on("resize", function() {
+			($this.timer) && clearTimeout($this.timer);
+			$this.timer = setTimeout(function() {
+				addCss = $this.getAddStyle();
+				$elmWrap.css(addCss);
+			}, 100);
+		});
+		
+		return $this.css({
+			position: "absolute",
+			bottom: 0,
+			left: 0,
+			width: "100%"
+		}).addClass("fixed-footer");
+	};
 })(window.jQuery || window.$);
