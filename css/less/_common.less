@@ -34,9 +34,9 @@ body {
 	background-color: transparent;
 	color: @base_txc;
 	font-size: 1.5rem;
-	height: 100vh;
+//	height: 100vh;
 	line-height: 1.4;
-	overflow: hidden;
+//	overflow: hidden;
 	width: 100%;
 	-webkit-text-size-adjust: 100%;
 	
@@ -178,11 +178,11 @@ a {
 * parts style */
 .wrapper {
 	background-color: @base_bgc;
-	height: 100%;
+	height: 100vh;
 	overflow: auto;
 	position: relative;
 //	overflow-y: scroll;
-//	-webkit-overflow-scrolling: touch;
+	-webkit-overflow-scrolling: touch;
 }
 
 .site-nav {
@@ -198,7 +198,7 @@ a {
 .scroll-to-pageTop {
 	.transition(opacity .4s);
 	bottom: @block_space;
-	opacity: .6;
+	opacity: .7;
 	position: fixed;
 	right: @block_space;
 	z-index: 999;
