@@ -5,24 +5,19 @@
 }
 
 .page-top {
-//	background-color: @theme_c;
-	padding-top: 0;
+	background-color: transparent;
+	padding-top: 60vh;
 	
-	.site-header {
-		@media(min-width: (@mq_w + 1px)) {
-			.background-hexToRgba(@sub_c, .5);
-			.transition(background .2s);
-			
-			&:hover {
-				.background-hexToRgba(@sub_c, .8);
-			}
-		}
-	}
-	
-	.wrapper {
-		background-color: transparent;
-		padding-top: 60vh;
-	}
+//	.site-header {
+//		@media(min-width: (@mq_w + 1px)) {
+//			.background-hexToRgba(@sub_c, .5);
+//			.transition(background .2s);
+//			
+//			&:hover {
+//				.background-hexToRgba(@sub_c, .8);
+//			}
+//		}
+//	}
 }
 
 .section {
@@ -109,12 +104,16 @@
 	.user-select(none);
 	cursor: default;
 	margin: 0;
-	padding: @btn_tumblr_h 0 5px;
+	padding: 5px 0;
 	position: absolute;
 	text-align: center;
-	top: (@header_h + 2px);
+	top: 0;
 	width: 100%;
 	z-index: 1;
+	
+	@media(max-width: @mq_w) {
+		padding-top: 100px;
+	}
 	
 	body:not(.page-top) & {
 		display: none;

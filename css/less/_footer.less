@@ -3,9 +3,38 @@
 	background-color: @sub_c;
 	color: @theme_c;
 	font-size: 1.6rem;
+	line-height: 1;
 	text-align: center;
 	
 	.copyright {
 		font-size: 1.2rem;
+	}
+	
+	.link-list {
+		&:extend(.clearfix all);
+		display: inline-block;
+		
+		.list-item {
+			float: left;
+		}
+		
+		@media(min-width: (@mq_w + 1px)) {
+			font-size: 20px;
+		}
+		
+		a {
+			color: @base_txc;
+			display: block;
+			padding: (@block_pad / 2) @block_pad;
+			text-decoration: none;
+			
+			@media(min-width: (@mq_w + 1px)) {
+				padding: (@block_pad / 4) (@block_pad / 2);
+			}
+			
+			&:before {
+				display: block;
+			}
+		}
 	}
 }

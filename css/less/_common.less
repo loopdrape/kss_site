@@ -27,22 +27,14 @@ html {
 	}
 }
 
-@btn_tumblr_h: 35px;
 body {
 	.font-type-play();
-	.transition(transform .2s);
 	background-color: transparent;
 	color: @base_txc;
 	font-size: 1.5rem;
-//	height: 100vh;
 	line-height: 1.4;
-//	overflow: hidden;
 	width: 100%;
 	-webkit-text-size-adjust: 100%;
-	
-	&.is-slide-left {
-		.transform( translate3d(-80px, 0, 0) );
-	}
 	
 	@media (min-width: (@mq_w + 1px)) {
 		font-size: 1.4rem;
@@ -176,13 +168,11 @@ a {
 
 /**------------------------------------
 * parts style */
-.wrapper {
+.site-body {
 	background-color: @base_bgc;
-	height: 100vh;
-	overflow: auto;
 	position: relative;
 //	overflow-y: scroll;
-	-webkit-overflow-scrolling: touch;
+//	-webkit-overflow-scrolling: touch;
 }
 
 .site-nav {
@@ -200,7 +190,7 @@ a {
 	bottom: @block_space;
 	opacity: .7;
 	position: fixed;
-	right: @block_space;
+	left: 50%;
 	z-index: 999;
 	
 	&.is-hide {
@@ -219,24 +209,26 @@ a {
 	}
 	
 	> .btn-exec {
+		@this_size: (@block_pad * 2);
 		.box-shadow(0, 2px, 4px, 0, #000, .6);
 		.user-select(none);
 		background-color: shade(@sub_c, 10%);
 		border-radius: 50%;
 		color: @theme_c;
 		display: block;
-		font-size: 4rem;
-		height: (@block_space * 2);
-		line-height: (@block_space * 2);
+		font-size: @this_size;
+		height: @this_size;
+		line-height: 1;
+		margin-left: (-1 * @this_size / 2);
 		text-align: center;
 		text-decoration: none;
-		width: (@block_space * 2);
+		width: @this_size;
 		
 		> span {
 			display: block;
 			
 			&:before {
-				top: 1px;
+//				top: 1px;
 			}
 		}
 	}

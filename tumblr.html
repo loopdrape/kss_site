@@ -8,7 +8,7 @@
   Free to use under the MIT license.
 -->
 
-<html lang="ja" prefix="og: http://ogp.me/ns#">
+<html lang="ja" prefix="og: https://ogp.me/ns#">
 <head>
 	<meta charset="UTF-8">
 
@@ -71,23 +71,23 @@
 	<script src="//loopdrape.github.io/kss_site/js/app.init.min.js"></script>
 </head>
 <body class="{block:IndexPage}page-index{/block:IndexPage}{block:DayPage} page-day{/block:DayPage}{block:TagPage} page-tag{/block:TagPage}{block:SearchPage} page-search{/block:SearchPage}{block:PermalinkPage}page-permalink page-{PostID}{/block:PermalinkPage}">
-	<div class="wrapper autopagerize_page_element" id="wrapper" role="main">
-		<header class="site-header" id="site_header">
-			<div class="content">
-				<h1 class="site-title">
-					<a href="/" class="icon-keeshkas" title="{Title}"></a>
-				</h1>
-				<fieldset class="btn-toggle"><input type="checkbox" id="show_sns_links"><label for="show_sns_links" class="icon-more icon-close-after"></label></fieldset>
-				<ul class="link-list" id="sns_links">
-					<li class="list-item"><a href="https://www.facebook.com/keeshkas.s.s" class="icon-facebook" target="_blank"></a></li>
-					<li class="list-item"><a href="https://twitter.com/KEESHKAS_sndsvc" class="icon-twitter" target="_blank"></a></li>
-					<li class="list-item"><a href="https://www.instagram.com/keeshkas/" class="icon-instagram" target="_blank"></a></li>
-					<li class="list-item"><a href="https://soundcloud.com/keeshkas-soundservice" class="icon-soundcloud" target="_blank"></a></li>
-					<li class="list-item"><a href="https://www.youtube.com/channel/UCmWrlNVGJ9hoRJlwVW5NqOA" class="icon-youtube" target="_blank"></a></li>
-				</ul>
-			</div>
-		</header>
+	<header class="site-header" id="site_header">
+		<div class="content">
+			<h1 class="site-title">
+				<a href="/" class="icon-keeshkas" title="{Title}"></a>
+			</h1>
+			<fieldset class="btn-toggle"><input type="checkbox" id="show_sns_links"><label for="show_sns_links" class="icon-more icon-close-after"></label></fieldset>
+			<ul class="link-list" id="sns_links">
+				<li class="list-item"><a href="https://www.facebook.com/keeshkas.s.s" class="icon-facebook" target="_blank"></a></li>
+				<li class="list-item"><a href="https://twitter.com/KEESHKAS_sndsvc" class="icon-twitter" target="_blank"></a></li>
+				<li class="list-item"><a href="https://www.instagram.com/keeshkas/" class="icon-instagram" target="_blank"></a></li>
+				<li class="list-item"><a href="https://soundcloud.com/keeshkas-soundservice" class="icon-soundcloud" target="_blank"></a></li>
+				<li class="list-item"><a href="https://www.youtube.com/channel/UCmWrlNVGJ9hoRJlwVW5NqOA" class="icon-youtube" target="_blank"></a></li>
+			</ul>
+		</div>
+	</header>
 
+	<div class="site-body" id="site_body" role="main">
 	{block:IndexPage}
 		<div class="section" data-section="title">
 			<h2 class="main-title">
@@ -96,15 +96,15 @@
 			</h2>
 			
 		{block:TagPage}
-			<h2 class="tagged">{Tag}</h2>
+			<h3 class="tagged">{Tag}</h3>
 		{/block:TagPage}
 			
 			<div class="main-background">
-				<video id="main_bg_video" preload="auto" autobuffer autoplay muted loop poster="http://loopdrape.github.io/kss_site/img/pa_face.png">
-					<source type="video/mp4" src="http://loopdrape.github.io/kss_site/img/parmanent.mp4">
+				<video id="main_bg_video" preload="auto" autobuffer autoplay muted loop poster="https://loopdrape.github.io/kss_site/img/pa_face.png">
+					<source type="video/mp4" src="https://loopdrape.github.io/kss_site/img/parmanent.mp4">
 					<span class="no-video"></span>
 				</video>
-				<img id="main_bg_image" src="http://loopdrape.github.io/kss_site/img/pa_face.png" alt="" />
+				<img id="main_bg_image" src="https://loopdrape.github.io/kss_site/img/pa_face.png" alt="" />
 				<div class="cover"></div>
 			</div>
 		{block:Description}
@@ -113,324 +113,352 @@
 		</div>
 	{/block:IndexPage}
 
-	{block:TagPage}
-		<h2 class="tagged">{Tag}</h2>
-	{/block:TagPage}
-
-	{block:IndexPage}
-		<div class="background">
-			<video preload="auto" autobuffer autoplay muted loop poster="http://loopdrape.github.io/kss_site/img/pa_face.png">
-				<source type="video/mp4" src="http://loopdrape.github.io/kss_site/img/parmanent.mp4">
-				<span class="no-video"></span>
-			</video>
-			<img src="http://loopdrape.github.io/kss_site/img/pa_face.png" alt="" />
-			<div class="cover"></div>
-		</div>
-		<ul class="area-news" id="area_news">
-		{block:Posts}
-			<li class="news {TagsAsClasses} {PostType}">
-				<a href="{Permalink}">
-				{block:Date}
-					<span class="date">{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}</span>
-				{/block:Date}
+		<div class="section autopagerize_page_element" data-section="posts" role="main">
+		{block:IndexPage}
+			<ul class="posts-list autopagerize_page_element" id="post_list">
+			{block:Posts}
+				<li class="list-item {TagsAsClasses}" data-type="{PostType}">
+					<a href="{Permalink}" target="_self"></a>
 				{block:Text}
 					<!-- post: テキスト -->
 					{block:Title}
-					<span>{Title}</span>
+					<p class="entry-title">{Title}</p>
 					{/block:Title}
 				{/block:Text}
 
 				{block:Photo}
 					<!-- post: 画像 -->
 					{block:Caption}
-					<img src="{PhotoURL-HighRes}" alt="{PhotoAlt}"/>
-					<span>{Caption}</span>
+					<img src="{PhotoURL-250}" alt="{PhotoAlt}"/>
+					<div class="caption">
+						{Caption}
+					</div>
 					{/block:Caption}
 				{/block:Photo}
 
 				{block:Photoset}
 					<!-- post: フォトセット -->
 					{block:Caption}
-					<span>{Caption}</span>
+					<div class="caption">
+						{Caption}
+					</div>
 					{/block:Caption}
 				{/block:Photoset}
 
 				{block:Quote}
 					<!-- post: 引用 -->
-					<span>{Quote}</span>
+					<blockquote>“{Quote}”</blockquote>
 				{/block:Quote}
 
 				{block:Link}
 					<!-- post: リンク -->
-					<span>{Name}</span>
+					{block:Thumbnail}
+						{Thumbnail}
+					{/block:Thumbnail}
+					<p class="entry-title">{Name}</p>
 				{/block:Link}
 
 				{block:Chat}
 					<!-- post: チャット -->
 					{block:Title}
-					<span>{Title}</span>
+					<p class="entry-title">{Title}</p>
 					{/block:Title}
 				{/block:Chat}
 
 				{block:Video}
 					<!-- post: ビデオ -->
+					{block:VideoThumbnail}{VideoThumbnailURL}{/block:VideoThumbnail}
 					{block:Caption}
-					<span>{Caption}</span>
+					<div class="caption">
+						{Caption}
+					</div>
 					{/block:Caption}
 				{/block:Video}
 
 				{block:Audio}
 					<!-- post: オーディオ -->
+					{block:AlbumArt}{AlbumArtURL}{/block:AlbumArt}
+					{block:AudioEmbed}{AudioEmbed-250}{/block:AudioEmbed}
+					{block:AudioPlayer}{AudioPlayer}{/block:AudioPlayer}
+					{block:TrackName}{TrackName}{/block:TrackName}
 					{block:Caption}
-					{AudioPcontentBlack}
-					<span>{Caption}</span>
+					<div class="caption">
+						{Caption}
+					</div>
 					{/block:Caption}
 				{/block:Audio}
 
 				{block:Answer}
 					<!-- post: Answer -->
-					<span>{Question}</span>
+					<div class="question">
+						{Question}
+					</div>
 				{/block:Answer}
 
 				{block:ContentSource}
 					<!-- Content Source -->
-					{block:NoSourceLogo}
-					<span>{SourceTitle}</span>
-					{/block:NoSourceLogo}
+					{block:SourceLogo}
+					<img src="{BlackLogoURL}" alt="{SourceTitle}" />
+					{/block:SourceLogo}
+					{block:NoSourceLogo}{SourceTitle}{/block:NoSourceLogo}
 				{/block:ContentSource}
-				</a>
-			</li>
-		{/block:Posts}
-		</ul>
-		
-	{/block:IndexPage}
 
-	{block:PermalinkPage}
-		{block:Posts}
-		<!-- 投稿 -->
-		<article class="post {TagsAsClasses} {PostType}">
-		{block:Date}
-			<div class="date">
-				<a href="{Permalink}">{Year}.{MonthNumberWithZero}.{DayOfMonthWithZero}</a>
-			</div>
-		{/block:Date}
+				{block:Date}
+					<p class="date">{Year}.{MonthNumberWithZero}.{DayOfMonthWithZero}</p>
+				{/block:Date}
+				</li>
+			{/block:Posts}
+			</ul>
+		{/block:IndexPage}
 
-		{block:Text}
-			<!-- post: テキスト -->
-			<header class="entry-header">
-				{block:Title}
-					<h1 class="entry-title"><a href="{Permalink}">{Title}</a></h1>
-				{/block:Title}
-			</header>
-			<div class="entry-content">
-				{Body}
-			</div>
-		{/block:Text}
+		{block:PermalinkPage}
+			{block:Posts}
+			<!-- 投稿 -->
+			<article class="post {TagsAsClasses}" data-type="{PostType}">
+			{block:Date}
+				<div class="date">
+					<a href="{Permalink}">{Year}.{MonthNumberWithZero}.{DayOfMonthWithZero}</a>
+				</div>
+			{/block:Date}
 
-		{block:Photo}
-			<!-- post: 画像 -->
-			<div class="entry-content">
-				{LinkOpenTag}
-					<img src="{PhotoURL-HighRes}" alt="{PhotoAlt}"/>
-				{LinkCloseTag}
+			{block:Text}
+				<!-- post: テキスト -->
+				<header class="entry-header">
+					{block:Title}
+						<h2 class="entry-title"><a href="{Permalink}">{Title}</a></h2>
+					{/block:Title}
+				</header>
+				<div class="entry-content">
+					{Body}
+				</div>
+			{/block:Text}
+
+			{block:Photo}
+				<!-- post: 画像 -->
+				<div class="entry-content">
+					{LinkOpenTag}
+						<img src="{PhotoURL-HighRes}" alt="{PhotoAlt}"/>
+					{LinkCloseTag}
+					{block:Caption}
+						<div class="caption">
+							{Caption}
+						</div>
+					{/block:Caption}
+				</div>
+			{/block:Photo}
+
+			{block:Photoset}
+				<!-- post: フォトセット -->
+				<div class="entry-content">
+				{Photoset}
 				{block:Caption}
 					<div class="caption">
 						{Caption}
 					</div>
 				{/block:Caption}
-			</div>
-		{/block:Photo}
-
-		{block:Photoset}
-			<!-- post: フォトセット -->
-			<div class="entry-content">
-			{Photoset-700}
-			{block:Caption}
-				<div class="caption">
-					{Caption}
 				</div>
-			{/block:Caption}
-			</div>
-		{/block:Photoset}
+			{/block:Photoset}
 
-		{block:Quote}
-			<!-- post: 引用 -->
-			<div class="entry-content {Length}">
-				<blockquote>“{Quote}”</blockquote>
-			{block:Source}
-				<div class="quote-source">
-					{Source}
+			{block:Quote}
+				<!-- post: 引用 -->
+				<div class="entry-content {Length}">
+					<blockquote>“{Quote}”</blockquote>
+				{block:Source}
+					<div class="quote-source">
+						{Source}
+					</div>
+				{/block:Source}
 				</div>
-			{/block:Source}
-			</div>
-		{/block:Quote}
+			{/block:Quote}
 
-		{block:Link}
-			<!-- post: リンク -->
-			<header class="entry-header">
-				<h1 class="entry-title">
-					<a href="{URL}" class="link-url" {Target}>{Name}</a>
-				</h1>
-			</header>
-			<div class="entry-content">
-			{block:Description}
-				<div class="link-description">{Description}</div>
-			{/block:Description}
-			</div>
-		{/block:Link}
-
-		{block:Chat}
-			<!-- post: チャット -->
-			<div class="entry-content">
-			{block:Title}
-				<h1 class="entry-title"><a href="{Permalink}">{Title}</a></h1>
-			{/block:Title}
-				<ul class="ul-chat">
-				{block:Lines}
-					<li class="{Alt} user_{UserNumber}">
-					{block:Label}
-						<span class="label">{Label}</span>
-					{/block:Label}
-					{Line}
-					</li>
-				{/block:Lines}
-				</ul>
-			</div>
-		{/block:Chat}
-
-			<!-- post: ビデオ -->
-
-		{block:Audio}
-			<!-- post: オーディオ -->
-			<div class="entry-content">
-				{AudioPlayerBlack}
-			{block:Caption}
-				<div class="caption">
-					{Caption}
+			{block:Link}
+				<!-- post: リンク -->
+				<header class="entry-header">
+					<h2 class="entry-title">
+						<a href="{URL}" class="link-url" {Target}>{Name}</a>
+					</h2>
+				</header>
+				<div class="entry-content">
+				{block:Thumbnail}
+					{Thumbnail}
+				{/block:Thumbnail}
+				{block:Description}
+					<div class="link-description">{Description}</div>
+				{/block:Description}
 				</div>
-			{/block:Caption}
-			</div>
-		{/block:Audio}
+			{/block:Link}
 
-		{block:Answer}
-			<!-- post: Answer -->
-			<div class="entry-content">
-				<div class="question bubble">
-					{Question}
-				</div>
-				<div class="asker-group">
-					<img src="{AskerPortraitURL-24}" width="24" height="24" /> {Asker}
-				</div>
-				<div class="answer cont">{Answer}</div>
-			</div>
-		{/block:Answer}
-
-		{block:ContentSource}
-			<!-- Content Source -->
-			<div class="content-source">
-				<a href="{SourceURL}">
-					{lang:Source}:
-				{block:SourceLogo}
-					<img src="{BlackLogoURL}" width="{LogoWidth}" height="{LogoHeight}" alt="{SourceTitle}" />
-				{/block:SourceLogo}
-				{block:NoSourceLogo}
-					{SourceTitle}
-				{/block:NoSourceLogo}
-				</a>
-			</div>
-		{/block:ContentSource}
-
-			<!-- 記事フッタ -->
-			<footer class="entry-footer">
-
-			{block:RebloggedFrom}
-				<div class="rebloggedfrom">
-					<span class="meta-elements reblog-parent-name">
-						Reblogged from <a href="{ReblogParentURL}"><img src="{ReblogParentPortraitURL-16}" class="favicon"/> {ReblogParentName}</a>
-					</span>
-					<span class="meta-elements reblog-root-name">
-						Originally posted by <a href="{ReblogRootURL}"><img src="{ReblogRootPortraitURL-16}" class="favicon"/> {ReblogRootName}</a>
-					</span>
-				</div>
-			{/block:RebloggedFrom}
-
-				<div class="meta meta-footer">
-					<span class="meta-elements timeago">
-						<a href="{Permalink}">{TimeAgo}</a>
-					</span>
-
-				{block:NoteCount}
-					<span class="meta-elements notecount">
-						<a href="{Permalink}">{NoteCount} Notes</a>
-					</span>
-				{/block:NoteCount}
-
-				{block:HasTags}
-					<span class="meta-elements hastags">
-						{block:Tags}
-							<a href="{TagURL}">#{Tag}</a>
-						{/block:Tags}
-					</span>
-				{/block:HasTags}
-				</div>
-
-			{block:Date}
-				<div class="tumblr-controls">
-					<ul class="like-and-reblog-buttons">
-						<li>{ReblogButton}</li>
-						<li>{LikeButton}</li>
+			{block:Chat}
+				<!-- post: チャット -->
+				<div class="entry-content">
+				{block:Title}
+					<h1 class="entry-title"><a href="{Permalink}">{Title}</a></h1>
+				{/block:Title}
+					<ul class="ul-chat">
+					{block:Lines}
+						<li class="{Alt} user_{UserNumber}">
+						{block:Label}
+							<span class="label">{Label}</span>
+						{/block:Label}
+						{Line}
+						</li>
+					{/block:Lines}
 					</ul>
 				</div>
-			{/block:Date}
+			{/block:Chat}
 
-				<!-- ソーシャルボタン -->
-				<ul class="social-buttons">
-				{block:IfEnableTweetButton}
-					<li class="social-button">
-						<a href="https://twitter.com/share" class="twitter-share-button" data-lang="ja">ツイート</a>
-						<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-					</li>
-				{/block:IfEnableTweetButton}
-				{block:IfEnableLikeButton}
-					<li class="social-button">
-						<div class="fb-like" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false"></div>
-					</li>
-				{/block:IfEnableLikeButton}
-				{block:IfEnablePlus1Button}
-					<li class="social-button">
-						<div class="g-plusone" data-size="medium"></div>
-						<script type="text/javascript">
-							window.___gcfg = {lang: 'ja'};
-							(function() {
-								var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-								po.src = 'https://apis.google.com/js/plusone.js';
-								var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-							})();
-						</script>
-					</li>
-				{/block:IfEnablePlus1Button}
-				</ul>
+			{block:Video}
+				<!-- post: ビデオ -->
+				<div class="entry-content">
+					{VideoEmbed-500}
+					{block:AlbumArt}{AlbumArtURL}{/block:AlbumArt}
+					{block:AudioEmbed}{AudioEmbed}{/block:AudioEmbed}
+					{block:AudioPlayer}{AudioPlayer}{/block:AudioPlayer}
+					{block:TrackName}{TrackName}{/block:TrackName}
+				{block:Caption}
+					<div class="caption">
+						{Caption}
+					</div>
+				{/block:Caption}
+				</div>
+			{/block:Video}
 
-			{block:PostNotes}
-				<h3 class="notecount-header">{NoteCount} Notes</h3>
-				<div class="notecontainer">{PostNotes}</div>
-			{/block:PostNotes}
-			</footer>
-		</article>
-		{/block:Posts}
-	{/block:PermalinkPage}
 
-	{block:PermalinkPagination}
+			{block:Audio}
+				<!-- post: オーディオ -->
+				<div class="entry-content">
+					{block:AlbumArt}{AlbumArtURL}{/block:AlbumArt}
+					{block:AudioEmbed}{AudioEmbed}{/block:AudioEmbed}
+					{block:AudioPlayer}{AudioPlayer}{/block:AudioPlayer}
+					{block:TrackName}{TrackName}{/block:TrackName}
+				{block:Caption}
+					<div class="caption">
+						{Caption}
+					</div>
+				{/block:Caption}
+				</div>
+			{/block:Audio}
+
+			{block:Answer}
+				<!-- post: Answer -->
+				<div class="entry-content">
+					<div class="question bubble">
+						{Question}
+					</div>
+					<div class="asker-group">
+						<img src="{AskerPortraitURL-24}" /> {Asker}
+					</div>
+					<div class="answer cont">{Answer}</div>
+				</div>
+			{/block:Answer}
+
+			{block:ContentSource}
+				<!-- Content Source -->
+				<div class="content-source">
+					<a href="{SourceURL}">
+						{lang:Source}:
+					{block:SourceLogo}
+						<img src="{BlackLogoURL}" alt="{SourceTitle}" />
+					{/block:SourceLogo}
+					{block:NoSourceLogo}
+						{SourceTitle}
+					{/block:NoSourceLogo}
+					</a>
+				</div>
+			{/block:ContentSource}
+
+				<!-- 記事フッタ -->
+				<footer class="entry-footer">
+
+				{block:RebloggedFrom}
+					<div class="rebloggedfrom">
+						<span class="meta-elements reblog-parent-name">
+							Reblogged from <a href="{ReblogParentURL}"><img src="{ReblogParentPortraitURL-16}" class="favicon"/> {ReblogParentName}</a>
+						</span>
+						<span class="meta-elements reblog-root-name">
+							Originally posted by <a href="{ReblogRootURL}"><img src="{ReblogRootPortraitURL-16}" class="favicon"/> {ReblogRootName}</a>
+						</span>
+					</div>
+				{/block:RebloggedFrom}
+
+					<div class="meta meta-footer">
+						<span class="meta-elements timeago">
+							<a href="{Permalink}">{TimeAgo}</a>
+						</span>
+
+					{block:NoteCount}
+						<span class="meta-elements notecount">
+							<a href="{Permalink}">{NoteCount} Notes</a>
+						</span>
+					{/block:NoteCount}
+
+					{block:HasTags}
+						<span class="meta-elements hastags">
+							{block:Tags}
+								<a href="{TagURL}">#{Tag}</a>
+							{/block:Tags}
+						</span>
+					{/block:HasTags}
+					</div>
+
+				{block:Date}
+					<div class="tumblr-controls">
+						<ul class="like-and-reblog-buttons">
+							<li>{ReblogButton}</li>
+							<li>{LikeButton}</li>
+						</ul>
+					</div>
+				{/block:Date}
+
+					<!-- ソーシャルボタン -->
+					<ul class="social-buttons">
+					{block:IfEnableTweetButton}
+						<li class="social-button">
+							<a href="https://twitter.com/share" class="twitter-share-button" data-lang="ja">ツイート</a>
+							<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+						</li>
+					{/block:IfEnableTweetButton}
+					{block:IfEnableLikeButton}
+						<li class="social-button">
+							<div class="fb-like" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false"></div>
+						</li>
+					{/block:IfEnableLikeButton}
+					{block:IfEnablePlus1Button}
+						<li class="social-button">
+							<div class="g-plusone" data-size="medium"></div>
+							<script type="text/javascript">
+								window.___gcfg = {lang: 'ja'};
+								(function() {
+									var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+									po.src = 'https://apis.google.com/js/plusone.js';
+									var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+								})();
+							</script>
+						</li>
+					{/block:IfEnablePlus1Button}
+					</ul>
+
+				{block:PostNotes}
+					<h3 class="notecount-header">{NoteCount} Notes</h3>
+					<div class="notecontainer">{PostNotes}</div>
+				{/block:PostNotes}
+				</footer>
+			</article>
+			{/block:Posts}
+		{/block:PermalinkPage}
+
+		{block:PermalinkPagination}
 		<!-- パーマリンクのページャ -->
-		<ul class="pagenation pagenation-permalink">
-		{block:NextPost}
-			<li><a href="{NextPost}" class="left" rel="next">Next</a></li>
-		{/block:NextPost}
-		{block:PreviousPost}
-			<li><a href="{PreviousPost}" class="right">Prev</a></li>
-		{/block:PreviousPost}
-		</ul>
-	{/block:PermalinkPagination}
+			<ul class="pagenation pagenation-permalink">
+			{block:NextPost}
+				<li><a href="{NextPost}" class="left" rel="next">Next</a></li>
+			{/block:NextPost}
+			{block:PreviousPost}
+				<li><a href="{PreviousPost}" class="right">Prev</a></li>
+			{/block:PreviousPost}
+			</ul>
+		{/block:PermalinkPagination}
+		</div>
 
 	{block:Pagination}
 		<!-- ページごとのページャ -->
@@ -451,23 +479,23 @@
 		{/block:NextPage}
 		</ul>
 	{/block:Pagination}
-
-		<nav class="site-nav" id="site_nav" role="navigation">
-			<ul>
-				<li><a href="/">Home</a></li>
-			{block:HasPages}
-				{block:Pages}
-				<li><a href="{URL}">{Label}</a></li>
-				{/block:Pages}
-			{/block:HasPages}
-				<li><a href="/archive">Archive</a></li>
-			</ul>
-		</nav>
-
-		<footer class="site-footer" id="site_footer">
-			<span class="copyright">©{CopyrightYears} {Title}</span>
-		</footer>
 	</div>
+
+	<nav class="site-nav" id="site_nav" role="navigation">
+		<ul>
+			<li><a href="/">Home</a></li>
+		{block:HasPages}
+			{block:Pages}
+			<li><a href="{URL}">{Label}</a></li>
+			{/block:Pages}
+		{/block:HasPages}
+			<li><a href="/archive">Archive</a></li>
+		</ul>
+	</nav>
+
+	<footer class="site-footer" id="site_footer">
+		<span class="copyright">©{CopyrightYears} {Title}</span>
+	</footer>
 
 	<script src="//code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 	<script src="//loopdrape.github.io/kss_site/js/app.ready.min.js"></script>

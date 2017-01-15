@@ -19,9 +19,9 @@
 		});
 */
 		
-		$("#show_sns_links").on("change", function() {
-			app.parts.$body.toggleClass("is-slide-left", this.checked);
-		});
+//		$("#show_sns_links").on("change", function() {
+//			app.parts.$body.toggleClass("is-slide-left", this.checked);
+//		});
 		
 		app.parts.$nav
 		.on("click", ".btn-about", function(e) {
@@ -29,13 +29,13 @@
 		});
 		
 		app.isTop && app.parts.$window.on("resize", function(e, isTrigger) {
-			!!app.parts.$wrapper._timer && clearTimeout(app.parts.$wrapper._timer);
-			app.parts.$wrapper._timer = setTimeout(function() {
+			!!app.parts.$body._timer && clearTimeout(app.parts.$body._timer);
+			app.parts.$body._timer = setTimeout(function() {
 				var t = {
 					wh: app.parts.$window.height(),
 					th: app.parts.$secTitle.height()
 				};
-				app.parts.$wrapper.css({
+				app.parts.$body.css({
 					"padding-top": (t.wh * 0.6 < t.th) ? t.th : ""
 				});
 			}, 200);
@@ -49,7 +49,7 @@
 		app.parts = {
 			$window: $(window),
 			$body: app._addDeviceInfoClass(document.body),
-			$wrapper: $("#wrapper"),
+			$siteBody: $("#site_body"),
 			$siteHeader: $("#site_header"),
 			$nav: $("#site_nav"),
 			$description: $("#description"),
@@ -59,17 +59,18 @@
 		// トップページ判定
 		app.isTop = (function(clsList) {
 			return (
-				clsList.indexOf("page-day") +
-				clsList.indexOf("page-tag") +
-				clsList.indexOf("page-search")
-			) < 0;
+				clsList.indexOf("page-day") <= 0 &&
+				clsList.indexOf("page-tag") <= 0 &&
+				clsList.indexOf("page-search") <= 0 &&
+				clsList.indexOf("page-permalink") <= 0
+			);
 		})( app.parts.$body.get(0).className.split(" ") );
 		
 		app.LOG = true;
 		app.isTop && (function() {
 			var methods = [];
 			app.parts.$body.addClass("page-top");
-			app.parts.$secTitle = app.parts.$wrapper
+			app.parts.$secTitle = app.parts.$siteBody
 			.children(".section[data-section='title']");
 			
 			methods.push( $.Deferred(function(df) {
@@ -177,8 +178,7 @@
 				e.preventDefault();
 				
 				//ページトップへ移動する
-//				$("html, body").animate({
-				app.parts.$wrapper.animate({
+				$("html, body").animate({
 					scrollTop: 0
 				}, {
 					duration: "slow"
@@ -190,8 +190,7 @@
 			"data-trigger": 100
 		}).appendTo(app.parts.$body);
 		
-//		app.parts.$window.on("scroll", function() {
-		app.parts.$wrapper.on("scroll", function() {
+		app.parts.$window.on("scroll", function() {
 			// ボタンの表示・非表示の切り替え
 			var viewSwitch = app.parts.$scrollToPageTop.data("trigger");
 			(typeof viewSwitch === "number") || ( viewSwitch = parseInt(viewSwitch) );
