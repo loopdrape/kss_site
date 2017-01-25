@@ -1,0 +1,21 @@
+{
+	"strict" : true,    // "use strict" を強制
+	"unused" : false,  // 宣言したきり使っていない変数を検出
+	
+	// グローバル変数へのアクセスの管理
+	"undef" : true,  // グローバル変数へのアクセスを禁止
+	"browser" : true,  // ブラウザ用のやつは許可
+	"devel" : true,  //  consoleやalertを許可
+	"debug"    : true,  // debugger を許可
+	"jquery" : true,  // jQueryの用意しているオブジェクトがグローバル宣言されていることになる
+	"globals": {
+		"app": false,
+		"moment": false
+	},
+	
+	// Relaxing Options - 危険性を認識した上で設定すること
+	"expr" : true,  // x || (x = 1); とかができるようにする
+	"shadow": false,  // 同一スコープで、名前が重複している関数の定義を許容する
+	"validthis": true,  // 非コンストラクタ関数内でthisの使用を許容する
+	"proto": true  // __proto__へのアクセスの可否
+}
