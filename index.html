@@ -76,14 +76,14 @@
 	<script src="./js/webAppBase-1.1.3.min.js"></script>
 	<script src="./js/app.init.min.js"></script>
 </head>
-<body class="page-index">
+<body class="page-index" id="top">
 	<header class="site-header" id="site_header">
 		<h1 class="site-title">
 			<a href="/" class="icon-keeshkas" title="{Title}"></a>
 		</h1>
 	</header>
 
-	<div class="site-body" id="site_body" role="main">
+	<div class="site-body" id="site_body" data-view="posts" role="main">
 <!--	{block:IndexPage}-->
 		<div class="section" data-section="title">
 			<h2 class="main-title">
@@ -105,11 +105,53 @@
 				<img id="main_bg_image" src="https://loopdrape.github.io/kss_site/img/pa_face.png" alt="" />
 				<div class="cover"></div>
 			</div>
-<!--	{block:Description}-->
-			<p class="description" id="description">{Description}</p>
-<!--	{/block:Description}-->
 		</div>
 <!--	{/block:IndexPage}-->
+		
+<!--	{block:Description}-->
+		<div class="section" id="sec_description" data-section="description">
+			<h3><span>About Us</span><a class="btn-close icon-close" href="./"></a></h3>
+			<div class="content">
+				<p class="text">{Description}</p>
+				<div class="members">
+					<h4>Members</h4>
+					<ul class="member-list">
+						<li>
+							<p class="name icon-unsmoking" data-part="Bass, Chorus">田中　暁央</p>
+							<ul class="link-list">
+								<li><a class="icon-facebook" href="https://www.facebook.com/akihisa.tanaka.5" target="_blank"></a></li>
+								<li><a class="icon-twitter" href="https://twitter.com/keeshkas_akissa" target="_blank"></a></li>
+								<li><a class="icon-instagram" href="https://www.instagram.com/akissa_tanaka/" target="_blank"></a></li>
+							</ul>
+						</li>
+						<li>
+							<p class="name icon-unsmoking" data-part="Vocal, Voice Effects">丸山　力</p>
+							<ul class="link-list">
+								<li><a class="icon-facebook" href="https://www.facebook.com/keeshkas" target="_blank"></a></li>
+								<li><a class="icon-twitter" href="https://twitter.com/KEESHKAS" target="_blank"></a></li>
+								<li><a class="icon-instagram" href="https://www.instagram.com/chikno21/" target="_blank"></a></li>
+							</ul>
+						</li>
+						<li>
+							<p class="name icon-unsmoking" data-part="Guitar">宮川　真</p>
+							<ul class="link-list"></ul>
+						</li>
+						<li>
+							<p class="name icon-smoking" data-part="The other parts">林　広祐</p>
+							<ul class="link-list">
+								<li><a class="icon-facebook" href="https://www.facebook.com/loopdrape" target="_blank"></a></li>
+								<li><a class="icon-twitter" href="https://twitter.com/sndsvc" target="_blank"></a></li>
+								<li><a class="icon-instagram" href="https://www.instagram.com/loopdrape/" target="_blank"></a></li>
+								<li><a class="icon-soundcloud" href="https://soundcloud.com/loopdrape" target="_blank"></a></li>
+								<li><a class="icon-youtube" href="https://www.youtube.com/channel/UCaO7SiQnB5n2H_R4zfh3JoA" target="_blank"></a></li>
+								<li><a class="icon-tumblr" href="http://loopdrape.tumblr.com" target="_blank"></a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+<!--	{/block:Description}-->
 		
 		<div class="section" data-section="posts">
 <!--	{block:IndexPage}-->
@@ -126,9 +168,9 @@
 
 				{block:Photo}
 					<!-- post: 画像 -->
-					{block:Caption}
 <!--					<img src="{PhotoURL-250}" alt="{PhotoAlt}"/>-->
-					<img src="./img/pa_face.png" alt="{PhotoAlt}"/>
+					<img src="https://68.media.tumblr.com/b60563d80b27e4ae754705a1c426e0f9/tumblr_nkioc8ZZA31tlblsmo1_250.jpg" alt="{PhotoAlt}"/>
+					{block:Caption}
 					<div class="caption">
 						{Caption}
 					</div>
@@ -137,6 +179,7 @@
 
 				{block:Photoset}
 					<!-- post: フォトセット -->
+					{Photoset-250}
 					{block:Caption}
 					<div class="caption">
 						{Caption}
@@ -166,7 +209,10 @@
 
 				{block:Video}
 					<!-- post: ビデオ -->
-					{block:VideoThumbnail}{VideoThumbnailURL}{/block:VideoThumbnail}
+					{block:VideoThumbnail}
+<!--					<img src="{VideoThumbnailURL}" alt="videoThumbnail"/>-->
+					<img src="./img/pa_face.png" alt="videoThumbnail"/>
+					{/block:VideoThumbnail}
 					{block:Caption}
 					<div class="caption">
 						{Caption}
@@ -197,7 +243,8 @@
 				{block:ContentSource}
 					<!-- Content Source -->
 					{block:SourceLogo}
-					<img src="{BlackLogoURL}" alt="{SourceTitle}" />
+<!--					<img src="{BlackLogoURL}" alt="{SourceTitle}" />-->
+					<img src="https://assets.tumblr.com/images/source_logos/soundcloud_000.png?1343" alt="{SourceTitle}" />
 					{/block:SourceLogo}
 					{block:NoSourceLogo}{SourceTitle}{/block:NoSourceLogo}
 				{/block:ContentSource}
@@ -212,39 +259,53 @@
 		</div>
 	</div>
 
-		<nav class="site-nav" id="site_nav" role="navigation">
-			<fieldset class="btn-toggle"><input type="checkbox" id="show_nav_links"><label for="show_nav_links" class="icon-menu icon-close-after"></label></fieldset>
-			<ul class="link-list" id="nav_links">
-				<li><a class="icon-home" href="/">Home</a></li>
-				<li><a class="icon-info" href="/tagged/info">Info</a></li>
-				<li><a class="icon-blog" href="/tagged/blog">Blog</a></li>
-				<li><a class="icon-sound" href="/tagged/sound">Sound</a></li>
-				<li><a class="icon-movie" href="/tagged/movie">Movie</a></li>
-				<li><a class="icon-discography" href="/tagged/disc">Discography</a></li>
-				<li><a class="icon-goods" href="/tagged/goods">Goods</a></li>
+	<nav class="site-nav is-fixed" id="site_nav" role="navigation" data-fix="0">
+		<fieldset class="btn-toggle"><input type="checkbox" id="show_nav_links"><label for="show_nav_links"><span class="icon"></span></label></fieldset>
+		<ul class="link-list">
+			<li>
+				<form class="search-box" id="search_box" action="/search" method="get" target="_self">
+					<fieldset><input type="text" name="q" value="{SearchQuery}" /></fieldset>
+					<fieldset><input type="submit" id="search_submit" value="{lang:Search}"/><label class="btn-search icon-search" for="search_submit"></label></fieldset>
+				</form>
+			</li>
+			<li><a class="icon-home" href="/">Home</a></li>
+			<li><a class="icon-info" href="/tagged/info">Info</a></li>
+			<li><a class="icon-blog" href="/tagged/blog">Blog</a></li>
+			<li><a class="icon-sound" href="/tagged/sound">Sound</a></li>
+			<li><a class="icon-movie" href="/tagged/movie">Movie</a></li>
+			<li><a class="icon-discography" href="/tagged/disc">Discography</a></li>
+			<li><a class="icon-goods" href="/tagged/goods">Goods</a></li>
+<!--		{block:Description}-->
+			<li><a class="icon-keeshkas" href="./" id="show_description">About Us</a></li>
+<!--		{/block:Description}-->
 <!--
-			{block:HasPages}
-				{block:Pages}
-				<li><a href="{URL}">{Label}</a></li>
-				{/block:Pages}
-			{/block:HasPages}
+		{block:HasPages}
+			{block:Pages}
+			<li><a href="{URL}">{Label}</a></li>
+			{/block:Pages}
+		{/block:HasPages}
 -->
-				<li><a class="icon-calender" href="/archive">Archive</a></li>
-			</ul>
-		</nav>
+			<li><a class="icon-calender" href="/archive">Archive</a></li>
+		</ul>
+	</nav>
 
-		<footer class="site-footer" id="site_footer">
-			<div class="content">
-				<ul class="link-list" id="sns_links">
+	<footer class="site-footer" id="site_footer">
+		<div class="content">
+			<div class="scroll-to-pageTop" id="scroll_to_pageTop" data-fix="100">
+				<a class="btn-exec" href="#top"><span class="icon-arrow" data-arrow="t"></span></a>
+			</div>
+			<div class="sns-links" id="sns_links">
+				<ul class="link-list">
 					<li class="list-item"><a href="https://www.facebook.com/keeshkas.s.s" class="icon-facebook" target="_blank"></a></li>
 					<li class="list-item"><a href="https://twitter.com/KEESHKAS_sndsvc" class="icon-twitter" target="_blank"></a></li>
 					<li class="list-item"><a href="https://www.instagram.com/keeshkas/" class="icon-instagram" target="_blank"></a></li>
 					<li class="list-item"><a href="https://soundcloud.com/keeshkas-soundservice" class="icon-soundcloud" target="_blank"></a></li>
 					<li class="list-item"><a href="https://www.youtube.com/channel/UCmWrlNVGJ9hoRJlwVW5NqOA" class="icon-youtube" target="_blank"></a></li>
 				</ul>
-				<p class="copyright">©2017 KEESHKAS soundservice</p>
 			</div>
-		</footer>
+		</div>
+		<p class="copyright">© 2017 KEESHKAS soundservice</p>
+	</footer>
 
 	<script src="//code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 	<script src="./js/app.ready.min.js"></script>

@@ -7,17 +7,6 @@
 .page-top {
 	background-color: transparent;
 	padding-top: 60vh;
-	
-//	.site-header {
-//		@media(min-width: (@mq_w + 1px)) {
-//			.background-hexToRgba(@sub_c, .5);
-//			.transition(background .2s);
-//			
-//			&:hover {
-//				.background-hexToRgba(@sub_c, .8);
-//			}
-//		}
-//	}
 }
 
 .section {
@@ -39,15 +28,8 @@
 /**------------------------------------
 * background (video) */
 .main-background {
-//	height: 100vh;
-//	left: 0;
 	overflow: hidden;
 	position: relative;
-//	padding: 0 0 18px;
-//	position: fixed;
-//	top: 0;
-//	width: 100vw;
-//	z-index: -1;
 	
 	body:not(.page-top) & {
 		display: none;
@@ -125,7 +107,7 @@
 	
 	.title-main {
 		.blur-text(@sub_c);
-		display: inline-block;
+		display: block;
 		font-size: 4rem;
 		line-height: 1;
 		margin: 0 10px;
@@ -143,7 +125,7 @@
 	
 	.title-sub {
 		.blur-text(@sub_c);
-		display: inline-block;
+		display: block;
 		font-size: 2rem;
 		font-weight: 700;
 		letter-spacing: .1em;
@@ -208,18 +190,3 @@
 		0 0 0 rgba(255, 255, 255, 0),
 		0 0 0 rgba(255, 255, 255, 0);
 });
-
-/**------------------------------------
-* description */
-.description {
-	.background-hexToRgba(@sub_c, .5);
-	.box-shadow(2px, 4px, 6px, 0, #000, .5);
-	border-radius: 4px;
-	bottom: @block_space;
-	font-size: 1.5rem;
-	left: 50%;
-	margin-left: -40%;
-	padding: (@block_pad / 2);
-	position: absolute;
-	width: 80%;
-}

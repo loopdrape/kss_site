@@ -20,7 +20,7 @@
 /**------------------------------------
 * base style */
 html {
-	background-color: @sub_c;
+	background-color: @theme_c;
 	
 	@media screen and (min-width:(@mq_w + 1px)){
 		min-width: auto;
@@ -45,58 +45,38 @@ body {
 	.user-select(none);
 	cursor: default;
 	line-height: 1.2;
-	margin: 0 auto @block_pad;
+	margin: 0 auto (@block_pad / 2);
 }
 
 h1 {
 	&:extend(.hx);
-	font-size: 26px;
-	font-weight: 400;
-	
-	@media screen and (max-width: @mq_w) {
-		font-size: 24px;
-	}
+	font-size: 4rem;
 }
 
 h2 {
 	&:extend(.hx);
-	font-size: 22px;
-	
-	@media screen and (max-width: @mq_w) {
-		font-size: 20px;
-	}
+	font-size: 3.2rem;
 }
 
 h3 {
 	&:extend(.hx);
-	border-bottom: 1px solid @base_bdc;
-	font-size: 20px;
-	padding-bottom: 2px;
-	
-	@media screen and (max-width: @mq_w) {
-		font-size: 18px;
-	}
+	font-size: 2.4rem;
 }
 
 h4 {
 	&:extend(.hx);
-	font-size: 18px;
+	font-size: 2rem;
 	padding-bottom: 2px;
-	
-	@media screen and (max-width: @mq_w) {
-		font-size: 16px;
-	}
 }
 
 h5 {
 	&:extend(.hx);
-	font-size: 1em;
-	font-weight: 400;
+	font-size: 1.8rem;
 }
 
 h6 {
 	&:extend(.hx);
-	font-size: 1em;
+	font-size: 1.6rem;
 }
 
 p {
@@ -120,8 +100,10 @@ a {
 		pointer-events: none;
 	}
 	
-	&.is-hover {
-		color: @link_hvc;
+	@media (min-width: (@mq_w + 1px)) {
+		&:hover {
+			color: @link_hvc;
+		}
 	}
 }
 
@@ -162,74 +144,6 @@ a {
 		
 		@media screen and (max-width: @mq_w) {
 			margin-top: @block_space;
-		}
-	}
-}
-
-/**------------------------------------
-* parts style */
-.site-body {
-	background-color: @base_bgc;
-	position: relative;
-//	overflow-y: scroll;
-//	-webkit-overflow-scrolling: touch;
-}
-
-.site-nav {
-//	display: none;
-}
-
-// header
-@import (less) "./_header";
-
-// footer
-@import (less) "./_footer";
-
-.scroll-to-pageTop {
-	.transition(opacity .4s);
-	bottom: @block_space;
-	opacity: .7;
-	position: fixed;
-	left: 50%;
-	z-index: 999;
-	
-	&.is-hide {
-		opacity: 0;
-		pointer-events: none;
-	}
-	
-	&:active {
-		opacity: .9;
-	}
-	
-	@media screen and (min-width: (@mq_w + 1px)) {
-		&:hover {
-			opacity: .8;
-		}
-	}
-	
-	> .btn-exec {
-		@this_size: (@block_pad * 2);
-		.box-shadow(0, 2px, 4px, 0, #000, .6);
-		.user-select(none);
-		background-color: shade(@sub_c, 10%);
-		border-radius: 50%;
-		color: @theme_c;
-		display: block;
-		font-size: @this_size;
-		height: @this_size;
-		line-height: 1;
-		margin-left: (-1 * @this_size / 2);
-		text-align: center;
-		text-decoration: none;
-		width: @this_size;
-		
-		> span {
-			display: block;
-			
-			&:before {
-//				top: 1px;
-			}
 		}
 	}
 }
