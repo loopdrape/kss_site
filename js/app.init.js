@@ -29,8 +29,9 @@
 		document.write(xmlHttp.responseText.replace(literal, app._relativePath));
 	};
 	
+/*
 	// 共通画像のプリロード
-	false && (function() {
+	(function() {
 		var
 			arrImgs, arrLoaded, i, len,
 			loaded = function(flg, src) {
@@ -38,8 +39,7 @@
 				(arrLoaded.length === len) && app.cnLog("preload success.", arrLoaded);
 			};
 		
-		arrImgs = (app.URL.split("/").indexOf("sys") >= 0) ? [] : [
-			// 管理システム以外の場合
+		arrImgs = [
 		];
 		len = arrImgs.length;
 		
@@ -47,6 +47,7 @@
 			app.imgPreload(app._relativePath + arrImgs[i], loaded);
 		}
 	})();
+*/
 	
 	// Google Analytics
 	(window.loadGoogleAnalytics) && (function(trackingID) {

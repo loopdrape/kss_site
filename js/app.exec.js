@@ -5,6 +5,8 @@
 		return false;
 	}
 	
+	app.LOG = true;
+		
 	// vuerrオブジェクトの利用
 	(function() {
 		app.useVuer();
@@ -14,7 +16,53 @@
 			selector: function() {
 				return $(window);
 			},
+			_positionTrackings: [],
+			positionTracking: function(vue) {
+				vue.onReady(function() {
+					vue.$pt = $("<div/>").addClass("position-tracker")
+					.insertBefore(vue.$self);
+					vue.onChangeState(function(state) {
+						if(app.isNumber(state.current)) {
+							this.$self.toggleClass(
+								"is-fixed",
+								state.current >= state.fixStart &&
+								state.current <= state.fixEnd
+							);
+							delete state.current;
+						}
+					});
+					vue.setState("fixStart", parseInt(vue.$pt.data("fix")));
+				});
+				this._positionTrackings.push(vue.name);
+			},
+			updPtFixEnd: function(vue, h) {
+				vue.setState("fixEnd", vue.$pt.offset().top - h);
+			},
+			onScroll: function(vue, t) {
+				vue.setState("current", t);
+			},
 			onReady: function($self) {
+				$self
+				.on("resize", function() {
+					var
+						$this = $(this),
+						vue = $.data(this, "vue"),
+						h = $this.height();
+					
+					vue._positionTrackings.forEach(function(vueName) {
+						this.updPtFixEnd(this.getOther(vueName), h);
+					}, vue);
+				})
+				.on("scroll", function() {
+					var
+						$this = $(this),
+						vue = $.data(this, "vue"),
+						t = $this.scrollTop();
+					
+					vue._positionTrackings.forEach(function(vueName) {
+						this.onScroll(this.getOther(vueName), t);
+					}, vue);
+				});
 			}
 		})
 		
@@ -42,6 +90,7 @@
 				._attachHoverStatus($self)
 				._attachLink4SP($self);
 			},
+			
 			// [端末情報をクラス名として登録]
 			_addDeviceInfoClass: function() {
 				var classList = [];
@@ -85,7 +134,8 @@
 			// [attach hover status]
 			_attachHoverStatus: function($self) {
 				var _self = this;
-				_self.getOther("window").$self.on("pageshow", function(e) {
+				_self.getOther("window").$self
+				.on("pageshow", function(e) {
 					$(".is-hover").removeClass("is-hover");
 				});
 				
@@ -148,6 +198,11 @@
 		.add("siteBody", {
 			selector: "#site_body",
 			onReady: function($self) {
+			},
+			onChangeState: function(state) {
+				this.$self.attr({
+					"data-view": state.view || ""
+				});
 			}
 		})
 		
@@ -161,7 +216,7 @@
 				
 				// 親要素を格納
 				this.$wrap = this.$self.parent();
-				(this.$wrap.length > 1) && ( this.$wrap = this.$wrap.eq(0) );
+				!!this.$wrap.length && ( this.$wrap = this.$wrap.eq(0) );
 				(this.$wrap.css("position") === "static") && this.$wrap.css("position", "relative");
 				this.$wrap.isBorderBox = (this.$wrap.css("box-sizing") === "border-box") ? true : false;
 				
@@ -199,19 +254,18 @@
 		.add("searchBox", {
 			selector: "#search_box",
 			onReady: function($self) {
-				$self.find("input")
-				.on("focus", function(e) {
+				$self
+				.on("focus", "input", function(e) {
 					var vue = $.data(e.delegateTarget, "vue");
 					vue.setState("focus", true);
 				})
-				.on("blur", function(e) {
+				.on("blur", "input", function(e) {
 					var vue = $.data(e.delegateTarget, "vue");
 					vue.setState("focus", false);
 				});
 			},
-			render: function() {
-				return this.$self
-				.toggleClass("is-focus", this.getState("focus"));
+			onChangeState: function(state) {
+				this.$self.toggleClass("is-focus", state.focus);
 			}
 		})
 		
@@ -219,28 +273,23 @@
 		.add("nav", {
 			selector: "#site_nav",
 			onReady: function($self) {
-				var $div = $("<div/>").addClass("position-tracker")
-				.insertBefore($self);
-				$self.data("pt", $div);
-				
-				this.getOther("window").$self
-				.on("resize", function() {
-					var $pt = $self.data("pt");
-					$self.data({
-						fixEnd: $pt.offset().top - $(this).height()
-					});
-				})
-				.on("scroll", function() {
-					var t = {
-						fStart: $self.data("fix"),
-						fEnd: $self.data("fixEnd")
-					};
-					(typeof t.fStart === "number") || ( t.fStart = parseInt(t.fStart) );
-					(typeof t.fEnd === "number") || ( t.fEnd = parseInt(t.fEnd) );
-					t.current = $(this).scrollTop();
-					t.isFixed = (t.current >= t.fStart && t.current <= t.fEnd);
-					$self.toggleClass("is-fixed", t.isFixed);
+				this.getOther("window").positionTracking(this);
+			}
+		})
+		
+		.add("switchNavLinks", {
+			selector: "#show_nav_links",
+			onReady: function($self) {
+				this.$link = $self.closest(".btn-toggle");
+				$self.on("change", function() {
+					var vue = $.data(this, "vue");
+					vue.setState("isChecked", this.checked);
+					vue.getOther("siteBody")
+					.seState("view", this.checked ? "" : "posts");
 				});
+			},
+			onChangeState: function(state) {
+				this.$link.toggleClass("is-checked", !!state.isChecked);
 			}
 		})
 		
@@ -248,122 +297,90 @@
 		.add("scrollToPageTop", {
 			selector: "#scroll_to_pageTop",
 			onReady: function($self) {
-				var $div = $("<div/>").addClass("position-tracker")
-				.insertBefore($self);
-				$self.data("pt", $div);
-				
-				this.getOther("window").$self
-				.on("resize", function() {
-					var $pt = $self.data("pt");
-					$self.data({
-						fixEnd: $pt.offset().top - $(this).height()
-					});
-				})
-				.on("scroll", function() {
-					// ボタンの表示・非表示の切り替え
-					var t = {
-						fStart: $self.data("fix"),
-						fEnd: $self.data("fixEnd")
-					};
-					(typeof t.fStart === "number") || ( t.fStart = parseInt(t.fStart) );
-					(typeof t.fEnd === "number") || ( t.fEnd = parseInt(t.fEnd) );
-					t.current = $(this).scrollTop();
-					t.isFixed = (t.current >= t.fStart && t.current <= t.fEnd);
-					$self.toggleClass("is-fixed", t.isFixed);
-				}).trigger("scroll");
+				this.getOther("window").positionTracking(this);
 			}
-		})
+		});
 		
+/*
 		// [pageLoader]
 		.add("pageLoader", {
 			selector: "#page_loader",
 			delay: 1,
 			onReady: function($self) {
 				var delay;
-				if($self) {
-					$self.attr("data-visible", "0").removeClass("hide");
-					delay = parseFloat( $self.css("transition-duration") );
-					if( !isNaN(delay) ) {
-						this.delay += delay * 1000;
-					}
-					
-					if(app.browser[0] !== "ie" || app.browser[1] > 9) {
-						$self.cssLoader();
-					}
+				$self.attr("data-visible", "0").removeClass("hide");
+				delay = parseFloat( $self.css("transition-duration") );
+				if( !isNaN(delay) ) {
+					this.delay += delay * 1000;
+				}
+				
+				if(app.browser[0] !== "ie" || app.browser[1] > 9) {
+					$self.cssLoader();
 				}
 			},
 			show: function(cb) {
-				if(this.$self) {
-					app.isFunction(cb) || (cb = function() {});
-					// CSSアニメーション様に処理をずらす
-					this.$self.attr("data-visible", "");
-					setTimeout( (function() {
-						this.$self.attr("data-visible", "1");
-						setTimeout(cb.bind(this), this.delay);
-					}).bind(this), 0);
-				} else {
-					app.cnWarn("pageLoader.show", "$self is false.");
-					cb.call(this);
-				}
+				app.isFunction(cb) || (cb = function() {});
+				// CSSアニメーション様に処理をずらす
+				this.$self.attr("data-visible", "");
+				setTimeout( this.setState({
+					visible: "1",
+					cb: cb
+				}).bind(this), 0);
 				return this;
 			},
 			hide: function(cb) {
-				if(this.$self) {
-					app.isFunction(cb) || (cb = function() {});
-					this.$self.attr("data-visible", "");
+				app.isFunction(cb) || (cb = function() {});
+				this.$self.attr("data-visible", "");
+				this.setState({
+					visible: "0",
+					cb: cb
+				});
+				return this;
+			},
+			onChangeState: function(state) {
+				if(state.visible) {
+					this.$self.attr("data-visible", "1");
+					setTimeout(state.cb.bind(this), this.delay);
+				} else {
 					setTimeout( (function() {
 						this.$self.attr("data-visible", "0");
-						cb.call(this);
+						state.cb.call(this);
 					}).bind(this), this.delay);
-				} else {
-					app.cnWarn("pageLoader.hide", "$self is false.");
-					cb.call(this);
 				}
-				return this;
 			}
 		});
+*/
 	})();
 	
-	
-	// ** override ** (for Google Analytics)
-	app.pushState = function(data, url) {
-		if( window.WebAppBase.prototype.pushState.call(app, data, url) ) {
-			!!window.ga && (function(ga) {
-				ga("set", "page", url);
-				ga("send", "pageview");
-				app.cnLog("**** send ga pageview.", url);
-			})(window.ga);
-			return this;
-		} else {
-			return false;
-		}
-	};
-	
-	// ** override ** (for Google Analytics)
-	app.replaceState = function(data, url) {
-		if( window.WebAppBase.prototype.replaceState.call(app, data, url) ) {
-			!!window.ga && (function(ga) {
-				ga("set", "page", url);
-				ga("send", "pageview");
-				app.cnLog("**** send ga pageview.", url);
-			})(window.ga);
-			return this;
-		} else {
-			return false;
-		}
+	// attach execute callbacks
+	app._execCallbacks = [];
+	app.onReady = function(fn) {
+		this.isFunction(fn) && this._execCallbacks.push(fn);
 	};
 	
 	/******************
 	*    app start    *
 	******************/
-	app.exec(function() {
-		// コンポーネント
-		return app.vuer.getReady();
-	}).then(function(flg) {
+	$.Deferred(function(df) {
+		$(function() {
+			// コンポーネント
+			app.vuer.getReady().then(df.resolve);
+		});
+		return df.promise();
+	}).then(function() {
+		var args = Array.prototype.slice.call(arguments, 0);
+		// onReadyで登録されたコールバックの実行
+		return $.when.apply($, app._execCallbacks.map(function(fn) {
+			return fn.apply(this, args);
+		}, app));
+	}).then(function() {
+		app.vuer.get("window").$self
+		.trigger("resize", [true])
+		.trigger("scroll", [true]);
 		app.vuer.get("body").$self.addClass("is-ready");
 		
 		setTimeout(function() {
-			app.vuer.get("siteFooter").fixBottom();
+//			app.vuer.get("siteFooter").fixBottom();
 			app.cnLog("app ready.");
 		}, 0);
 	});
@@ -428,25 +445,32 @@
 		return df.promise();
 	};
 	
-	/*----------------
-	* app.writeHTMLの後始末
-	*/
-	app.cleanupAfterWriteHTML = function(selector) {
-		var $area = (selector instanceof $) ? selector: $(selector);
-		
-		if(!$area.length) {
+	// ** override ** (for Google Analytics)
+	app.pushState = function(data, url) {
+		if( window.WebAppBase.prototype.pushState.call(app, data, url) ) {
+			!!window.ga && (function(ga) {
+				ga("set", "page", url);
+				ga("send", "pageview");
+				app.cnLog("**** send ga pageview.", url);
+			})(window.ga);
+			return this;
+		} else {
 			return false;
 		}
-		
-		$area.children("script").remove();
-		
-		$area.find("a").each(function() {
-			if(this.href === app.URL) {
-				$(this).addClass("is-current");
-			}
-		});
-		
-		return $area;
+	};
+	
+	// ** override ** (for Google Analytics)
+	app.replaceState = function(data, url) {
+		if( window.WebAppBase.prototype.replaceState.call(app, data, url) ) {
+			!!window.ga && (function(ga) {
+				ga("set", "page", url);
+				ga("send", "pageview");
+				app.cnLog("**** send ga pageview.", url);
+			})(window.ga);
+			return this;
+		} else {
+			return false;
+		}
 	};
 	
 })(window.jQuery || window.$);

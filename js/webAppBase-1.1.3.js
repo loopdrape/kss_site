@@ -15,7 +15,7 @@
 		
 		// [constructor]
 		_initialize: function(str, rootdir) {
-			if(typeof str === "string") {
+			if( this.isString(str) ) {
 				if(str.slice(0, 4) === "http" ||
 					 str.slice(0, 1) === "." ||
 					 str.slice(0, 1) === "/") {
@@ -57,7 +57,7 @@
 					}
 					
 				} else
-				if(typeof rootdir === "string") {
+				if( this.isString(rootdir) ) {
 					idx = arr.lastIndexOf(rootdir);
 					this._environment = "prod";
 				}
@@ -221,14 +221,23 @@
 */
 			return (new Array(length).join("0") + num).slice(-length);
 		},
+		isObject: function(obj) {
+			return (typeof obj === "object");
+		},
+		isString: function(str) {
+			return (typeof str === "string");
+		},
+		isNumber: function(num) {
+			return (typeof num === "number");
+		},
 		isInteger: function(num) {
-			return (typeof num === "number" && Math.round(num) === num);
+			return (this.isNumber(num) && Math.round(num) === num);
 		},
 		isFunction: function(fn) {
 			return (typeof fn === "function");
 		},
 		hasHalfKana: function(str) {
-			if(typeof str !== "string") {
+			if( !this.isString(str) ) {
 				this.cnWarn("hasHalfKana", "arguments[0] must be string.");
 				return false;
 			}
@@ -236,12 +245,12 @@
 			return (/[ｦｧ-ｯｰｱ-ﾝﾞﾟ]/).test(str);
 		},
 		hasHalfChar: function(str, denyHalfKana) {
-			if(typeof str !== "string") {
+			if( !this.isString(str) ) {
 				this.cnWarn("hasHalfChar", "arguments[0] must be string.");
 				return false;
 			}
 			
-			(typeof denyHalfKana !== "number") && (denyHalfKana = 0);
+			this.isNumber(denyHalfKana) || (denyHalfKana = 0);
 			if( !denyHalfKana && this.hasHalfKana(str) ) {
 				return true;
 			}
@@ -257,7 +266,7 @@
 			return false;
 		},
 		hasFullChar: function(str) {
-			if(typeof str !== "string") {
+			if( !this.isString(str) ) {
 				this.cnWarn("hasFullChar", "arguments[0] must be string.");
 				return false;
 			}
@@ -273,7 +282,7 @@
 			return false;
 		},
 		pathInfo: function(path) {
-			if(typeof path !== "string") {
+			if( !this.isString(path) ) {
 				this.cnWarn("pathInfo", "arguments[0] must be string.");
 				return false;
 			}
@@ -307,7 +316,7 @@
 		* @return [String]
 		*/
 		replacePathinfo: function(str, path) {
-			if(typeof str !== "string" || typeof path !== "string") {
+			if( !this.isString(str) || !this.isString(path) ) {
 				return str;
 			}
 			var pathInfo = this.pathInfo(path);
@@ -318,7 +327,7 @@
 			return str;
 		},
 		parseQueryString: function(search) {
-			if(typeof search !== "string") {
+			if( !this.isString(search) ) {
 				this.cnWarn("parseQueryString", "arguments[0] must be string.");
 				return false;
 			}
@@ -372,7 +381,7 @@
 			return query;
 		},
 		textareaParse: function(str, isBlock) {
-			if(typeof str !== "string") {
+			if( !this.isString(str) ) {
 				this.cnWarn("textareaParse", "arguments[0] must be string.");
 				return false;
 			}
@@ -437,9 +446,7 @@
 	(function() {
 		proto._scrollTop = 0;
 		proto.saveScroll = function(param) {
-			if(typeof param !== "number") {
-				param = window.pageYOffset;
-			}
+			this.isNumber(param) || (param = window.pageYOffset);
 			this._scrollTop = param;
 			return this;
 		};
@@ -448,7 +455,7 @@
 			return this;
 		};
 		proto.setScroll = function(param) {
-			if(typeof param === "number") {
+			if( this.isNumber(param) ) {
 				window.scrollTo(window.pageXOffset, param);
 			} else {
 				this.cnWarn(String(param) + "isn't Number.");
@@ -485,6 +492,61 @@
 			};
 		}
 		
+		if(!Object.assign) {
+			Object.assign = function (target) {
+				if (target === undefined || target === null) {
+					throw new TypeError('Cannot convert undefined or null to object');
+				}
+				
+				var output = Object(target);
+				for (var index = 1; index < arguments.length; index++) {
+					var source = arguments[index];
+					if (source !== undefined && source !== null) {
+						for (var nextKey in source) {
+							if (Object.prototype.hasOwnProperty.call(source, nextKey)) {
+								output[nextKey] = source[nextKey];
+							}
+						}
+					}
+				}
+				return output;
+			};
+		}
+		
+		if(!Object.keys) {	// LTE IE8
+			Object.keys = (function () {
+				var hasOwnProperty = Object.prototype.hasOwnProperty,
+						hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
+						dontEnums = [
+							'toString',
+							'toLocaleString',
+							'valueOf',
+							'hasOwnProperty',
+							'isPrototypeOf',
+							'propertyIsEnumerable',
+							'constructor'
+						],
+						dontEnumsLength = dontEnums.length;
+				
+				return function (obj) {
+					if (typeof obj !== 'object' && typeof obj !== 'function' || obj === null) throw new TypeError('Object.keys called on non-object');
+					
+					var result = [];
+					
+					for (var prop in obj) {
+						if (hasOwnProperty.call(obj, prop)) result.push(prop);
+					}
+					
+					if (hasDontEnumBug) {
+						for (var i=0; i < dontEnumsLength; i++) {
+							if (hasOwnProperty.call(obj, dontEnums[i])) result.push(dontEnums[i]);
+						}
+					}
+					return result;
+				};
+			})();
+		}
+		
 		if(!Object.setPrototypeOf) {
 			if(Object.defineProperty && (browser[0] !== "ie" || parseInt(browser[1]) > 8)) {
 				Object.defineProperty(Object, "setPrototypeOf", {
@@ -501,7 +563,7 @@
 			}
 		}
 		
-		if (!Object.getPrototypeOf) {
+		if(!Object.getPrototypeOf) {
 			if(Object.defineProperty && (browser[0] !== "ie" || parseInt(browser[1]) > 8)) {
 				Object.defineProperty(Object, "getPrototypeOf", {
 					value: function getPrototypeOf(obj) {
@@ -515,10 +577,6 @@
 					return obj.__proto__;
 				};
 			}
-		}
-		
-		if(!location.origin) {	// LTE IE10
-			location.origin = location.protocol + "\/\/" + location.hostname;
 		}
 		
 		if (!Array.prototype.indexOf) {	// LTE IE8
@@ -745,40 +803,6 @@
 			};
 		}
 		
-		if(!Object.keys) {	// LTE IE8
-			Object.keys = (function () {
-				var hasOwnProperty = Object.prototype.hasOwnProperty,
-						hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
-						dontEnums = [
-							'toString',
-							'toLocaleString',
-							'valueOf',
-							'hasOwnProperty',
-							'isPrototypeOf',
-							'propertyIsEnumerable',
-							'constructor'
-						],
-						dontEnumsLength = dontEnums.length;
-				
-				return function (obj) {
-					if (typeof obj !== 'object' && typeof obj !== 'function' || obj === null) throw new TypeError('Object.keys called on non-object');
-					
-					var result = [];
-					
-					for (var prop in obj) {
-						if (hasOwnProperty.call(obj, prop)) result.push(prop);
-					}
-					
-					if (hasDontEnumBug) {
-						for (var i=0; i < dontEnumsLength; i++) {
-							if (hasOwnProperty.call(obj, dontEnums[i])) result.push(dontEnums[i]);
-						}
-					}
-					return result;
-				};
-			})();
-		}
-		
 		if(!String.prototype.trim) {
 			String.prototype.trim = function () {
 				return this.replace(/^\s+|\s+$/g, "");
@@ -790,6 +814,11 @@
 				return new Date().getTime();
 			};
 		}
+		
+		if(!location.origin) {	// LTE IE10
+			location.origin = location.protocol + "\/\/" + location.hostname;
+		}
+		
 		if(!window.console) {
 			window.console = {};
 		}

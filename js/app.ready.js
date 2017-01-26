@@ -5,18 +5,7 @@
 		return false;
 	}
 	
-	app.LOG = true;
-	
 	app._addEventListen = function() {
-		$("#show_nav_links").on("change", function() {
-			var $link = $.data(this, "link");
-			if(!$link) {
-				$link = $(this).closest(".btn-toggle");
-				$.data(this, "link", $link);
-			}
-			$link.toggleClass("is-checked", this.checked);
-			app.parts.$siteBody.attr("data-view", this.checked ? "" : "posts");
-		});
 		
 		$("#show_description").on("click", function(e) {
 			e.preventDefault();
@@ -61,13 +50,12 @@
 		return this;
 	};
 	
-	// document.ready
-	$(function() {
+	app.onReady(function() {
 		var methods = [];
 		
 		app.parts = {
 			$window: $(window),
-			$body: app._addDeviceInfoClass(document.body),
+			$body: $(document.body),
 			$siteHeader: $("#site_header"),
 			$siteBody: $("#site_body"),
 			$nav: $("#site_nav"),
@@ -99,15 +87,7 @@
 			}) );
 		}
 		
-		$.when.apply($, methods).then(function() {
-			app.parts.$window
-			.trigger("resize", [true])
-			.trigger("scroll", [true]);
-			
-			setTimeout(function() {
-				app.parts.$body.addClass("is-ready");
-			}, 100);
-		});
+		return $.when.apply($, methods);
 	});
 		
 })(window.jQuery || window.$);
