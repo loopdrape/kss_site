@@ -159,6 +159,14 @@
 		},
 		
 		/**
+		* 自要素のセッター
+		* @param k [string] プロパティ名
+		*/
+		getProp: function(k) {
+			return this.hasOwnProperty(k) ? this[k] : undefined;
+		},
+		
+		/**
 		* テンプレート退避領域の登録先
 		*/
 		_templateAreaPropTo: "_wAB",
@@ -242,7 +250,7 @@
 			
 			// コールバックの実行
 			methods = this._onReadyCallbacks.map(function(fn) {
-				return fn.call(this, this.$self);
+				return fn.call(this, this.$self, this.$template);
 			}, this);
 			
 			$.when.apply($, methods).then( (function() {
@@ -272,14 +280,18 @@
 		/**
 		* 状態オブジェクトのセッター
 		* （changeStateが実行された後、$selfにchangeイベントがトリガーされます）
-		* @param k [string || object] objectの場合は元のデータにマージされる
+		* @param k [string || object] objectの場合は元のデータに置換される
 		* @param v [everything] kがstringの場合、値として登録される
-		* @return this
+		* @return $.Deferred().promise()
 		*/
 		setState: function(k, v) {
-			var flg = false;
+			var
+				df = $.Deferred(),
+				flg = false;
+			
 			if(!this.isReady) {
 				this._wAB.cnWarn(this.name + ".setState() ... getReady() didn't execute yet.");
+				df.reject();
 			} else
 			if(k) {
 				if( this._wAB.isString(k) ) {
@@ -287,19 +299,21 @@
 					flg = true;
 				} else
 				if( this._wAB.isObject(k) ) {
-					Object.assign(this.state, k);
+					this.state = k;
 					flg = true;
 				}
 			} else {
 				this._wAB.cnWarn(this.name + ".setState() ... arguments[0] is required.");
+				df.reject();
 			}
 			
 			if(flg) {
 				this.changeState().then( (function() {
 					!!this.$self && this.$self.trigger("changeState");
-				}).bind(this) );
+					df.resolve.apply(df, Array.prototype.slice.call(arguments, 0) );
+				}).bind(this), df.reject.bind(df) );
 			}
-			return this;
+			return df.promise();
 		},
 		
 		/**
@@ -433,29 +447,25 @@
 	***************/
 	/**
 	* 使用宣言関数
-	* （実行するとVueの格納用オブジェクト[vuer]が生成される）
+	* （実行するとVueの格納用Vueインスタンスとして vuer が生成される）
 	*/
 	WAB.useVuer = function() {
-		this.vuer = {
-			_wAB: this,
-			_vueMap: {},
-			isReady: false,
+		this.vuer = this.initVue({
+			name: "vuer",
+			selector: function() {
+				return $(window);
+			},
 			
-			/**
-			* 準備関数
-			* （documentの準備完了後に実行すること）
-			* @return $.Deferred().promise()
-			*/
-			getReady: function() {
+			_vueMap: {},
+			
+			onReady: function($self) {
 				var
 					df = $.Deferred(),
 					methods;
 				
-				if(this.isReady) {
-					this._wAB.cnLog("** vuer.getReady() is already executed.");
-					return this;
-				}
+				this.$window = $self;
 				
+				// add()で追加されたVueのgetReady()を実行する
 				methods = Object.keys(this._vueMap).map(function(name) {
 					if(this._vueMap[name] instanceof this._wAB.Vue) {
 						return this._vueMap[name].getReady();
@@ -484,6 +494,10 @@
 				}).bind(this), df.reject.bind(df) );
 				
 				return df.promise();
+			},
+			
+			onChangeState: function(state) {
+				app._GET = state;
 			},
 			
 			/**
@@ -547,13 +561,8 @@
 			*/
 			get: function(name) {
 				return this._vueMap[name];
-			},
-			
-			/**
-			* DOM描画関数（変数名予約）
-			*/
-			render: function() {}
-		};
+			}
+		});
 		
 		// [extend Vue.prototype]
 		Object.assign(this.Vue.prototype, {
