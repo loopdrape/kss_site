@@ -85,7 +85,7 @@
 
 	<div class="site-body" id="site_body" data-view="posts" role="main">
 <!--	{block:IndexPage}-->
-		<div class="section" data-section="title">
+		<div class="section" id="sec_title" data-section="title">
 			<h2 class="main-title">
 				<em class="title-main"><span>K</span><span>E</span><span>E</span><span>S</span><span>H</span><span>K</span><span>A</span><span>S</span></em>
 				<em class="title-sub"><span>soundservice</span></em>
@@ -103,8 +103,8 @@
 					<span class="no-video"></span>
 				</video>
 				<img id="main_bg_image" src="https://loopdrape.github.io/kss_site/img/pa_face.png" alt="" />
-				<div class="cover"></div>
 			</div>
+			<div class="cover"></div>
 		</div>
 <!--	{/block:IndexPage}-->
 		
@@ -157,7 +157,7 @@
 <!--	{block:IndexPage}-->
 			<ul class="posts-list autopagerize_page_element" id="post_list">
 <!--			{block:Posts}-->
-				<li class="list-item {TagsAsClasses}" data-type="{PostType}">
+				<li class="{TagsAsClasses}" data-type="{PostType}">
 					<a href="{Permalink}" target="_self"></a>
 				{block:Text}
 					<!-- post: テキスト -->
@@ -272,7 +272,7 @@
 			<li><a class="icon-info" href="/tagged/info">Info</a></li>
 			<li><a class="icon-blog" href="/tagged/blog">Blog</a></li>
 			<li><a class="icon-sound" href="/tagged/sound">Sound</a></li>
-			<li><a class="icon-movie" href="/tagged/movie">Movie</a></li>
+<!--			<li><a class="icon-movie" href="/tagged/movie">Movie</a></li>-->
 			<li><a class="icon-discography" href="/tagged/disc">Discography</a></li>
 			<li><a class="icon-goods" href="/tagged/goods">Goods</a></li>
 <!--		{block:Description}-->
@@ -295,12 +295,13 @@
 				<a class="btn-exec" href="#top"><span class="icon-arrow" data-arrow="t"></span></a>
 			</div>
 			<div class="sns-links" id="sns_links">
+				<h4>Follow Us</h4>
 				<ul class="link-list">
-					<li class="list-item"><a href="https://www.facebook.com/keeshkas.s.s" class="icon-facebook" target="_blank"></a></li>
-					<li class="list-item"><a href="https://twitter.com/KEESHKAS_sndsvc" class="icon-twitter" target="_blank"></a></li>
-					<li class="list-item"><a href="https://www.instagram.com/keeshkas/" class="icon-instagram" target="_blank"></a></li>
-					<li class="list-item"><a href="https://soundcloud.com/keeshkas-soundservice" class="icon-soundcloud" target="_blank"></a></li>
-					<li class="list-item"><a href="https://www.youtube.com/channel/UCmWrlNVGJ9hoRJlwVW5NqOA" class="icon-youtube" target="_blank"></a></li>
+					<li><a href="https://www.facebook.com/keeshkas.s.s" class="icon-facebook" target="_blank"></a></li>
+					<li><a href="https://twitter.com/KEESHKAS_sndsvc" class="icon-twitter" target="_blank"></a></li>
+					<li><a href="https://www.instagram.com/keeshkas/" class="icon-instagram" target="_blank"></a></li>
+					<li><a href="https://soundcloud.com/keeshkas-soundservice" class="icon-soundcloud" target="_blank"></a></li>
+					<li><a href="https://www.youtube.com/channel/UCmWrlNVGJ9hoRJlwVW5NqOA" class="icon-youtube" target="_blank"></a></li>
 				</ul>
 			</div>
 		</div>
@@ -309,6 +310,7 @@
 
 	<script src="//code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 	<script src="./js/wAB.plugin.vue.min.js"></script>
+	<script src="./js/app.vue.min.js"></script>
 	<script src="./js/app.exec.min.js"></script>
 	<script src="./js/app.ready.min.js"></script>
 

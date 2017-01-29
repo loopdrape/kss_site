@@ -1,10 +1,15 @@
 // out:null
 .site-nav {
+	.background-hexToRgba(@sub_c, .8);
+	padding-top: (@icon_size + @block_pad / 2);
+	position: relative;
+	
 	.btn-toggle {
 		display: none;
 	}
 	
 	&.is-fixed {
+		background-color: transparent;
 		bottom: 0;
 		position: fixed;
 		right: 0;
@@ -148,6 +153,7 @@
 		
 		.link-list {
 			.transition(opacity .5s);
+			flex-direction: column;
 			height: 0;
 			opacity: 0;
 			overflow: hidden;
@@ -163,12 +169,21 @@
 				display: table;
 				font-size: 2rem;
 				height: 10%;
+				padding: 0;
 				width: 100%;
+				
+				&:first-child {
+					.transform(none);
+					position: static;
+					left: auto;
+					top: auto;
+				}
 				
 				> a {
 					.transition(color .4s);
 					color: @base_txc;
 					display: table-cell;
+					padding: 0;
 					position: relative;
 					vertical-align: middle;
 					z-index: 0;
@@ -236,20 +251,52 @@
 	}
 	
 	.link-list {
-		&:extend(.clearfix all);
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: space-between;
 		text-align: center;
 		
 		> li {
-			float: left;
+			flex-grow: 1;
+			min-width: 12.5%;
+			padding: 0 2px;
+			
+			&:first-child {
+				.transform( translateX(-50%) );
+				position: absolute;
+				left: 50%;
+				top: 0;
+			}
 			
 			> a {
 				color: @base_bgc;
 				display: block;
+				padding: 5px 0 2px;
+				position: relative;
 				text-decoration: none;
+				z-index: 0;
 				
 				&:before {
+					.transform( skew(@base_skew) );
+					.transform-origin(50% 50%);
 					display: block;
 					font-size: @icon_size;
+					margin-left: 30%;
+				}
+				
+				&:after {
+					.transform( skew(@base_skew) );
+					.transform-origin(50% 50%);
+					background-color: @theme_c;
+					content: "";
+					display: block;
+					height: 100%;
+					left: 15%;
+					position: absolute;
+					top: 0;
+					width: 100%;
+					z-index: -1;
 				}
 			}
 		}

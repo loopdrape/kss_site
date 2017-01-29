@@ -86,7 +86,7 @@
 			</h2>
 			
 		{block:TagPage}
-			<h3 class="tagged">{Tag}</h3>
+			<h2 class="tagged">{Tag}</h2>
 		{/block:TagPage}
 			
 			<div class="main-background">
@@ -149,7 +149,7 @@
 		{block:IndexPage}
 			<ul class="posts-list autopagerize_page_element" id="post_list">
 			{block:Posts}
-				<li class="list-item {TagsAsClasses}" data-type="{PostType}">
+				<li class="{TagsAsClasses}" data-type="{PostType}">
 					<a href="{Permalink}" target="_self"></a>
 				{block:Text}
 					<!-- post: テキスト -->
@@ -404,7 +404,7 @@
 
 				<!-- 記事フッタ -->
 				<footer class="entry-footer">
-
+					
 				{block:RebloggedFrom}
 					<div class="rebloggedfrom">
 						<span class="meta-elements reblog-parent-name">
@@ -415,18 +415,18 @@
 						</span>
 					</div>
 				{/block:RebloggedFrom}
-
+					
 					<div class="meta meta-footer">
 						<span class="meta-elements timeago">
 							<a href="{Permalink}">{TimeAgo}</a>
 						</span>
-
+						
 					{block:NoteCount}
 						<span class="meta-elements notecount">
 							<a href="{Permalink}">{NoteCount} Notes</a>
 						</span>
 					{/block:NoteCount}
-
+						
 					{block:HasTags}
 						<span class="meta-elements hastags">
 							{block:Tags}
@@ -435,7 +435,7 @@
 						</span>
 					{/block:HasTags}
 					</div>
-
+					
 				{block:Date}
 					<div class="tumblr-controls">
 						<ul class="like-and-reblog-buttons">
@@ -444,7 +444,7 @@
 						</ul>
 					</div>
 				{/block:Date}
-
+					
 					<!-- ソーシャルボタン -->
 					<ul class="social-buttons">
 					{block:IfEnableTweetButton}
@@ -472,7 +472,7 @@
 						</li>
 					{/block:IfEnablePlus1Button}
 					</ul>
-
+					
 				{block:PostNotes}
 					<h3 class="notecount-header">{NoteCount} Notes</h3>
 					<div class="notecontainer">{PostNotes}</div>
@@ -514,12 +514,28 @@
 		{/block:NextPage}
 		</ul>
 	{/block:Pagination}
+	{block:DayPagination}
+		<!-- 日付ごとのページャ -->
+		<ul class="pagenation pagenation-day">
+		{block:PreviousDayPage}
+			<li><a href="{PreviousDayPage}">&#171; {ShortMonth} {DayOfMonth}</a></li>
+		{/block:PreviousDayPage}
+		{block:NextDayPage}
+			<li><a href="{NextDayPage}" class="next" rel="next">{ShortMonth} {DayOfMonth} &#187;</a></li>
+		{/block:NextDayPage}
+		</ul>
+	{/block:DayPagination}
 	</div>
 
 	<nav class="site-nav" id="site_nav" role="navigation">
 		<fieldset class="btn-toggle"><input type="checkbox" id="show_nav_links"><label for="show_nav_links"><span class="icon"></span></label></fieldset>
 		<ul class="link-list">
-			<li class="search-box" id="search_box"><label><input type="text" name="search" /><span class="btn-search icon-search"></span></label></li>
+			<li>
+				<form class="search-box" id="search_box" action="/search" method="get" target="_self">
+					<fieldset><input type="text" name="q" value="{SearchQuery}" /></fieldset>
+					<fieldset><input type="submit" id="search_submit" value="{lang:Search}"/><label class="btn-search icon-search" for="search_submit"></label></fieldset>
+				</form>
+			</li>
 			<li><a class="icon-home" href="/">Home</a></li>
 			<li><a class="icon-info" href="/tagged/info">Info</a></li>
 			<li><a class="icon-blog" href="/tagged/blog">Blog</a></li>
@@ -546,11 +562,11 @@
 			</div>
 			<div class="sns-links" id="sns_links">
 				<ul class="link-list">
-					<li class="list-item"><a href="https://www.facebook.com/keeshkas.s.s" class="icon-facebook" target="_blank"></a></li>
-					<li class="list-item"><a href="https://twitter.com/KEESHKAS_sndsvc" class="icon-twitter" target="_blank"></a></li>
-					<li class="list-item"><a href="https://www.instagram.com/keeshkas/" class="icon-instagram" target="_blank"></a></li>
-					<li class="list-item"><a href="https://soundcloud.com/keeshkas-soundservice" class="icon-soundcloud" target="_blank"></a></li>
-					<li class="list-item"><a href="https://www.youtube.com/channel/UCmWrlNVGJ9hoRJlwVW5NqOA" class="icon-youtube" target="_blank"></a></li>
+					<li><a href="https://www.facebook.com/keeshkas.s.s" class="icon-facebook" target="_blank"></a></li>
+					<li><a href="https://twitter.com/KEESHKAS_sndsvc" class="icon-twitter" target="_blank"></a></li>
+					<li><a href="https://www.instagram.com/keeshkas/" class="icon-instagram" target="_blank"></a></li>
+					<li><a href="https://soundcloud.com/keeshkas-soundservice" class="icon-soundcloud" target="_blank"></a></li>
+					<li><a href="https://www.youtube.com/channel/UCmWrlNVGJ9hoRJlwVW5NqOA" class="icon-youtube" target="_blank"></a></li>
 				</ul>
 			</div>
 		</div>
@@ -559,6 +575,7 @@
 	
 	<script src="//code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 	<script src="//loopdrape.github.io/kss_site/js/wAB.plugin.vue.min.js"></script>
+	<script src="//loopdrape.github.io/kss_site/js/app.vue.min.js"></script>
 	<script src="//loopdrape.github.io/kss_site/js/app.exec.min.js"></script>
 	<script src="//loopdrape.github.io/kss_site/js/app.ready.min.js"></script>
 

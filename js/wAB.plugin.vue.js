@@ -114,6 +114,14 @@
 		},
 		
 		/**
+		* 自要素のゲッター
+		* @param k [string] プロパティ名
+		*/
+		getProp: function(k) {
+			return this.hasOwnProperty(k) ? this[k] : undefined;
+		},
+		
+		/**
 		* 自要素のセッター
 		* @param k [string || object] objectの場合は自身にマージされる
 		* @param v [everything] kがstringの場合、値として登録される
@@ -156,14 +164,6 @@
 				this[k] = v;
 			}
 			return this;
-		},
-		
-		/**
-		* 自要素のセッター
-		* @param k [string] プロパティ名
-		*/
-		getProp: function(k) {
-			return this.hasOwnProperty(k) ? this[k] : undefined;
 		},
 		
 		/**
@@ -269,51 +269,13 @@
 		onReady: function(fn) {
 			if( this._wAB.isFunction(fn) ) {
 				if(this.isReady) {
+					this._wAB.cnLog(this.name, "isReady to execute.");
 					fn.call(this, this.$self, this.$template);
 				} else {
 					this._onReadyCallbacks.push(fn);
 				}
 			}
 			return this;
-		},
-		
-		/**
-		* 状態オブジェクトのセッター
-		* （changeStateが実行された後、$selfにchangeイベントがトリガーされます）
-		* @param k [string || object] objectの場合は元のデータに置換される
-		* @param v [everything] kがstringの場合、値として登録される
-		* @return $.Deferred().promise()
-		*/
-		setState: function(k, v) {
-			var
-				df = $.Deferred(),
-				flg = false;
-			
-			if(!this.isReady) {
-				this._wAB.cnWarn(this.name + ".setState() ... getReady() didn't execute yet.");
-				df.reject();
-			} else
-			if(k) {
-				if( this._wAB.isString(k) ) {
-					this.state[k] = v;
-					flg = true;
-				} else
-				if( this._wAB.isObject(k) ) {
-					this.state = k;
-					flg = true;
-				}
-			} else {
-				this._wAB.cnWarn(this.name + ".setState() ... arguments[0] is required.");
-				df.reject();
-			}
-			
-			if(flg) {
-				this.changeState().then( (function() {
-					!!this.$self && this.$self.trigger("changeState");
-					df.resolve.apply(df, Array.prototype.slice.call(arguments, 0) );
-				}).bind(this), df.reject.bind(df) );
-			}
-			return df.promise();
 		},
 		
 		/**
@@ -334,6 +296,52 @@
 		},
 		
 		/**
+		* 状態オブジェクトのセッター
+		* （changeStateが実行された後、$selfにchangeイベントがトリガーされます）
+		* @param k [string || object] objectの場合は元のデータに置換される
+		* @param v [everything] kがstringの場合、値として登録される
+		* @return $.Deferred().promise()
+		*/
+		setState: function(k, v) {
+			var
+				df = $.Deferred(),
+				flg = false;
+			
+			if(!this.isReady) {
+				this._wAB.cnWarn(this.name + ".setState() ... getReady() didn't execute yet.");
+				df.reject();
+			} else
+			if(this.isChangingState) {
+				this._wAB.cnLog(this.name + " is changing state...", [k, v]);
+				df.reject();
+			} else
+			if(k) {
+				if( this._wAB.isString(k) ) {
+					this.state[k] = v;
+					flg = true;
+				} else
+				if( this._wAB.isObject(k) ) {
+					this.state = k;
+					flg = true;
+				} else {
+					this._wAB.cnWarn(this.name + ".setState() ... arguments error.");
+					df.reject();
+				}
+			} else {
+				this._wAB.cnWarn(this.name + ".setState() ... arguments[0] is required.");
+				df.reject();
+			}
+			
+			if(flg) {
+				this.changeState().then( (function() {
+					!!this.$self && this.$self.trigger("changeState");
+					df.resolve.apply(df, Array.prototype.slice.call(arguments, 0) );
+				}).bind(this), df.reject.bind(df) );
+			}
+			return df.promise();
+		},
+		
+		/**
 		* 状態が変化した際に呼び出される関数
 		* @return $.Deferred().promise()
 		*/
@@ -342,15 +350,22 @@
 				df = $.Deferred(),
 				methods;
 			
+			this.isChangingState = true;
+			
 			// コールバックの実行
 			methods = this._onChangeStateCallbacks.map(function(fn) {
 				return fn.call( this, this.state );
 			}, this);
 			
-			$.when.apply($, methods).then( (function() {
+			$.when.apply($, methods)
+			.then( (function() {
 				var renderedElm = this._execRender( Array.prototype.slice.call(arguments, 0) );
+				this.isChangingState = false;
 				df.resolve(renderedElm);
-			}).bind(this), df.reject.bind(df) );
+			}).bind(this), function() {
+				this.isChangingState = false;
+				df.reject.apply(df, Array.prototype.slice(arguments, 0));
+			});
 			return df.promise();
 		},
 		
@@ -487,7 +502,7 @@
 						}
 						
 						(res === undefined) || (obj[ names[i] ] = res);
-					});
+					}, this);
 					
 					this.isReady = true;
 					df.resolve(obj);
