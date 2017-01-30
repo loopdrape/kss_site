@@ -512,7 +512,7 @@
 			},
 			
 			onChangeState: function(state) {
-				app._GET = state;
+				this._wAB._GET = state;
 			},
 			
 			/**
