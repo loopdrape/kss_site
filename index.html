@@ -153,9 +153,9 @@
 		</div>
 <!--	{/block:Description}-->
 		
-		<div class="section" data-section="posts">
+		<div class="section autopagerize_page_element" data-section="posts">
 <!--	{block:IndexPage}-->
-			<ul class="posts-list autopagerize_page_element" id="post_list">
+			<ul class="post-list" id="post_list">
 <!--			{block:Posts}-->
 				<li class="{TagsAsClasses}" data-type="{PostType}">
 					<a href="{Permalink}" target="_self"></a>
@@ -171,9 +171,7 @@
 <!--					<img src="{PhotoURL-250}" alt="{PhotoAlt}"/>-->
 					<img src="https://68.media.tumblr.com/b60563d80b27e4ae754705a1c426e0f9/tumblr_nkioc8ZZA31tlblsmo1_250.jpg" alt="{PhotoAlt}"/>
 					{block:Caption}
-					<div class="caption">
-						{Caption}
-					</div>
+					<div class="caption">{Caption}</div>
 					{/block:Caption}
 				{/block:Photo}
 
@@ -181,9 +179,7 @@
 					<!-- post: フォトセット -->
 					{Photoset-250}
 					{block:Caption}
-					<div class="caption">
-						{Caption}
-					</div>
+					<div class="caption">{Caption}</div>
 					{/block:Caption}
 				{/block:Photoset}
 
@@ -214,39 +210,43 @@
 					<img src="./img/pa_face.png" alt="videoThumbnail"/>
 					{/block:VideoThumbnail}
 					{block:Caption}
-					<div class="caption">
-						{Caption}
-					</div>
+					<div class="caption">{Caption}</div>
 					{/block:Caption}
 				{/block:Video}
 
 				{block:Audio}
 					<!-- post: オーディオ -->
-					{block:AlbumArt}{AlbumArtURL}{/block:AlbumArt}
-					{block:AudioEmbed}{AudioEmbed-250}{/block:AudioEmbed}
-					{block:AudioPlayer}{AudioPlayer}{/block:AudioPlayer}
-					{block:TrackName}{TrackName}{/block:TrackName}
+					{block:AlbumArt}
+<!--					<img class="album-art" src="{AlbumArtURL}" alt="album artwork"/>-->
+					{/block:AlbumArt}
+					{block:AudioEmbed}
+					<div class="audio-embed">{AudioEmbed-250}</div>
+					{/block:AudioEmbed}
+					{block:AudioPlayer}
+					<div class="audio-player">{AudioPlayer}</div>
+					{/block:AudioPlayer}
+					{block:TrackName}
+					<p class="trackname">{TrackName}</p>
+					{/block:TrackName}
 					{block:Caption}
-					<div class="caption">
-						{Caption}
-					</div>
+					<div class="caption">{Caption}</div>
 					{/block:Caption}
 				{/block:Audio}
 
 				{block:Answer}
 					<!-- post: Answer -->
-					<div class="question">
-						{Question}
-					</div>
+					<div class="question">{Question}</div>
 				{/block:Answer}
 
 				{block:ContentSource}
 					<!-- Content Source -->
 					{block:SourceLogo}
-<!--					<img src="{BlackLogoURL}" alt="{SourceTitle}" />-->
-					<img src="https://assets.tumblr.com/images/source_logos/soundcloud_000.png?1343" alt="{SourceTitle}" />
+<!--					<img class="source-logo" src="{BlackLogoURL}" alt="{SourceTitle}" />-->
+					<img class="source-logo" src="https://assets.tumblr.com/images/source_logos/soundcloud_000.png?1343" alt="{SourceTitle}" />
 					{/block:SourceLogo}
-					{block:NoSourceLogo}{SourceTitle}{/block:NoSourceLogo}
+					{block:NoSourceLogo}
+					<p class="source-title">{SourceTitle}</p>
+					{/block:NoSourceLogo}
 				{/block:ContentSource}
 
 				{block:Date}
@@ -273,7 +273,7 @@
 			<li><a class="icon-blog" href="/tagged/blog">Blog</a></li>
 			<li><a class="icon-sound" href="/tagged/sound">Sound</a></li>
 <!--			<li><a class="icon-movie" href="/tagged/movie">Movie</a></li>-->
-			<li><a class="icon-discography" href="/tagged/disc">Discography</a></li>
+			<li><a class="icon-discography" href="/tagged/release">Release</a></li>
 			<li><a class="icon-goods" href="/tagged/goods">Goods</a></li>
 <!--		{block:Description}-->
 			<li><a class="icon-keeshkas" href="./" id="show_description">About Us</a></li>

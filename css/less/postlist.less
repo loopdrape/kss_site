@@ -1,0 +1,45 @@
+// out: null
+.post-list {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	margin: 0 14% 0 auto;
+	
+	> li {
+		border: 1px solid @theme_c;
+		height: 160px;
+		overflow: hidden;
+		text-align: center;
+		
+		.transform( skew(@base_skew) );
+		.transform-origin(100% 100%);
+		
+		&:nth-child(5n + 1),
+		&:nth-child(5n + 2) {
+			flex-grow: 3;
+			width: 50%
+		}
+		
+		&:nth-child(5n + 3),
+		&:nth-child(5n + 4),
+		&:nth-child(5n) {
+			flex-grow: 2;
+			width: 33.333%;
+		}
+		
+		img {
+			max-height: 120%;
+			max-width: 120%;
+		}
+		
+		> p,
+		.caption {
+			text-align: left;
+		}
+		
+		.date {
+			text-align: right;
+		}
+	}
+}

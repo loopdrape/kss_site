@@ -5,7 +5,7 @@
 		return false;
 	}
 	
-	app.onReady(function() {
+	false && app.onReady(function() {
 		if(app.isTop) {
 			return $.ajax({
 				type: "GET",
