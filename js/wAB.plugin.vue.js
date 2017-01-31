@@ -575,7 +575,34 @@
 			* @return Vue instance
 			*/
 			get: function(name) {
-				return this._vueMap[name];
+				if( !this._wAB.isString(name) ) {
+					this._wAB.cnWarn("vuer.get() ... arguments[0] is must be string.", typeof name);
+					return false;
+				}
+				return this._vueMap[name] || false;
+			},
+			
+			/**
+			* Vueの削除関数
+			* @param name [string] Vueの名称
+			* @return Vue instance
+			*/
+			remove: function(name) {
+				var vue;
+				if( !this._wAB.isString(name) ) {
+					this._wAB.cnWarn("vuer.remove() ... arguments[0] is must be string.", typeof name);
+					return this;
+				}
+				
+				vue = this.get(name);
+				if(!vue) {
+					return this;
+				}
+				
+				(vue.$self && vue.$self.length) && vue.$self.remove();
+				(vue.$template && vue.$template.length) && vue.$template.remove();
+				delete this._vueMap[name];
+				return this;
 			}
 		});
 		
