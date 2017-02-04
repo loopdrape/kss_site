@@ -527,12 +527,12 @@
 	{/block:DayPagination}
 	</div>
 
-	<nav class="site-nav" id="site_nav" role="navigation">
+	<nav class="site-nav" id="site_nav" role="navigation" data-fix="0">
 		<fieldset class="btn-toggle"><input type="checkbox" id="show_nav_links"><label for="show_nav_links"><span class="icon"></span></label></fieldset>
 		<ul class="link-list">
 			<li>
 				<form class="search-box" id="search_box" action="/search" method="get" target="_self">
-					<fieldset><input type="text" name="q" value="{SearchQuery}" /></fieldset>
+					<fieldset><input type="text" name="q" id="inp_q" value="{SearchQuery}" /></fieldset>
 					<fieldset><input type="submit" id="search_submit" value="{lang:Search}"/><label class="btn-search icon-search" for="search_submit"></label></fieldset>
 				</form>
 			</li>
@@ -557,7 +557,7 @@
 
 	<footer class="site-footer" id="site_footer">
 		<div class="content">
-			<div class="scroll-to-pageTop is-hide" id="scroll_to_pageTop" data-trigger="100">
+			<div class="scroll-to-pageTop" id="scroll_to_pageTop" data-fix="100">
 				<a class="btn-exec" href="#top"><span class="icon-arrow" data-arrow="t"></span></a>
 			</div>
 			<div class="sns-links" id="sns_links">

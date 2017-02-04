@@ -10,8 +10,6 @@
 
 // site body
 .site-body {
-	.background-hexToRgba(@base_bgc, .8);
-	position: relative;
 }
 
 .section[data-section="title"],
@@ -24,7 +22,7 @@
 }
 
 .section[data-section="description"] {
-	.background-hexToRgba(@sub_c, .85);
+	.background-hexToRgba(@base_bgc, .85);
 	.transition(opacity .4s);
 	height: 100vh;
 	left: 0;
@@ -134,6 +132,12 @@
 			}
 		}
 	}
+}
+
+.section[data-section="posts"] {
+	.background-hexToRgba(@base_bgc, .8);
+	position: relative;
+	z-index: 2;
 }
 
 // site nav

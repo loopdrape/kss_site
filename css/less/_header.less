@@ -9,9 +9,9 @@
 	
 	&:before {
 		.box-shadow(0, 1px, 4px, 0, #000, .4);
-		.transform( skew(@base_skew) );
+		.transform( skew(@base_skew, 0) );
 		.transform-origin(0 0);
-		background-color: @sub_c;
+		background-color: @base_bgc;
 		content: "";
 		display: block;
 		height: (@icon_size * 4);

@@ -17,10 +17,10 @@
 			// background sheet
 			&:before {
 				.box-shadow(0, -1px, 4px, 0, #000, .4);
-				.transform( skew(@base_skew) );
+				.transform( skew(@base_skew, 0) );
 				.transform-origin(100% 100%);
 				.transition(all .4s);
-				background-color: @sub_c;
+				background-color: @base_bgc;
 				bottom: 0;
 				content: "";
 				display: block;
@@ -147,9 +147,9 @@
 			.transition(opacity .5s);
 			flex-direction: column;
 			height: 0;
-			padding: 0;
 			opacity: 0;
 			overflow: hidden;
+			padding-bottom: 0;
 			
 			@this_switch: 500px;
 			@media(min-width: (@this_switch + 1px)) {
@@ -177,7 +177,7 @@
 					.transition(color .4s);
 					color: @base_txc;
 					display: table-cell;
-					padding: 0;
+					margin: 0;
 					position: relative;
 					vertical-align: middle;
 					z-index: 0;
@@ -192,12 +192,10 @@
 						.transition(opacity .5s);
 						background: radial-gradient(ellipse at center,
 							rgba(red(@base_bgc), green(@base_bgc), blue(@base_bgc), .8) 0%,
-							rgba(red(@sub_c), green(@sub_c), blue(@sub_c), .6) 40%,
-							rgba(red(@sub_c), green(@sub_c), blue(@sub_c), .2) 60%,
+							rgba(red(@base_bgc), green(@base_bgc), blue(@base_bgc), .6) 40%,
+							rgba(red(@base_bgc), green(@base_bgc), blue(@base_bgc), .2) 60%,
 							rgba(255, 255, 255, 0) 100%
 						);
-						content: "";
-						display: block;
 						height: 100%;
 						left: 0;
 						opacity: 0;

@@ -1,10 +1,16 @@
 // out: null
 .post-list {
+	// flex box
+	display: -webkit-flex;
+	-webkit-flex-direction: row;
+	-webkit-flex-wrap: wrap;
+	-webkit-justify-content: space-between;
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: space-between;
-	margin: 0 14% 0 auto;
+	
+//	margin: 0 14% 0 auto;
 	
 	> li {
 		border: 1px solid @theme_c;
@@ -12,8 +18,8 @@
 		overflow: hidden;
 		text-align: center;
 		
-		.transform( skew(@base_skew) );
-		.transform-origin(100% 100%);
+//		.transform( skew(@base_skew) );
+//		.transform-origin(100% 100%);
 		
 		&:nth-child(5n + 1),
 		&:nth-child(5n + 2) {

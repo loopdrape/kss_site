@@ -20,11 +20,11 @@
 			vue.state.fixStart = parseInt( vue.$self.data("fix") );
 			vue.onChangeState(function(state) {
 				if( app.isNumber(state.current) ) {
-					this.$self.toggleClass(
-						"is-fixed",
+					state.isFixed =
 						state.current >= state.fixStart &&
-						state.current <= (state.fixEnd || 0)
-					);
+						state.current <= (state.fixEnd || 0);
+					
+					this.$self.toggleClass("is-fixed", state.isFixed);
 					delete state.current;
 				}
 			});
@@ -33,14 +33,19 @@
 		},
 		updPtFixEnd: function(vueName, h) {
 			var vue = this.get(vueName);
-			return vue.setState("fixEnd", vue.$pt.offset().top - h);
+			if(vue.isReady) {
+				return vue.setState("fixEnd", vue.$pt.offset().top - h);
+			}
 		},
 		onScroll: function(vueName, t) {
-			return this.get(vueName).setState("current", t);
+			var vue = this.get(vueName);
+			if(vue.isReady) {
+				return vue.setState("current", t);
+			}
 		},
 		onReady: function($self) {
 			$self
-			.on("resize", function() {
+			.on("resize", function(e, isTrigger) {
 				var
 					$this = $(this),
 					vuer = $.data(this, "vue"),
@@ -51,7 +56,7 @@
 					vuer._positionTrackings.forEach(function(vueName) {
 						this.updPtFixEnd(vueName, h);
 					}, vuer);
-				}, 100);
+				}, !!isTrigger ? 0 : 100);
 			})
 			.on("scroll", function() {
 				var
@@ -184,7 +189,7 @@
 			$self.on("click", ".icon-keeshkas", function(e) {
 				var vue = $.data(e.delegateTarget, "vue");
 				e.preventDefault();
-				if( vue.getOther("nav").isFixed() ) {
+				if( vue.getOther("nav").getState("isFixed") ) {
 					vue.getOther("switchNavLinks").$self.trigger("click", [true]);
 				} else {
 					vue.getOther("scrollToPageTop").execScroll();
@@ -234,9 +239,9 @@
 			
 			// for window resize event
 			this.getVuer().$window
-			.on("resize", function() {
+			.on("resize", function(e, isTrigger) {
 				(_self._fixTimer) && clearTimeout(_self._fixTimer);
-				_self._fixTimer = setTimeout(_self.updStyle.bind(_self), 100);
+				_self._fixTimer = setTimeout(_self.updStyle.bind(_self), !!isTrigger ? 0 : 50);
 			});
 			
 			this.$self.css({
@@ -249,33 +254,11 @@
 		}
 	})
 	
-	// [searchBox]
-	.add("searchBox", {
-		selector: "#search_box",
-		onReady: function($self) {
-			$self
-			.on("focus", "input", function(e) {
-				var vue = $.data(e.delegateTarget, "vue");
-				vue.setState("focus", true);
-			})
-			.on("blur", "input", function(e) {
-				var vue = $.data(e.delegateTarget, "vue");
-				vue.setState("focus", false);
-			});
-		},
-		onChangeState: function(state) {
-			this.$self.toggleClass("is-focus", state.focus);
-		}
-	})
-	
 	// [nav]
 	.add("nav", {
 		selector: "#site_nav",
 		onReady: function($self) {
 			this.getVuer().positionTracking(this);
-		},
-		isFixed: function() {
-			return this.$self.hasClass("is-fixed");
 		}
 	})
 	
@@ -294,6 +277,55 @@
 		},
 		onChangeState: function(state) {
 			this.$link.toggleClass("is-checked", !!state.isChecked);
+		}
+	})
+	
+	// [searchBox]
+	.add("searchBox", {
+		selector: "#search_box",
+		onReady: function($self) {
+			$self
+			.on("focus", "input", function(e) {
+				var vue = $.data(e.delegateTarget, "vue");
+				vue.setState("focus", true);
+			})
+			.on("blur", "input", function(e) {
+				var vue = $.data(e.delegateTarget, "vue");
+				vue.setState("focus", false);
+			});
+			
+			this.getOther("nav").onChangeState(function(state) {
+				this.getOther("searchBox").setState("rockOpen", !!state.isFixed);
+			});
+			this.state.focus = false;
+		},
+		onChangeState: function(state) {
+			this.$self
+			.toggleClass("is-focus", state.focus)
+			.toggleClass("is-rockOpen", state.rockOpen);
+		}
+	})
+	
+	// [btnSearch]
+	.add("btnSearch", {
+		selector: function() {
+			return this.getOther("searchBox").$self.find(".btn-search");
+		},
+		onReady: function($self) {
+			this.getOther("searchBox").onChangeState(function(state) {
+				var htmlFor;
+				if(state.rockOpen) {
+					htmlFor = "search_submit";
+				} else {
+					htmlFor = state.focus ? "search_submit" : "inp_q";
+				}
+				this.getOther("btnSearch").setState({
+					htmlFor: htmlFor
+				});
+			});
+		},
+		onChangeState: function(state) {
+			!!state.htmlFor && this.$self.attr("for", state.htmlFor);
 		}
 	})
 	
@@ -328,7 +360,7 @@
 				});
 				
 				this.$mainBG = $self.children(".main-background");
-				this.getVuer().$window.on("resize", function(e) {
+				this.getVuer().$window.on("resize", function(e, isTrigger) {
 					var
 						vuer = $.data(this, "vue"),
 						secTitle =	vuer.get("secTitle");
@@ -338,7 +370,7 @@
 							wndH: vuer.$window.height(),
 							ttlH: secTitle.$mainBG.height()
 						});
-					}, 100);
+					}, !!isTrigger ? 0 : 100);
 				});
 				
 				methods = [];
