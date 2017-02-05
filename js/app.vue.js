@@ -179,6 +179,12 @@
 				}
 			});
 			return this;
+		},
+		
+		onChangeState: function(state) {
+			if(typeof state.lockScroll === "boolean") {
+				this.$self.toggleClass("is-lock-scroll", state.lockScroll);
+			}
 		}
 	})
 	
@@ -272,6 +278,7 @@
 					vue = $.data(this, "vue"),
 					section = app.isString(isTrigger) ? isTrigger : "posts";
 				vue.setState("isChecked", this.checked);
+				vue.getOther("body").setState("lockScroll", this.checked);
 				vue.getOther("siteBody").setState("view", this.checked ? "" : section);
 			});
 		},

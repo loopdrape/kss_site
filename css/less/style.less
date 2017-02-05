@@ -14,17 +14,12 @@
 	
 	&:not([data-view="posts"]) {
 		.filter( blur(4px) );
+		
+		~ .site-footer {
+			.filter( blur(4px) );
+		}
 	}
 }
-
-//.section[data-section="title"],
-//.section[data-section="posts"] {
-//	.transition(filter .4s);
-//	
-//	.site-body:not([data-view="posts"]) & {
-//		.filter( blur(4px) );
-//	}
-//}
 
 .section[data-section="description"] {
 	.background-hexToRgba(@base_bgc, .85);
