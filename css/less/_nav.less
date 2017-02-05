@@ -238,11 +238,6 @@
 			fieldset:first-child {
 				width: @inp_w;
 				
-				&:after {
-					.transform( scaleX(1) );
-				}
-				
-			
 				+ fieldset {
 					margin-left: -4px;
 				}
@@ -253,8 +248,13 @@
 			}
 		}
 		
-		
 		&.is-focus {
+			fieldset:first-child {
+				&:after {
+					.transform( scaleX(1) );
+				}
+			}
+			
 			.btn-search {
 				color: @theme_c;
 			}
