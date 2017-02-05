@@ -21,6 +21,7 @@
 * base style */
 html {
 	background-color: @theme_c;
+	height: 100%;
 	overflow: auto;
 	
 	@media screen and (min-width:(@mq_w + 1px)){
@@ -42,6 +43,7 @@ body {
 	}
 	
 	&.is-lock-scroll {
+		height: 100%;
 		overflow-y: hidden;
 	}
 }
