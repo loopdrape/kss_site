@@ -277,7 +277,6 @@
 		},
 		onChangeState: function(state) {
 			this.$link.toggleClass("is-checked", !!state.isChecked);
-			this.getOther("body").$self.toggleClass("is-lock-scroll", !!state.isCheckd);
 		}
 	})
 	
