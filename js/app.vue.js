@@ -277,6 +277,9 @@
 		},
 		onChangeState: function(state) {
 			this.$link.toggleClass("is-checked", !!state.isChecked);
+			this.getOther("body").$self.css({
+				overflowY: !!state.isChecked ? "hidden" : "auto"
+			});
 		}
 	})
 	
