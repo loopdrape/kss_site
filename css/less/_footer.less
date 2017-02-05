@@ -5,6 +5,10 @@
 	font-size: 2rem;
 	line-height: 1;
 	text-align: center;
+	
+	.site-body:not([data-view="posts"]) ~ & {
+		.filter( blur(4px) );
+	}
 }
 
 .scroll-to-pageTop {

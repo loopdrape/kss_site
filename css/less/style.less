@@ -10,14 +10,14 @@
 
 // site body
 .site-body {
+}
+
+.section[data-section="title"],
+.section[data-section="posts"] {
 	.transition(filter .4s);
 	
-	&:not([data-view="posts"]) {
+	.site-body:not([data-view="posts"]) & {
 		.filter( blur(4px) );
-		
-		~ .site-footer {
-			.filter( blur(4px) );
-		}
 	}
 }
 
