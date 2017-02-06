@@ -22,8 +22,8 @@
 }
 
 .section[data-section="description"] {
-	.background-hexToRgba(@base_bgc, .85);
 	.transition(opacity .4s);
+	background-color: fade(@base_bgc, 85%);
 	height: 100vh;
 	left: 0;
 	opacity: 0;
@@ -135,9 +135,22 @@
 }
 
 .section[data-section="posts"] {
-	.background-hexToRgba(@base_bgc, .8);
+	background-color: @sub_c;
+	padding-bottom: (@block_space * 2);
 	position: relative;
-	z-index: 2;
+	z-index: 0;
+	
+	@media (min-width: (@mq_w + 1px)) {
+		padding-bottom: 0;
+		margin-bottom: 0;
+		z-index: 2;
+	}
+	
+	
+	body.page-index & {
+		.transform( skew(0, @base_skewY) );
+		.transform-origin(90% 0);
+	}
 }
 
 // site nav
@@ -149,5 +162,4 @@
 
 
 @import (less) "./index";
-@import (less) "./postlist";
 @import (less) "./posts";

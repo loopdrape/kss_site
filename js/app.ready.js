@@ -5,14 +5,14 @@
 		return false;
 	}
 	
-	false && app.onReady(function() {
+	app.onReady(function() {
 		if(app.isTop) {
 			return $.ajax({
 				type: "GET",
 				url: "./_postList.html",
 				dataType: "html"
 			}).then(function(html) {
-				$("#post_list").html( $.parseHTML(html) );
+				$("#posts").html( $.parseHTML(html) );
 			});
 		}
 	});

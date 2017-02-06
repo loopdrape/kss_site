@@ -1,11 +1,11 @@
 // out:null
 .site-nav {
-	&.is-fixed {
+	&.is-fixed,
+	&.lock-fixed {
 		background-color: transparent;
-		height: 100vh;
 		position: fixed;
 		right: 0;
-		top: 0;
+		bottom: 0;
 		width: 100%;
 		z-index: 998;
 		
@@ -18,7 +18,7 @@
 			// background sheet
 			&:before {
 				.box-shadow(0, -1px, 4px, 0, #000, .4);
-				.transform( skew(@base_skew, 0) );
+				.transform( skew(@base_skewX, 0) );
 				.transform-origin(100% 100%);
 				.transition(all .4s);
 				background-color: @base_bgc;
@@ -138,8 +138,9 @@
 				}
 				
 				+ .link-list {
-					height: 100vh;
+					height: 120vh;
 					opacity: 1;
+					padding-top: 20vh;
 				}
 			}
 		}
@@ -153,18 +154,26 @@
 			padding-bottom: 0;
 			
 			@this_switch: 500px;
-			@media(min-width: (@this_switch + 1px)) {
+			@media (min-width: (@this_switch + 1px)) {
 				margin: 0 auto;
 				width: @this_switch;
+			}
+			
+			@media (max-width: @mq_w) {
+				.transform(none);
 			}
 			
 			> li {
 				.box-shadow(0, 1px, 2px, -1px, #000, .4);
 				display: table;
 				font-size: 2rem;
-				height: 10%;
+				height: 10vh;
 				padding: 0;
 				width: 100%;
+				
+				@media (max-width: @mq_w) {
+					background-color: transparent;
+				}
 				
 				&:first-child {
 					.transform(none);
@@ -172,6 +181,12 @@
 					position: static;
 					left: auto;
 					top: auto;
+					
+					@media (max-width: @mq_w) {
+						form {
+							.transform(none);
+						}
+					}
 				}
 				
 				> a {
@@ -190,6 +205,7 @@
 					}
 					
 					&:after {
+						.transform(none);
 						.transition(opacity .5s);
 						background: radial-gradient(ellipse at center,
 							rgba(red(@base_bgc), green(@base_bgc), blue(@base_bgc), .8) 0%,
@@ -214,13 +230,11 @@
 						}
 					}
 					
-					@media(min-width: (@this_switch + 1px)) {
-						&:hover {
-							color: @theme_c;
-							
-							&:after {
-								opacity: 1;
-							}
+					&.is-hover {
+						color: @theme_c;
+						
+						&:after {
+							opacity: 1;
 						}
 					}
 				}
@@ -231,6 +245,7 @@
 				vertical-align: middle;
 				
 				input[type="text"] {
+					background-color: transparent;
 					height: 30px;
 				}
 				

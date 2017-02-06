@@ -153,113 +153,26 @@
 		</div>
 <!--	{/block:Description}-->
 		
-		<div class="section autopagerize_page_element" data-section="posts">
-<!--	{block:IndexPage}-->
-			<ul class="post-list" id="post_list">
-<!--			{block:Posts}-->
-				<li class="{TagsAsClasses}" data-type="{PostType}">
-					<a href="{Permalink}" target="_self"></a>
-				{block:Text}
-					<!-- post: テキスト -->
-					{block:Title}
-					<p class="entry-title">{Title}</p>
-					{/block:Title}
-				{/block:Text}
-
-				{block:Photo}
-					<!-- post: 画像 -->
-<!--					<img src="{PhotoURL-250}" alt="{PhotoAlt}"/>-->
-					<img src="https://68.media.tumblr.com/b60563d80b27e4ae754705a1c426e0f9/tumblr_nkioc8ZZA31tlblsmo1_250.jpg" alt="{PhotoAlt}"/>
-					{block:Caption}
-					<div class="caption">{Caption}</div>
-					{/block:Caption}
-				{/block:Photo}
-
-				{block:Photoset}
-					<!-- post: フォトセット -->
-					{Photoset-250}
-					{block:Caption}
-					<div class="caption">{Caption}</div>
-					{/block:Caption}
-				{/block:Photoset}
-
-				{block:Quote}
-					<!-- post: 引用 -->
-					<blockquote>“{Quote}”</blockquote>
-				{/block:Quote}
-
-				{block:Link}
-					<!-- post: リンク -->
-					{block:Thumbnail}
-						{Thumbnail}
-					{/block:Thumbnail}
-					<p class="entry-title">{Name}</p>
-				{/block:Link}
-
-				{block:Chat}
-					<!-- post: チャット -->
-					{block:Title}
-					<p class="entry-title">{Title}</p>
-					{/block:Title}
-				{/block:Chat}
-
-				{block:Video}
-					<!-- post: ビデオ -->
-					{block:VideoThumbnail}
-<!--					<img src="{VideoThumbnailURL}" alt="videoThumbnail"/>-->
-					<img src="./img/pa_face.png" alt="videoThumbnail"/>
-					{/block:VideoThumbnail}
-					{block:Caption}
-					<div class="caption">{Caption}</div>
-					{/block:Caption}
-				{/block:Video}
-
-				{block:Audio}
-					<!-- post: オーディオ -->
-					{block:AlbumArt}
-<!--					<img class="album-art" src="{AlbumArtURL}" alt="album artwork"/>-->
-					{/block:AlbumArt}
-					{block:AudioEmbed}
-					<div class="audio-embed">{AudioEmbed-250}</div>
-					{/block:AudioEmbed}
-					{block:AudioPlayer}
-					<div class="audio-player">{AudioPlayer}</div>
-					{/block:AudioPlayer}
-					{block:TrackName}
-					<p class="trackname">{TrackName}</p>
-					{/block:TrackName}
-					{block:Caption}
-					<div class="caption">{Caption}</div>
-					{/block:Caption}
-				{/block:Audio}
-
-				{block:Answer}
-					<!-- post: Answer -->
-					<div class="question">{Question}</div>
-				{/block:Answer}
-
-				{block:ContentSource}
-					<!-- Content Source -->
-					{block:SourceLogo}
-<!--					<img class="source-logo" src="{BlackLogoURL}" alt="{SourceTitle}" />-->
-					<img class="source-logo" src="https://assets.tumblr.com/images/source_logos/soundcloud_000.png?1343" alt="{SourceTitle}" />
-					{/block:SourceLogo}
-					{block:NoSourceLogo}
-					<p class="source-title">{SourceTitle}</p>
-					{/block:NoSourceLogo}
-				{/block:ContentSource}
-
-				{block:Date}
-					<p class="date">{Year}.{MonthNumberWithZero}.{DayOfMonthWithZero}</p>
-				{/block:Date}
-				</li>
-	<!--		{/block:Posts}-->
-			</ul>
-<!--	{/block:IndexPage}-->
+		<div class="section" data-section="posts">
+<!--		{block:Posts}-->
+			<div class="posts autopagerize_page_element" id="posts" >
+				<article class="post">
+					<header class="entry-header">
+						<a class="permalink" href="{Permalink}"></a>
+						<p class="date"><a href="{Permalink}">{Year}.{MonthNumberWithZero}.{DayOfMonthWithZero}</a></p>
+						<h2 class="entry-title"><span>{Title}</span></h2>
+					</header>
+				</article>
+				<article class="post"></article>
+				<article class="post"></article>
+				<article class="post"></article>
+				<article class="post"></article>
+			</div>
+<!--		{/block:Posts}-->
 		</div>
 	</div>
 
-	<nav class="site-nav" id="site_nav" role="navigation" data-fix="0">
+	<nav class="site-nav" id="site_nav" role="navigation" data-fix="-200">
 		<fieldset class="btn-toggle"><input type="checkbox" id="show_nav_links"><label for="show_nav_links"><span class="icon"></span></label></fieldset>
 		<ul class="link-list">
 			<li>

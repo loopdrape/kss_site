@@ -265,6 +265,9 @@
 		selector: "#site_nav",
 		onReady: function($self) {
 			this.getVuer().positionTracking(this);
+		},
+		onChangeState: function(state) {
+			this.$self.toggleClass("lock-fixed", !!state.isLockFixed);
 		}
 	})
 	
@@ -278,7 +281,7 @@
 					vue = $.data(this, "vue"),
 					section = app.isString(isTrigger) ? isTrigger : "posts";
 				vue.setState("isChecked", this.checked);
-				vue.getOther("body").setState("lockScroll", this.checked);
+				vue.getOther("nav").setState("isLockFixed", this.checked);
 				vue.getOther("siteBody").setState("view", this.checked ? "" : section);
 			});
 		},

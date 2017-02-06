@@ -26,9 +26,10 @@
 	}).then(function() {
 		var df = $.Deferred();
 		app.vuer.$window.trigger("resize", [true]);
-		setTimeout(df.resolve, 100);
+		setTimeout(df.resolve, 200);
 		return df.promise();
 	}).then(function() {
+		app.setScroll(1);
 		app.vuer.$window.trigger("scroll", [true]);
 		app.vuer.get("body").$self.addClass("is-ready");
 		
