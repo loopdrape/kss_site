@@ -49,9 +49,15 @@
 			}
 		}
 		
-		img {
-			max-height: 120%;
-			max-width: 120%;
+		img,
+		video,
+		iframe {
+			.transform( skew(0, -@base_skewY) translate(-50%, -50%) );
+			width: 110%;
+			left: 50%;
+			position: absolute;
+			top: 50%;
+			z-index: 0;
 		}
 		
 		> p,
@@ -86,6 +92,7 @@
 			position: absolute;
 			top: 50%;
 			width: 100%;
+			z-index: 1;
 			
 			h3 {
 				border-bottom-width: 0px;
@@ -94,8 +101,8 @@
 		}
 		
 		.entry-content {
-			height: 0;
-			overflow: hidden;
+//			height: 0;
+//			overflow: hidden;
 		}
 	}
 	
