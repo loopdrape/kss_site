@@ -149,18 +149,25 @@
 			<div class="posts autopagerize_page_element" id="posts" >
 		{block:Posts}
 				<!-- 投稿 -->
-				<article class="post {TagsAsClasses}" data-type="{PostType}">
+				<article class="post {TagsAsClasses}" id="post_{PostID}" data-type="{PostType}">
 					<header class="entry-header">
-						{block:IndexPage}<a class="permalink" href="{Permalink}"></a>{/block:IndexPage}
-					{block:Date}
-						<p class="date"><a href="{Permalink}">{Year}.{MonthNumberWithZero}.{DayOfMonthWithZero}</a></p>
-					{/block:Date}
+					{block:IndexPage}
+						<a class="permalink" href="{Permalink}"></a>
+						{block:Date}
+						<p class="date"><span>{Year}.{MonthNumberWithZero}.{DayOfMonthWithZero}</span></p>
+						{/block:Date}
+					{/block:IndexPage}
+					{block:PermalinkPage}
+						{block:Date}
+							<p class="date"><a href="{Permalink}">{Year}.{MonthNumberWithZero}.{DayOfMonthWithZero}</a></p>
+						{/block:Date}
+					{/block:PermalinkPage}
 					{block:Title}
-						<h2 class="entry-title"><span>{Title}</span></h2>
+						<h3 class="entry-title"><span>{Title}</span></h3>
 					{/block:Title}
 					{block:Audio}
 						{block:TrackName}
-						<h2 class="entry-title trackname"><span>{TrackName}</span></h2>
+						<h3 class="entry-title trackname"><span>{TrackName}</span></h3>
 						{/block:TrackName}
 					{/block:Audio}
 					</header>
@@ -302,10 +309,13 @@
 					{/block:ContentSource}
 				{/block:PermalinkPage}
 
-				{block:PermalinkPage}
 					<!-- 記事フッタ -->
 					<footer class="entry-footer">
+				{block:IndexPage}
+						<a class="permalink" href="{Permalink}"></a>
+				{/block:IndexPage}
 
+				{block:PermalinkPage}
 					{block:RebloggedFrom}
 						<div class="rebloggedfrom">
 							<span class="meta-elements reblog-parent-name">
@@ -370,8 +380,8 @@
 						<h3 class="notecount-header">{NoteCount} Notes</h3>
 						<div class="notecontainer">{PostNotes}</div>
 					{/block:PostNotes}
-					</footer>
 				{/block:PermalinkPage}
+					</footer>
 				</article>
 		{/block:Posts}
 			</div>

@@ -436,6 +436,14 @@
 				}).trigger("change", ["description"]);
 			});
 		}
+	})
+	
+	// [posts]
+	.add("posts", {
+		selector: "#posts",
+		onReady: function($self) {
+		}
 	});
+	
 	
 })(window.jQuery || window.$);
