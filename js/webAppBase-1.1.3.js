@@ -88,7 +88,7 @@
 		LOG: true,
 		cnLog: function() {
 			// app.LOGがtrueの時だけconsole.logを出力する
-			if(this.LOG && !(this.browser[0] === "ie" && this.browser[1] === "8")) {
+			if( this.LOG && this.isFunction(console.log) ) {
 				var args = Array.prototype.slice.call(arguments, 0);
 				console.log.apply(console, args);
 			}
@@ -96,7 +96,7 @@
 		WARN: true,
 		cnWarn: function() {
 			// app.WARNがtrueの時だけconsole.warnを出力する
-			if(this.WARN && !(this.browser[0] === "ie" && this.browser[1] === "8")) {
+			if( this.WARN && this.isFunction(console.warn) ) {
 				var args = Array.prototype.slice.call(arguments, 0);
 				console.warn.apply(console, args);
 			}
@@ -572,7 +572,17 @@
 				});
 			} else {
 				Object.setPrototypeOf = function(obj, parentProto) {
-					obj.__proto__ = parentProto;
+					for (var prop in parentProto) {
+						if( Array.isArray(parentProto[prop]) ) {
+							obj[prop] = [].concat( parentProto[prop] );
+						} else
+						if(typeof parentProto[prop] === "object") {
+							obj[prop] = Object.assign({}, parentProto[prop]);
+						} else {
+							obj[prop] = parentProto[prop];
+						}
+					}
+					return obj;
 				};
 			}
 		}
@@ -836,7 +846,7 @@
 		if(!window.console) {
 			window.console = {};
 		}
-		if (typeof window.console.log !== "function") {
+		if(typeof window.console.log !== "function") {
 			window.console.log = function() {};
 		}
 	})( proto.__getBrowser() );

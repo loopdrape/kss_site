@@ -403,8 +403,6 @@
 				renderedElm;
 			args.unshift( this.getCloneFromTemplate() );
 			renderedElm = this.render.apply(this, args);
-			// 完了コールバックの実行
-			this._wAB.isFunction(this.renderComplete) && this.renderComplete(renderedElm);
 			
 			if(this.$self && renderedElm) {
 				// render()の戻り値でDOM要素を更新
@@ -416,6 +414,10 @@
 				if(renderedElm instanceof $ && renderedElm.length) {
 					this.$self.replaceWith(renderedElm);
 					this.$self = renderedElm;
+					$.data(this.$self.get(0), "vue", this);
+					
+					// 完了コールバックの実行
+					this._wAB.isFunction(this.renderComplete) && this.renderComplete(renderedElm);
 				}
 			}
 			
@@ -436,19 +438,6 @@
 		renderComplete: function(renderedElm) {}
 	};
 	
-//	// [jQuery alias]
-//	Object.keys($.fn).forEach(function(fn) {
-//		if(typeof $.fn[fn] === "function" && fn !== "constructor") {
-//			WAB.Vue.prototype["$" + fn] = function() {
-//				if(this.$self) {
-//					return $.fn[fn].apply( this.$self, Array.prototype.slice.call(arguments, 0) );
-//				} else {
-//					return false;
-//				}
-//			};
-//		}
-//	});
-	
 	// function for create instance
 	WAB.initVue = function() {
 		var args = Array.prototype.slice.call(arguments, 0);
@@ -457,9 +446,9 @@
 	};
 	
 	
-	/***************
-	*  vuer object *
-	***************/
+	//////////////////////////////////////
+	//////// vuer (Vue container) ////////
+	//////////////////////////////////////
 	/**
 	* 使用宣言関数
 	* （実行するとVueの格納用Vueインスタンスとして vuer が生成される）
@@ -472,17 +461,16 @@
 			},
 			
 			_vueMap: {},
+			_childProto: "VuerComponent",
 			
-			onReady: function($self) {
+			_getComponentsReady: function() {
 				var
 					df = $.Deferred(),
 					methods;
 				
-				this.$window = $self;
-				
 				// add()で追加されたVueのgetReady()を実行する
 				methods = Object.keys(this._vueMap).map(function(name) {
-					if(this._vueMap[name] instanceof this._wAB.Vue) {
+					if(this._vueMap[name] instanceof this._protoMap[this._childProto]) {
 						return this._vueMap[name].getReady();
 					}
 				}, this);
@@ -511,59 +499,46 @@
 				return df.promise();
 			},
 			
+			onReady: function($self) {
+				this.$window = $self;
+				return this._getComponentsReady();
+			},
+			
 			onChangeState: function(state) {
 				this._wAB._GET = state;
 			},
 			
 			/**
 			* Vueの追加関数
-			* @param name [string] Vueの名称
+			* @param name [string || Vue instance] Vueの名称 || _childProtoで指定したFunctionのインスタンス
 			* @param (optional) opt [object] Vueコンストラクタのオプション
 			* @param (optional) isOverride [boolean] true: 既に存在していた場合に上書きを行う
 			* @return this
 			*/
 			add: function(name, opt, isOverride) {
 				var vue;
-				if( !this._wAB.isString(name) ) {
-					this._wAB.cnWarn("vuer.add() ... arguments[0] is must be string.", typeof name);
-					return this;
-				}
-				if(name in this._vueMap && !isOverride) {
-					this._wAB.cnWarn("vuer.add() ... '" + name + "' is already defined.");
-					return this;
-				}
 				
-				this._wAB.isObject(opt) || (opt = {});
-				
-				Object.assign(opt, {
-					name: name,
-					_templateAreaPropTo: "_vuer",
-					getCloneFromTemplate: function() {
-						var
-							_self = this,
-							$clone = this._wAB.Vue.prototype.getCloneFromTemplate.call(this);
-						
-						if($clone) {
-							$clone.find("[data-vue]").each(function() {
-								var
-									$this = $(this),
-									vueName = $this.data("vue"),
-									vue = _self.getOther(vueName),
-									stateData;
-								
-								if(vue) {
-									vue.setProp("$self", $this, true);
-									stateData = _self.getState(vueName);
-									if( _self._wAB.isObject(stateData) ) {
-										vue.setState(stateData);
-									}
-								}
-							});
-						}
-						return $clone;
+				if(name instanceof this._protoMap[this._childProto]) {
+					vue = name;
+					
+				} else {
+					if( !this._wAB.isString(name) ) {
+						this._wAB.cnWarn("vuer.add() ... arguments[0] is must be string.", typeof name);
+						return this;
 					}
-				});
-				vue = this._wAB.initVue(opt);
+					if(name in this._vueMap && !isOverride) {
+						this._wAB.cnWarn("vuer.add() ... '" + name + "' is already defined.");
+						return this;
+					}
+					
+					this._wAB.isObject(opt) || (opt = {});
+					
+					Object.assign(opt, {
+						name: name
+					});
+					
+					vue = new this._protoMap[this._childProto](this._wAB, opt);
+				}
 				
 				this._vueMap[vue.name] = vue;
 				return this;
@@ -603,12 +578,64 @@
 				(vue.$template && vue.$template.length) && vue.$template.remove();
 				delete this._vueMap[name];
 				return this;
+			},
+			
+			// Vueを継承したprototypeの格納領域
+			_protoMap: {},
+			
+			/**
+			* prototype継承用関数
+			* @param name [string] 継承先の登録名称
+			* @param Sub [function] 継承先Function
+			* @param (optional) parent [string || function] 継承元の名称 || 継承元Function
+			* @return this
+			*/
+			appendProto: function(name, Sub, parent) {
+				var Super;
+				if( !this._wAB.isString(name) ) {
+					this._wAB.cnWarn("vuer.addProto() ... arguments[0] is must be string.", typeof name);
+					return this;
+				} else
+				if(this._protoMap[name]) {
+					this._wAB.cnWarn("vuer.addProto() ... '" + name + "' is already defined.");
+					return this;
+				}
+				if( !this._wAB.isFunction(Sub) ) {
+					this._wAB.cnWarn("vuer.addProto() ... arguments[1] is must be function.", typeof Sub);
+					return this;
+				}
+				
+				if( this._wAB.isString(parent) ) {
+					if( !this._wAB.isFunction(this._protoMap[parent]) ) {
+						this._wAB.cnWarn("vuer.addProto() ... '" + parent + "' is undefined.");
+						return this;
+					}
+					Super = this._protoMap[parent];
+				} else
+				if( this._wAB.isFunction(parent) ) {
+					Super = parent;
+				}
+				
+				this._wAB.inherits(Sub, Super);
+				this._protoMap[name] = Sub;
+				return this;
 			}
 		});
 		
-		// [extend Vue.prototype]
-		Object.assign(this.Vue.prototype, {
+		/***********************
+		* define VuerComponent *
+		***********************/
+		function VuerComponent() {
+			this._initialize.apply(this, arguments);
+		}
+		
+		// prototype継承して登録
+		this.vuer.appendProto("VuerComponent", VuerComponent, this.Vue);
+		
+		// define property
+		Object.assign(VuerComponent.prototype, {
 			_vuer: this.vuer,
+			_templateAreaPropTo: "_vuer",
 			
 			/**
 			* vuerの取得
@@ -625,10 +652,68 @@
 			*/
 			getOther: function(vueName) {
 				return this.getVuer().get(vueName);
+			},
+			
+			/**
+			* $templateからcloneを生成して返す
+			* （$templat内部に[data-vue]プロパティを持つ要素が存在した場合に
+			* 対象のVueのstateの書き換えを行う）
+			* @return $clone
+			*/
+			getCloneFromTemplate: function() {
+				var
+					_self = this,
+					$clone = this._wAB.Vue.prototype.getCloneFromTemplate.call(this);
+				
+				if($clone) {
+					$clone.find("[data-vue]").each(function() {
+						var
+							$this = $(this),
+							vueName = $this.data("vue"),
+							vue = _self.getOther(vueName),
+							stateData;
+						
+						if(vue) {
+							vue.setProp("$self", $this, true);
+							stateData = _self.getState(vueName);
+							if( _self._wAB.isObject(stateData) ) {
+								vue.setState(stateData);
+							}
+						}
+					});
+				}
+				return $clone;
+			}
+		});
+		
+		/**********************
+		* define VueContainer *
+		**********************/
+		function VueContainer() {
+			this._initialize.apply(this, arguments);
+		}
+		
+		// prototype継承して登録
+		this.vuer.appendProto("VueContainer", VueContainer, "VuerComponent");
+		
+		// define property
+		Object.assign(VueContainer.prototype, {
+			_initialize: function(wAB, opt) {
+				this.onReady( this.getVuer()._getComponentsReady.bind(this) );
+				return this.super_.apply(this, [wAB, opt]);
+			},
+			_vueMap: {},
+			_childProto: "",
+			add: function(name, opt, isOverride) {
+				var args = Array.prototype.slice.call(arguments, 0);
+				this.getVuer().add.apply(this, args);
+				return this;
+			},
+			get: function(name) {
+				return this.getVuer().get.call(this, name);
 			}
 		});
 		
 		return this;
 	};
-	
 }(window.WebAppBase.prototype, window.jQuery || window.$));
