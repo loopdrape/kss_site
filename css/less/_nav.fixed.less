@@ -5,9 +5,13 @@
 		background-color: transparent;
 		position: fixed;
 		right: 0;
-		bottom: 0;
+		top: 100%;
 		width: 100%;
 		z-index: 998;
+		
+		@media (max-width: @mq_w) {
+			margin-top: 0;
+		}
 		
 		.btn-toggle {
 			border: none;
@@ -25,7 +29,7 @@
 				bottom: 0;
 				content: "";
 				display: block;
-				height: 100vh;
+				height: 120vh;
 				position: absolute;
 				opacity: .85;
 				right: 0;
@@ -147,15 +151,19 @@
 		
 		.link-list {
 			.transition(opacity .5s);
+			bottom: 0;
 			flex-direction: column;
 			height: 0;
+			left: 0;
 			opacity: 0;
 			overflow: hidden;
 			padding-bottom: 0;
+			position: absolute;
 			
 			@this_switch: 500px;
 			@media (min-width: (@this_switch + 1px)) {
-				margin: 0 auto;
+				margin: auto;
+				right: 0;
 				width: @this_switch;
 			}
 			

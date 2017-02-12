@@ -8,7 +8,7 @@
 	/******************
 	*    component    *
 	******************/
-	// vuerrオブジェクトの利用
+	// vuerオブジェクトの利用
 	app.useVuer();
 	app.vuer
 	// [window]
@@ -19,6 +19,7 @@
 			.insertBefore(vue.$self);
 			vue.state.fixStart = parseInt( vue.$self.data("fix") );
 			vue.onChangeState(function(state) {
+				app.cnLog(this.name, "onChangeState", state);
 				if( app.isNumber(state.current) ) {
 					state.isFixed =
 						state.current >= state.fixStart &&
@@ -295,14 +296,16 @@
 		selector: "#search_box",
 		onReady: function($self) {
 			$self
-			.on("focus", "input", function(e) {
+			.on("focus", ".inp-txt", function(e) {
 				var vue = $.data(e.delegateTarget, "vue");
 				vue.setState("focus", true);
 			})
-			.on("blur", "input", function(e) {
+			.on("blur", ".inp-txt", function(e) {
 				var vue = $.data(e.delegateTarget, "vue");
 				vue.setState("focus", false);
 			});
+			
+			this.$inp = $("#inp_q");
 			
 			this.getOther("nav").onChangeState(function(state) {
 				this.getOther("searchBox").setState("rockOpen", !!state.isFixed);
@@ -332,6 +335,14 @@
 				this.getOther("btnSearch").setState({
 					htmlFor: htmlFor
 				});
+			});
+			
+			this.$self.on("click", function(e) {
+				var vue = $.data(this, "vue");
+				if(vue.getState("htmlFor") === "inp_q") {
+					e.preventDefault();
+					vue.getOther("searchBox").$inp.trigger("focus", [true]);
+				}
 			});
 		},
 		onChangeState: function(state) {
@@ -441,6 +452,45 @@
 	// [posts]
 	.add("posts", {
 		selector: "#posts",
+		checkLoaded: function() {
+			var methods = [];
+			this.$self.find("img, iframe, video").each(function() {
+				var $this = $(this);
+				methods.push( $.Deferred(function(df) {
+					$.data($this.get(0), "timer", setTimeout(function() {
+						$this.off(".check");
+						df.resolve();
+					}, 1000));
+					$this.on("load.check", function() {
+						clearTimeout( $.data(this, "timer") );
+						df.resolve();
+					});
+					return df.promise();
+				}) );
+			});
+			return $.when.apply($, methods).then(function() {
+				app.cnLog("checkLoaded", "complete");
+			});
+		},
+		scBgi: function() {
+			if(!window.SC) {
+				return false;
+			}
+			this.$self.children(".soundcloud").each(function() {
+				var t = {
+					iframe: $(this).find("iframe").get(0)
+				};
+				if(t.iframe) {
+					t.widget = window.SC.Widget(t.iframe);
+				}
+				if(t.widget) {
+					t.widget.getCurrentSound(function(music) {
+						t.artwork_url = music.artwork_url;
+						app.cnLog(music.artwork_url);
+					});
+				}
+			});
+		},
 		onReady: function($self) {
 		}
 	});

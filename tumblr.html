@@ -150,9 +150,11 @@
 		{block:Posts}
 				<!-- 投稿 -->
 				<article class="post {TagsAsClasses}" id="post_{PostID}" data-type="{PostType}">
+				{block:IndexPage}
+					<a class="permalink" href="{Permalink}"></a>
+				{/block:IndexPage}
 					<header class="entry-header">
 					{block:IndexPage}
-						<a class="permalink" href="{Permalink}"></a>
 						{block:Date}
 						<p class="date"><span>{Year}.{MonthNumberWithZero}.{DayOfMonthWithZero}</span></p>
 						{/block:Date}
@@ -310,12 +312,8 @@
 				{/block:PermalinkPage}
 
 					<!-- 記事フッタ -->
-					<footer class="entry-footer">
-				{block:IndexPage}
-						<a class="permalink" href="{Permalink}"></a>
-				{/block:IndexPage}
-
 				{block:PermalinkPage}
+					<footer class="entry-footer">
 					{block:RebloggedFrom}
 						<div class="rebloggedfrom">
 							<span class="meta-elements reblog-parent-name">
@@ -380,8 +378,8 @@
 						<h3 class="notecount-header">{NoteCount} Notes</h3>
 						<div class="notecontainer">{PostNotes}</div>
 					{/block:PostNotes}
-				{/block:PermalinkPage}
 					</footer>
+				{/block:PermalinkPage}
 				</article>
 		{/block:Posts}
 			</div>
@@ -436,7 +434,7 @@
 		<ul class="link-list">
 			<li>
 				<form class="search-box" id="search_box" action="/search" method="get" target="_self">
-					<fieldset><input type="text" name="q" id="inp_q" value="{SearchQuery}" /></fieldset>
+					<fieldset><input type="text" class="inp-txt" name="q" id="inp_q" value="{SearchQuery}" /></fieldset>
 					<fieldset><input type="submit" id="search_submit" value="{lang:Search}"/><label class="btn-search icon-search" for="search_submit"></label></fieldset>
 				</form>
 			</li>
@@ -482,7 +480,6 @@
 	<script src="//loopdrape.github.io/kss_site/js/wAB.plugin.vue.min.js"></script>
 	<script src="//loopdrape.github.io/kss_site/js/app.vue.min.js"></script>
 	<script src="//loopdrape.github.io/kss_site/js/app.exec.min.js"></script>
-	<script src="//loopdrape.github.io/kss_site/js/app.ready.min.js"></script>
 
  {block:IfEnableLikeButton}
 	<div id="fb-root"></div>

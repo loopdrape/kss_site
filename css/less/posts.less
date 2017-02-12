@@ -33,8 +33,8 @@
 	}
 	
 	body.page-index & {
-		border: 1px solid @theme_c;
-		height: 240px;
+//		border: 1px solid @theme_c;
+		height: 200px;
 		overflow: hidden;
 		position: relative;
 		text-align: center;
@@ -94,8 +94,9 @@
 			width: 100%;
 			z-index: 1;
 			
-			h3 {
+			.entry-title {
 				border-bottom-width: 0px;
+				color: @base_bgc;
 				margin-bottom: 0;
 			}
 		}
@@ -103,6 +104,10 @@
 		.entry-content {
 //			height: 0;
 //			overflow: hidden;
+		}
+		
+		.entry-footer {
+			display: none;
 		}
 	}
 	
