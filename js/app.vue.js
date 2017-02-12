@@ -81,10 +81,10 @@
 			// トップページ判定
 			app.isTop = (function(clsList) {
 				return (
-					clsList.indexOf("page-day") <= 0 &&
-					clsList.indexOf("page-tag") <= 0 &&
-					clsList.indexOf("page-search") <= 0 &&
-					clsList.indexOf("page-permalink") <= 0
+					clsList.indexOf("page-day") < 0 &&
+					clsList.indexOf("page-tag") < 0 &&
+					clsList.indexOf("page-search") < 0 &&
+					clsList.indexOf("page-permalink") < 0
 				);
 			})( $self.get(0).className.split(" ") );
 			

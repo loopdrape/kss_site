@@ -7,11 +7,11 @@
 		display: -webkit-flex;
 		-webkit-flex-direction: row;
 		-webkit-flex-wrap: wrap;
-		-webkit-justify-content: space-between;
+		-webkit-justify-content: flex-start;
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
-		justify-content: space-between;
+		justify-content: flex-start;
 	}
 }
 
@@ -41,22 +41,18 @@
 		width: 50%;
 		
 		@media (min-width: (@mq_w + 1px)) {
-			&:nth-child(5n + 3),
-			&:nth-child(5n + 4),
-			&:nth-child(5n) {
-				flex-grow: 1;
-				width: 33.333%;
-			}
+			width: 33.333%;
 		}
 		
 		img,
 		video,
 		iframe {
 			.transform( skew(0, -@base_skewY) translate(-50%, -50%) );
-			width: 110%;
+			max-width: 110%;
+			min-height: 120%;
 			left: 50%;
 			position: absolute;
-			top: 50%;
+			top: 44%;
 			z-index: 0;
 		}
 		

@@ -16,8 +16,6 @@
 				}).then(function(html) {
 					app.cnLog("_postList", "loaded");
 					$self.html( $.parseHTML(html) );
-				}).then(function() {
-					vue.scBgi();
 				});
 			}
 		}
