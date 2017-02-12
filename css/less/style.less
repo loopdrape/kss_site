@@ -4,6 +4,25 @@
 
 /**------------------------------------
 * parts style */
+body {
+	padding-top: 22vh;
+	
+	@media (min-width: (@mq_w + 1px)) {
+		padding-top: 25vh;
+	}
+	
+	&:not(.is-ready) {
+		.main-background,
+		.section[data-section="description"],
+		.section[data-section="posts"],
+		.site-nav,
+		.site-footer {
+			height: 0;
+			overflow: hidden;
+			padding: 0;
+		}
+	}
+}
 
 // site header
 @import (less) "./_header";
@@ -20,6 +39,9 @@
 		.filter( blur(4px) );
 	}
 }
+
+// title
+@import (less) "./_title";
 
 .section[data-section="description"] {
 	.transition(opacity .4s);
@@ -149,7 +171,7 @@
 	
 	body.page-index & {
 		.transform( skew(0, @base_skewY) );
-		.transform-origin(90% 0);
+		.transform-origin(100% 0);
 	}
 }
 

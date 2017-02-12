@@ -97,19 +97,23 @@
 			}
 			
 			@media (max-width: @mq_w) {
-				&:nth-child(4n - 2) {
+				&:nth-child(2) {
+					background-color: tint(@theme_c, 60%);
+				}
+				
+				&:nth-child(3n + 3) {
 					background-color: tint(@theme_c, 65%);
 				}
 				
-				&:nth-child(4n - 1) {
+				&:nth-child(3n + 4) {
 					background-color: tint(@theme_c, 70%);
 				}
 				
-				&:nth-child(4n) {
+				&:nth-child(3n + 5) {
 					background-color: tint(@theme_c, 75%);
 				}
 				
-				&:nth-child(4n + 5) {
+				&:nth-child(3n + 6) {
 					background-color: tint(@theme_c, 80%);
 				}
 			}
@@ -302,7 +306,8 @@
 		}
 		
 		&.is-rockOpen,
-		&.is-focus {
+		&.is-focus,
+		.lock-fixed& {
 			fieldset:first-child {
 				width: @inp_w;
 				

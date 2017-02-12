@@ -12,6 +12,7 @@
 	******************/
 	$.Deferred(function(df) {
 		$(function() {
+			app.setScroll(1);
 			// コンポーネントの準備
 			app.vuer.getReady().then(df.resolve);
 		});
@@ -20,23 +21,17 @@
 		var args = Array.prototype.slice.call(arguments, 0);
 		app.cnLog("vuer ready.", args);
 		// app.onReadyで登録されたコールバックの実行
-		return $.when(
-			app.showLoading(),
-			$.when.apply($, app._execCallbacks.map(function(fn) {
-				return fn.apply(this, args);
-			}, app))
-		);
+		return $.when.apply($, app._execCallbacks.map(function(fn) {
+			return fn.apply(this, args);
+		}, app));
 	}).then(function() {
 		var df = $.Deferred();
-		app.vuer.get("body").$self.addClass("is-ready");
 		app.vuer.$window.trigger("resize", [true]);
-		setTimeout(df.resolve, 600);
+		setTimeout(df.resolve, 200);
 		return df.promise();
 	}).then(function() {
-		return app.hideLoading();
-	}).then(function() {
-		app.setScroll(1);
 		app.vuer.$window.trigger("scroll", [true]);
+		app.vuer.get("body").$self.addClass("is-ready");
 		
 //		setTimeout(function() {
 //			app.vuer.get("siteFooter").fixBottom();
@@ -58,16 +53,57 @@
 	* ローディング表示 ON
 	* @return $.Deferred().promise()
 	*/
-	app.showLoading = function() {
-		return app.vuer.get("secTitle").setState("anime", true);
+	app.showLoading = function(str) {
+		var
+			df = $.Deferred(),
+			pageLoader = app.vuer.get("pageLoader");
+		
+		if( pageLoader && app.isString(str) ) {
+			$.when( pageLoader.isReady ? false : pageLoader.getReady() )
+			.then( (function() {
+				if(pageLoader._loadingBy) {
+					app.cnLog("  (kick showLoading " + str + ")");
+					df.resolve();
+					
+				} else {
+					pageLoader._loadingBy = str;
+					pageLoader.show(function() {
+						app.cnLog("showLoading", [this._loadingBy]);
+						df.resolve();
+					});
+				}
+			}).bind(this) );
+		} else {
+			df.resolve();
+		}
+		return df.promise();
 	};
 	
 	/*----------------
 	* ローディング表示 OFF
 	* @return $.Deferred().promise()
 	*/
-	app.hideLoading = function() {
-		return app.vuer.get("secTitle").setState("anime", false);
+	app.hideLoading = function(str) {
+		var
+			df = $.Deferred(),
+			pageLoader = app.vuer.get("pageLoader");
+		
+		if( pageLoader && app.isString(str) ) {
+			if(pageLoader._loadingBy === str) {
+				pageLoader.hide(function() {
+					app.cnLog("hideLoading", [str]);
+					delete this._loadingBy;
+					df.resolve();
+				});
+				
+			} else {
+				app.cnLog("  (kick hideLoading " + str + ")");
+				df.resolve();
+			}
+		} else {
+			df.resolve();
+		}
+		return df.promise();
 	};
 	
 	// ** override ** (for Google Analytics)

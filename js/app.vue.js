@@ -19,7 +19,7 @@
 			.insertBefore(vue.$self);
 			vue.state.fixStart = parseInt( vue.$self.data("fix") );
 			vue.onChangeState(function(state) {
-				app.cnLog(this.name, "onChangeState", state);
+//				app.cnLog(this.name, "onChangeState", state);
 				if( app.isNumber(state.current) ) {
 					state.isFixed =
 						state.current >= state.fixStart &&
@@ -78,17 +78,23 @@
 			return $(document.body);
 		},
 		onReady: function($self) {
-			// トップページ判定
-			app.isTop = (function(clsList) {
-				return (
-					clsList.indexOf("page-day") < 0 &&
-					clsList.indexOf("page-tag") < 0 &&
-					clsList.indexOf("page-search") < 0 &&
-					clsList.indexOf("page-permalink") < 0
-				);
-			})( $self.get(0).className.split(" ") );
-			
-			app.isTop && $self.addClass("page-top");
+			// ページタイプ判定
+			app.pageType = [];
+			$self.hasClass("page-index") && app.pageType.push("index");
+			$self.hasClass("page-day") && app.pageType.push("day");
+			$self.hasClass("page-tag") && app.pageType.push("tag");
+			$self.hasClass("page-search") && app.pageType.push("search");
+			$self.hasClass("page-permalink") && app.pageType.push("permalink");
+			if(app.pageType.length) {
+				if(app.pageType[0] === "index" && app.pageType.length === 1) {
+					app.pageType.push("top");
+					$self.addClass("page-top");
+					app.isTop = true;
+				} else {
+					app.isTop = false;
+				}
+			}
+			app.pageType = app.pageType.join(".");
 			
 			this
 			._addDeviceInfoClass()
@@ -366,9 +372,23 @@
 		selector: "#sec_title",
 		onReady: function($self) {
 			var methods;
-			if(!$self) {
-				return false;
-			}
+			methods = [];
+			methods.push( $.Deferred(function(df) {
+				$("#main_bg_video").on("load", df.resolve);
+				setTimeout(df.resolve, 1000);
+				return df.promise();
+			}) );
+			methods.push( $.Deferred(function(df) {
+				$("#main_bg_image").on("load", df.resolve);
+				setTimeout(df.resolve, 1000);
+				return df.promise();
+			}) );
+			$.when.apply($, methods).then( (function() {
+				app.cnLog("main bg loaded");
+				this.getVuer().$window.trigger("resize", [true]);
+			}).bind(this) );
+			
+			this.$title = $self.children(".main-title");
 			
 			if(app.isTop) {
 				this.getOther("body").onChangeState(function(state) {
@@ -385,6 +405,7 @@
 					var
 						vuer = $.data(this, "vue"),
 						secTitle =	vuer.get("secTitle");
+					
 					!!secTitle._timer && clearTimeout(secTitle._timer);
 					secTitle._timer = setTimeout(function() {
 						vuer.get("body").setState({
@@ -393,23 +414,10 @@
 						});
 					}, !!isTrigger ? 0 : 100);
 				});
-				
-				methods = [];
-				methods.push( $.Deferred(function(df) {
-					$("#main_bg_video").on("load", df.resolve);
-					setTimeout(df.resolve, 1000);
-					return df.promise();
-				}) );
-				methods.push( $.Deferred(function(df) {
-					$("#main_bg_image").on("load", df.resolve);
-					setTimeout(df.resolve, 1000);
-					return df.promise();
-				}) );
-				return $.when.apply($, methods);
-				
-			} else {
-				$self.children(".main-title").remove();
 			}
+		},
+		onChangeState: function(state) {
+			("anime" in state) && this.$title.toggleClass("is-anime", !!state.anime);
 		}
 	})
 	
@@ -472,26 +480,50 @@
 				app.cnLog("checkLoaded", "complete");
 			});
 		},
-		scBgi: function() {
-			if(!window.SC) {
-				return false;
+		scMap: {},
+		postCheck: function($post) {
+			var t = {
+				postID: $post.attr("id")
+			};
+			switch( $post.data("type") ) {
+				case "audio":
+					if($post.hasClass("soundcloud") && window.SC) {
+						t.iframe = $post.find("iframe").get(0);
+						if(t.iframe) {
+							t.widget = window.SC.Widget(t.iframe);
+							if(t.widget) {
+								t.widget.getCurrentSound( (function(music) {
+									$("<img/>").addClass("thumbnail").attr({
+										src: music.artwork_url.replace('-large', '-t500x500'),
+										alt: "artwork"
+									}).appendTo($post);
+									this.scMap[t.postID] = music;
+									app.cnLog("soundcloud", t.postID, music);
+								}).bind(this) );
+							}
+						}
+					}
+					break;
 			}
-			this.$self.children(".soundcloud").each(function() {
-				var t = {
-					iframe: $(this).find("iframe").get(0)
-				};
-				if(t.iframe) {
-					t.widget = window.SC.Widget(t.iframe);
-				}
-				if(t.widget) {
-					t.widget.getCurrentSound(function(music) {
-						t.artwork_url = music.artwork_url;
-						app.cnLog(music.artwork_url);
-					});
-				}
-			});
 		},
 		onReady: function($self) {
+			var vue = this;
+			return this.checkLoaded().then(function() {
+				if( (/^index/).test(app.pageType) ) {
+					vue.$posts = $self.children(".post").each(function() {
+						vue.postCheck( $(this) );
+					});
+					if( (/\.top/).test(app.pageType) ) {
+						vue.$posts.eq(5).before(
+							$("<div/>").addClass("post more-box").append(
+								$("<a/>").addClass("icon-more-after").append(
+									$("<span/>").text("more")
+								)
+							)
+						);
+					}
+				}
+			});
 		}
 	});
 	

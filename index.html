@@ -86,16 +86,15 @@
 	<div class="site-body" id="site_body" data-view="posts" role="main">
 <!--	{block:IndexPage}-->
 		<div class="section" id="sec_title" data-section="title">
-			<h2 class="main-title">
+			<h2 class="main-title is-anime">
+<!--
+		{block:TagPage}
+				<em class="title-tagged"><span>{Tag}</span></em>
+		{/block:TagPage}
+-->
 				<em class="title-main"><span>K</span><span>E</span><span>E</span><span>S</span><span>H</span><span>K</span><span>A</span><span>S</span></em>
 				<em class="title-sub"><span>soundservice</span></em>
 			</h2>
-			
-<!--
-			{block:TagPage}
-			<h2 class="tagged">{Tag}</h2>
-			{/block:TagPage}
--->
 			
 			<div class="main-background">
 				<video id="main_bg_video" preload="auto" autobuffer autoplay muted loop poster="https://loopdrape.github.io/kss_site/img/pa_face.png">
@@ -156,17 +155,7 @@
 		<div class="section" data-section="posts">
 <!--		{block:Posts}-->
 			<div class="posts autopagerize_page_element" id="posts" >
-				<article class="post">
-					<header class="entry-header">
-						<p class="date"><a href="{Permalink}">{Year}.{MonthNumberWithZero}.{DayOfMonthWithZero}</a></p>
-						<h3 class="entry-title"><span>{Title}</span></h3>
-					</header>
-					<a class="permalink" href="{Permalink}"></a>
-				</article>
-				<article class="post"></article>
-				<article class="post"></article>
-				<article class="post"></article>
-				<article class="post"></article>
+				<script>app.writeHTML("_postList.html")</script>
 			</div>
 <!--		{/block:Posts}-->
 		</div>

@@ -80,14 +80,13 @@
 	<div class="site-body" id="site_body" data-view="posts" role="main">
 	{block:IndexPage}
 		<div class="section" id="sec_title" data-section="title">
-			<h2 class="main-title">
+			<h2 class="main-title is-anime">
+		{block:TagPage}
+				<em class="title-tagged"><span>{Tag}</span></em>
+		{/block:TagPage}
 				<em class="title-main"><span>K</span><span>E</span><span>E</span><span>S</span><span>H</span><span>K</span><span>A</span><span>S</span></em>
 				<em class="title-sub"><span>soundservice</span></em>
 			</h2>
-			
-		{block:TagPage}
-			<h2 class="tagged">{Tag}</h2>
-		{/block:TagPage}
 			
 			<div class="main-background">
 				<video id="main_bg_video" preload="auto" autobuffer autoplay muted loop poster="https://loopdrape.github.io/kss_site/img/pa_face.png">
@@ -181,18 +180,18 @@
 
 				{block:Photo}
 					<!-- post: 画像 -->
+					{block:IndexPage}
+					<img class="thumbnail" src="{PhotoURL-HighRes}" alt="{PhotoAlt}"/>
+					{/block:IndexPage}
 					<div class="entry-content">
-				{block:IndexPage}
+					{block:PermalinkPage}
+						{LinkOpenTag}
 						<img src="{PhotoURL-HighRes}" alt="{PhotoAlt}"/>
-				{/block:IndexPage}
-				{block:PermalinkPage}
-					{LinkOpenTag}
-						<img src="{PhotoURL-HighRes}" alt="{PhotoAlt}"/>
-					{LinkCloseTag}
+						{LinkCloseTag}
+					{block:PermalinkPage}
 					{block:Caption}
 						<div class="caption">{Caption}</div>
 					{/block:Caption}
-				{block:PermalinkPage}
 					</div>
 				{/block:Photo}
 
@@ -247,14 +246,14 @@
 
 				{block:Video}
 					<!-- post: ビデオ -->
-					<div class="entry-content">
 					{block:IndexPage}
 						{block:VideoThumbnail}
-						<img class="thumbnail" src="{VideoThumbnailURL}" alt="videoThumbnail"/>
+					<img class="thumbnail" src="{VideoThumbnailURL}" alt="videoThumbnail"/>
 						{/block:VideoThumbnail}
 					{/block:IndexPage}
+					<div class="entry-content">
 					{block:PermalinkPage}
-						<div class="video-embed">{VideoEmbed-500}</div>
+						<div class="embed-box video-embed">{VideoEmbed-500}</div>
 						{block:Caption}
 						<div class="caption">{Caption}</div>
 						{/block:Caption}
@@ -264,12 +263,19 @@
 
 				{block:Audio}
 					<!-- post: オーディオ -->
+					{block:IndexPage}
+						{block:AlbumArt}
+							<img class="thumbnail" src="{AlbumArtURL}" alt="album artwork"/>
+						{/block:AlbumArt}
+					{/block:IndexPage}
 					<div class="entry-content">
-					{block:AlbumArt}
-						<img class="album-art" src="{AlbumArtURL}" alt="album artwork"/>
-					{/block:AlbumArt}
+					{block:PermalinkPage}
+						{block:AlbumArt}
+							<img class="album-art" src="{AlbumArtURL}" alt="album artwork"/>
+						{/block:AlbumArt}
+					{/block:PermalinkPage}
 					{block:AudioEmbed}
-						<div class="audio-embed">{AudioEmbed}</div>
+						<div class="embed-box audio-embed">{AudioEmbed}</div>
 					{/block:AudioEmbed}
 					{block:AudioPlayer}
 						<div class="audio-player">{AudioPlayer}</div>

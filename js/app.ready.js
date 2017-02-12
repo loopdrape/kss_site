@@ -5,6 +5,7 @@
 		return false;
 	}
 	
+/*
 	app.vuer.get("posts").setProp({
 		onReady: function($self) {
 			var vue = this;
@@ -20,4 +21,5 @@
 			}
 		}
 	});
+*/
 })(window.jQuery || window.$);
