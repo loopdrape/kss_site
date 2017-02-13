@@ -201,63 +201,64 @@
 			
 			if(this.isReady) {
 				this._wAB.cnLog("** " + this.name +  ".getReady() is already executed.");
-				return df.resolve().promise();
+				df.resolve();
 			} else
 			if(this.isGettingReady) {
 				this._wAB.cnLog("** " + this.name +  " is getting ready now...");
-				return df.resolve().promise();
-			}
-			
-			this.isGettingReady = true;
-			
-			// selectorから$selfないし$templateを生成
-			!!this.selector && (function() {
-				var $elm;
-				if( this._wAB.isString(this.selector) ) {
-					$elm = $(this.selector);
-				} else
-				if( this._wAB.isFunction(this.selector) ) {
-					$elm = this.selector.call(this);
-				}
+				df.resolve();
+			} else {
 				
-				if($elm && $elm instanceof $ && $elm.length) {
-					if( $elm.attr("data-vue-template") !== undefined ) {
-						// data-vue-template属性がある場合はテンプレートとみなし、$templateプロパティに格納
-						this.$template = $elm;
-						// 代替要素を配置し、$selfプロパティに格納
-						$elm = $("<var/>").attr("data-vue", this.name).insertBefore(this.$template);
-						this.$self = $elm;
-					} else {
-						// $selfプロパティに格納
-						this.$self = $elm;
-						// イベントのコールバック等で使用できる様に$.dataに自身を登録
-						$.data(this.$self.get(0), "vue", this);
+				this.isGettingReady = true;
+				
+				// selectorから$selfないし$templateを生成
+				!!this.selector && (function() {
+					var $elm;
+					if( this._wAB.isString(this.selector) ) {
+						$elm = $(this.selector);
+					} else
+					if( this._wAB.isFunction(this.selector) ) {
+						$elm = this.selector.call(this);
 					}
-				}
-			}).call(this);
-			
-			// createTemplateが指定されてされている場合、実行して$templateを生成
-			this._wAB.isFunction(this.createTemplate) && (function() {
-				var $elm;
-				$elm = this.createTemplate.call(this);
-				if($elm && $elm instanceof $ && $elm.length) {
-					this.$template = $elm;
-				}
-			}).call(this);
-			
-			// $templateが生成されている場合、body直下の専用領域に退避する
-			!!this.$template && this.$template.appendTo( this.getTemplateArea() );
-			
-			// コールバックの実行
-			methods = this._onReadyCallbacks.map(function(fn) {
-				return fn.call(this, this.$self, this.$template);
-			}, this);
-			
-			$.when.apply($, methods).then( (function() {
-				this.isReady = true;
-				delete this.isGettingReady;
-				df.resolve.apply( df, Array.prototype.slice.call(arguments, 0) );
-			}).bind(this), df.reject.bind(df) );
+					
+					if($elm && $elm instanceof $ && $elm.length) {
+						if( $elm.attr("data-vue-template") !== undefined ) {
+							// data-vue-template属性がある場合はテンプレートとみなし、$templateプロパティに格納
+							this.$template = $elm;
+							// 代替要素を配置し、$selfプロパティに格納
+							$elm = $("<var/>").attr("data-vue", this.name).insertBefore(this.$template);
+							this.$self = $elm;
+						} else {
+							// $selfプロパティに格納
+							this.$self = $elm;
+							// イベントのコールバック等で使用できる様に$.dataに自身を登録
+							$.data(this.$self.get(0), "vue", this);
+						}
+					}
+				}).call(this);
+				
+				// createTemplateが指定されてされている場合、実行して$templateを生成
+				this._wAB.isFunction(this.createTemplate) && (function() {
+					var $elm;
+					$elm = this.createTemplate.call(this);
+					if($elm && $elm instanceof $ && $elm.length) {
+						this.$template = $elm;
+					}
+				}).call(this);
+				
+				// $templateが生成されている場合、body直下の専用領域に退避する
+				!!this.$template && this.$template.appendTo( this.getTemplateArea() );
+				
+				// コールバックの実行
+				methods = this._onReadyCallbacks.map(function(fn) {
+					return fn.call(this, this.$self, this.$template);
+				}, this);
+				
+				$.when.apply($, methods).then( (function() {
+					this.isReady = true;
+					delete this.isGettingReady;
+					df.resolve.apply( df, Array.prototype.slice.call(arguments, 0) );
+				}).bind(this), df.reject.bind(df) );
+			}
 			
 			return df.promise();
 		},
@@ -427,6 +428,7 @@
 		/**
 		* DOM更新用関数
 		* 状態が変化した際（上記setState後）に実行される
+		* returnで$elementを返すと$selfと置き換わる
 		* @param $templateClone [$instance] $templateから生成したクローン
 		*/
 		render: function($templateClone) {},
@@ -461,7 +463,7 @@
 			},
 			
 			_vueMap: {},
-			_childProto: "VuerComponent",
+			_childKlass: "VuerComponent",
 			
 			_getComponentsReady: function() {
 				var
@@ -470,7 +472,7 @@
 				
 				// add()で追加されたVueのgetReady()を実行する
 				methods = Object.keys(this._vueMap).map(function(name) {
-					if(this._vueMap[name] instanceof this._protoMap[this._childProto]) {
+					if(this._vueMap[name] instanceof this._KlassMap[this._childKlass]) {
 						return this._vueMap[name].getReady();
 					}
 				}, this);
@@ -510,7 +512,7 @@
 			
 			/**
 			* Vueの追加関数
-			* @param name [string || Vue instance] Vueの名称 || _childProtoで指定したFunctionのインスタンス
+			* @param name [string || Vue instance] Vueの名称 || _childKlassで指定したFunctionのインスタンス
 			* @param (optional) opt [object] Vueコンストラクタのオプション
 			* @param (optional) isOverride [boolean] true: 既に存在していた場合に上書きを行う
 			* @return this
@@ -518,7 +520,7 @@
 			add: function(name, opt, isOverride) {
 				var vue;
 				
-				if(name instanceof this._protoMap[this._childProto]) {
+				if(this._wAB.isFunction(name) && name instanceof this._KlassMap[this._childKlass]) {
 					vue = name;
 					
 				} else {
@@ -537,7 +539,18 @@
 						name: name
 					});
 					
-					vue = new this._protoMap[this._childProto](this._wAB, opt);
+					if( opt.vueType && this._wAB.isString(opt.vueType) ) {
+						name = "Vue" + opt.vueType.slice(0, 1).toUpperCase() + opt.vueType.slice(1);
+						if( !this._wAB.isFunction(this._KlassMap[name]) ) {
+							name = this._childKlass;
+							opt.vueType = "component";
+						}
+					} else {
+						name = this._childKlass;
+						opt.vueType = "component";
+					}
+					
+					vue = new this._KlassMap[name](this._wAB, opt);
 				}
 				
 				this._vueMap[vue.name] = vue;
@@ -580,60 +593,72 @@
 				return this;
 			},
 			
-			// Vueを継承したprototypeの格納領域
-			_protoMap: {},
+			// Vueを継承したClassの格納領域
+			_KlassMap: {},
 			
 			/**
-			* prototype継承用関数
+			* Class 継承用関数
 			* @param name [string] 継承先の登録名称
-			* @param Sub [function] 継承先Function
-			* @param (optional) parent [string || function] 継承元の名称 || 継承元Function
+			* @param (optional) prop [object] 継承先のプロパティ
+			* @param (optional) parent [string || function] 継承元の名称 || 継承元Class
 			* @return this
 			*/
-			appendProto: function(name, Sub, parent) {
+			appendKlass: function(name, prop, parent) {
 				var Super;
 				if( !this._wAB.isString(name) ) {
-					this._wAB.cnWarn("vuer.addProto() ... arguments[0] is must be string.", typeof name);
+					this._wAB.cnWarn("vuer.appendKlass() ... arguments[0] is must be string.", typeof name);
 					return this;
 				} else
-				if(this._protoMap[name]) {
-					this._wAB.cnWarn("vuer.addProto() ... '" + name + "' is already defined.");
+				if(this._KlassMap[name]) {
+					this._wAB.cnWarn("vuer.appendKlass() ... '" + name + "' is already defined.");
 					return this;
 				}
-				if( !this._wAB.isFunction(Sub) ) {
-					this._wAB.cnWarn("vuer.addProto() ... arguments[1] is must be function.", typeof Sub);
-					return this;
+				
+				function Klass() {
+					this._initialize.apply(this, arguments);
 				}
 				
 				if( this._wAB.isString(parent) ) {
-					if( !this._wAB.isFunction(this._protoMap[parent]) ) {
-						this._wAB.cnWarn("vuer.addProto() ... '" + parent + "' is undefined.");
+					if( !this._wAB.isFunction(this._KlassMap[parent]) ) {
+						this._wAB.cnWarn("vuer.appendKlass() ... '" + parent + "' is undefined.");
 						return this;
 					}
-					Super = this._protoMap[parent];
+					Super = this._KlassMap[parent];
 				} else
 				if( this._wAB.isFunction(parent) ) {
 					Super = parent;
+				} else {
+					// default
+					if( !this._wAB.isFunction(this._KlassMap[this._childKlass]) ) {
+						this._wAB.cnWarn("vuer.appendKlass() ... '" + this._childKlass + "' is undefined.");
+						return this;
+					}
+					Super = this._KlassMap[this._childKlass];
 				}
 				
-				this._wAB.inherits(Sub, Super);
-				this._protoMap[name] = Sub;
+				this._wAB.inherits(Klass, Super);
+				
+				this._wAB.isObject(prop) && Object.assign(Klass.prototype, prop);
+				
+				this._KlassMap[name] = Klass;
 				return this;
+			},
+			
+			/**
+			* Class 取得用関数
+			* @param name [string] 登録名称
+			* @return Class [function]
+			*/
+			getKlass: function(name) {
+				return this._KlassMap[name];
 			}
 		});
 		
-		/***********************
-		* define VuerComponent *
-		***********************/
-		function VuerComponent() {
-			this._initialize.apply(this, arguments);
-		}
-		
+		/*************************************
+		* define VuerComponent (extends Vue) *
+		*************************************/
 		// prototype継承して登録
-		this.vuer.appendProto("VuerComponent", VuerComponent, this.Vue);
-		
-		// define property
-		Object.assign(VuerComponent.prototype, {
+		this.vuer.appendKlass("VuerComponent", {
 			_vuer: this.vuer,
 			_templateAreaPropTo: "_vuer",
 			
@@ -684,26 +709,23 @@
 				}
 				return $clone;
 			}
-		});
+		}, this.Vue);
 		
-		/**********************
-		* define VueContainer *
-		**********************/
-		function VueContainer() {
-			this._initialize.apply(this, arguments);
-		}
-		
+		/**********************************************
+		* define VueContainer (extends VuerComponent) *
+		**********************************************/
 		// prototype継承して登録
-		this.vuer.appendProto("VueContainer", VueContainer, "VuerComponent");
-		
-		// define property
-		Object.assign(VueContainer.prototype, {
+		this.vuer.appendKlass("VueContainer", {
 			_initialize: function(wAB, opt) {
-				this.onReady( this.getVuer()._getComponentsReady.bind(this) );
-				return this.super_.apply(this, [wAB, opt]);
+				if( this.callSuper("_initialize", wAB, opt) ) {
+					this.onReady( this.getVuer()._getComponentsReady.bind(this) );
+					return this;
+				} else {
+					return false;
+				}
 			},
 			_vueMap: {},
-			_childProto: "",
+			_childKlass: "",
 			add: function(name, opt, isOverride) {
 				var args = Array.prototype.slice.call(arguments, 0);
 				this.getVuer().add.apply(this, args);
@@ -711,8 +733,9 @@
 			},
 			get: function(name) {
 				return this.getVuer().get.call(this, name);
-			}
-		});
+			},
+			_KlassMap: this.vuer._KlassMap
+		}, "VuerComponent");
 		
 		return this;
 	};
