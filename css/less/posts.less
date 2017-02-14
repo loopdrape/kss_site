@@ -61,12 +61,12 @@
 		}
 		
 		> .thumbnail {
-			.transform( skew(0, -@base_skewY) translate(-50%, -50%) );
+			.transform( skew(0, (@base_skewY * -1)) translate(-50%, -50%) );
 			max-width: 110%;
-			min-height: 110%;
+			min-height: 116%;
 			left: 50%;
 			position: absolute;
-			top: 44%;
+			top: 55%;
 			z-index: 0;
 		}
 		
@@ -76,16 +76,19 @@
 		}
 		
 		.entry-header {
+			background-color: fade(@theme_c, 90%);
+			bottom: 0;
+			left: 0;
+			padding-bottom: (14px * 1.6);
+			position: absolute;
+			width: 100%;
+			z-index: 1;
+			
 			.entry-title {
-				.transform( translateY(-50%) );
 				border-bottom-width: 0px;
 				color: @base_bgc;
-				left: 0;
 				margin-bottom: 0;
-				position: absolute;
-				top: 50%;
-				width: 100%;
-				z-index: 1;
+				text-align: center;
 			}
 			
 			.date {

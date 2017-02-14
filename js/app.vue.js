@@ -345,6 +345,7 @@
 			
 			this.$self.on("click", function(e) {
 				var vue = $.data(this, "vue");
+				alert("click ... " + vue.getState("htmlFor"));
 				if(vue.getState("htmlFor") === "inp_q") {
 					e.preventDefault();
 					vue.getOther("searchBox").$inp.trigger("focus", [true]);
@@ -480,35 +481,43 @@
 				app.cnLog("checkLoaded", "complete");
 			});
 		},
+		addLoadListener: function($elm, cb) {
+			if($elm && $elm.length & app.isFunction(cb)) {
+				$.Deferred(function(df) {
+					$elm.eq(0).on("load", df.resolve);
+					setTimeout(df.resolve, 1000);
+					return df.promise();
+				}).then(function() {
+					cb.call( $elm.get(0) );
+				});
+			}
+		},
 		scMap: {},
 		postCheck: function($post) {
-			var t = {
-				postID: $post.attr("id")
-			};
+			var
+				_self = this,
+				postID = $post.attr("id");
+			
 			switch( $post.data("type") ) {
 				case "audio":
 					if($post.hasClass("soundcloud") && window.SC) {
-						t.iframe = $post.find("iframe").get(0);
-						if(t.iframe) {
-							t.widget = window.SC.Widget(t.iframe);
-							if(t.widget) {
-								t.widget.getCurrentSound( (function(music) {
-									$("<img/>").addClass("thumbnail").attr({
-										src: music.artwork_url.replace('-large', '-t500x500'),
-										alt: "artwork"
-									}).appendTo($post);
-									this.scMap[t.postID] = music;
-									app.cnLog("soundcloud", t.postID, music);
-								}).bind(this) );
-							}
-						}
+						this.addLoadListener($post.find("iframe"), function() {
+							window.SC.Widget(this).getCurrentSound(function(music) {
+								$("<img/>").addClass("thumbnail").attr({
+									src: music.artwork_url.replace('-large', '-t500x500'),
+									alt: "artwork"
+								}).appendTo($post);
+								_self.scMap[postID] = music;
+								app.cnLog("soundcloud", postID, music);
+							});
+						});
 					}
 					break;
 			}
 		},
 		onReady: function($self) {
 			var vue = this;
-			return this.checkLoaded().then(function() {
+//			return this.checkLoaded().then(function() {
 				if( (/^index/).test(app.pageType) ) {
 					vue.$posts = $self.children(".post").each(function() {
 						vue.postCheck( $(this) );
@@ -523,7 +532,7 @@
 						);
 					}
 				}
-			});
+//			});
 		}
 	});
 	

@@ -6,7 +6,7 @@
 		background-color: transparent;
 		position: fixed;
 		right: 0;
-		top: 100%;
+		top: 0;
 		width: 100%;
 		z-index: 998;
 		
@@ -27,10 +27,10 @@
 				.transform-origin(100% 100%);
 				.transition(all .4s);
 				background-color: @base_bgc;
-				bottom: 0;
+				top: 0;
 				content: "";
 				display: block;
-				height: 120vh;
+				height: 100vh;
 				position: absolute;
 				opacity: .85;
 				right: 0;
@@ -56,8 +56,10 @@
 				
 				+ label {
 					@this_size: ( @icon_size + 4px );
+					.transform( rotate(-180deg) );
 					.transition(transform .4s);
-					bottom: (@block_pad / 4);
+					@top_negative: ( @this_size + (@block_pad / 4) );
+					top: calc(~"100vh - @{top_negative}");
 					cursor: pointer;
 					display: block;
 					height: @this_size;
@@ -138,6 +140,7 @@
 				&:before {
 					.box-shadow(none);
 					.transform( skew(0, 0) );
+					height: 120vh;
 					opacity: .8;
 					width: 100%;
 				}
@@ -145,21 +148,18 @@
 				+ .link-list {
 					height: 120vh;
 					opacity: 1;
-					padding-top: 20vh;
+//					padding-top: 20vh;
 				}
 			}
 		}
 		
 		.link-list {
 			.transition(opacity .5s);
-			bottom: 0;
 			flex-direction: column;
 			height: 0;
-			left: 0;
 			opacity: 0;
 			overflow: hidden;
 			padding-bottom: 0;
-			position: absolute;
 			
 			@this_switch: 500px;
 			@media (min-width: (@this_switch + 1px)) {
@@ -252,6 +252,10 @@
 			.search-box {
 				display: table-cell;
 				vertical-align: middle;
+				
+				&.is-focus {
+					padding: 0;
+				}
 				
 				input[type="text"] {
 					background-color: transparent;

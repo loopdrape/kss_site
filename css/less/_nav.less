@@ -22,7 +22,7 @@
 		
 		@media (max-width: @mq_w) {
 			.transform( skew(0, @base_skewY) );
-			.transform-origin(100% 0);
+			.transform-origin(0 0);
 			flex-wrap: wrap;
 			padding-bottom: (@icon_size + @block_pad);
 		}
@@ -51,7 +51,7 @@
 				
 				@media (max-width: @mq_w) {
 					form {
-						.transform( skew(0, -@base_skewY) );
+						.transform( skew(0, (@base_skewY * -1)) );
 						.transform-origin(50% 50%);
 					}
 				}
@@ -112,7 +112,7 @@
 					background-color: tint(@theme_c, 75%);
 				}
 				
-				&:nth-child(3n + 6) {
+				&:nth-child(9n) {
 					background-color: tint(@theme_c, 80%);
 				}
 			}
