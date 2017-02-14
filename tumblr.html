@@ -78,8 +78,8 @@
 	</header>
 
 	<div class="site-body" id="site_body" data-view="posts" role="main">
-	{block:IndexPage}
 		<div class="section" id="sec_title" data-section="title">
+	{block:IndexPage}
 			<h2 class="main-title is-anime">
 		{block:TagPage}
 				<em class="title-tagged"><span>{Tag}</span></em>
@@ -87,6 +87,7 @@
 				<em class="title-main"><span>K</span><span>E</span><span>E</span><span>S</span><span>H</span><span>K</span><span>A</span><span>S</span></em>
 				<em class="title-sub"><span>soundservice</span></em>
 			</h2>
+	{block:IndexPage}
 			
 			<div class="main-background">
 				<video id="main_bg_video" preload="auto" autobuffer autoplay muted loop poster="https://loopdrape.github.io/kss_site/img/pa_face.png">
@@ -97,7 +98,6 @@
 				<div class="cover"></div>
 			</div>
 		</div>
-	{/block:IndexPage}
 
 	{block:Description}
 		<div class="section" id="sec_description" data-section="description">
@@ -478,6 +478,7 @@
 	</footer>
 	
 	<script src="//code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+	<script src="//w.soundcloud.com/player/api.js"></script>
 	<script src="//loopdrape.github.io/kss_site/js/wAB.plugin.vue.min.js"></script>
 	<script src="//loopdrape.github.io/kss_site/js/app.vue.min.js"></script>
 	<script src="//loopdrape.github.io/kss_site/js/app.exec.min.js"></script>

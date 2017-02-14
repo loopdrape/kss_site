@@ -29,6 +29,10 @@
 	}).then(function() {
 		var df = $.Deferred();
 		app.vuer.get("body").$self.addClass("is-ready");
+		setTimeout(df.resolve, 0);
+		return df.promise();
+	}).then(function() {
+		var df = $.Deferred();
 		app.vuer.$window.trigger("resize", [true]);
 		setTimeout(df.resolve, 600);
 		return df.promise();
