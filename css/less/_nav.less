@@ -43,8 +43,7 @@
 				.transform( translateX(-50%) );
 				bottom: 0;
 				font-size: inherit;
-				@pad_v: (@block_pad / 4);
-				padding: @pad_v 0 @pad_v 37px;
+				padding: 0;
 				position: absolute;
 				left: 50%;
 				width: auto;
@@ -243,8 +242,6 @@
 	.search-box {
 		white-space: nowrap;
 		
-		@inp_w: 200px;
-		
 		fieldset {
 			border: none;
 			display: inline-block;
@@ -271,10 +268,6 @@
 					position: absolute;
 					width: 100%;
 				}
-			}
-			
-			+ fieldset {
-				margin-left: (8px - @icon_size);
 			}
 		}
 		
@@ -309,7 +302,7 @@
 		&.is-focus,
 		.lock-fixed& {
 			fieldset:first-child {
-				width: @inp_w;
+				width: 200px;
 				
 				+ fieldset {
 					margin-left: -4px;
@@ -323,6 +316,9 @@
 		}
 		
 		&.is-focus {
+			@pad_v: (@block_pad / 4);
+			padding: @pad_v 0 @pad_v 37px;
+			
 			fieldset:first-child {
 				&:after {
 					.transform( scaleX(1) );
