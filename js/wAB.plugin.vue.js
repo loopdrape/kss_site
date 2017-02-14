@@ -402,6 +402,8 @@
 			var
 				args = Array.prototype.slice.call(arguments, 0),
 				renderedElm;
+			
+			args.unshift( this.state );
 			args.unshift( this.getCloneFromTemplate() );
 			renderedElm = this.render.apply(this, args);
 			
@@ -472,8 +474,9 @@
 				
 				// add()で追加されたVueのgetReady()を実行する
 				methods = Object.keys(this._vueMap).map(function(name) {
-					if(this._vueMap[name] instanceof this._KlassMap[this._childKlass]) {
-						return this._vueMap[name].getReady();
+					var vue = this._vueMap[name];
+					if(vue instanceof this._KlassMap[this._childKlass] && !vue.isReady) {
+						return vue.getReady();
 					}
 				}, this);
 				
@@ -504,10 +507,6 @@
 			onReady: function($self) {
 				this.$window = $self;
 				return this._getComponentsReady();
-			},
-			
-			onChangeState: function(state) {
-				this._wAB._GET = state;
 			},
 			
 			/**
