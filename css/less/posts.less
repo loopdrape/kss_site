@@ -39,6 +39,10 @@
 		text-align: center;
 		width: 50%;
 		
+		@media (orientation: portrait) and (max-width: @mq_w) {
+			height: 42vw;
+		}
+		
 		@media (min-width: (@mq_w + 1px)) {
 			width: 33.333%;
 		}

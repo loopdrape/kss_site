@@ -146,9 +146,18 @@
 				}
 				
 				+ .link-list {
+					.transform( translate3d(0, -10vh, 0) );
 					height: 120vh;
 					opacity: 1;
-//					padding-top: 20vh;
+					padding-top: 10vh;
+					
+					@media (max-width: @mq_w) {
+//						.transition(transform .2s);
+						
+						&.is-form-focus {
+							.transform( translate3d(0, 0, 0) );
+						}
+					}
 				}
 			}
 		}

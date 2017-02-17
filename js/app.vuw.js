@@ -1,25 +1,24 @@
 ;(function($) {
 	"use strict";
 	
-	if(!app || !app.Vue) {
+	if(!app || !Vuw) {
 		return false;
 	}
 	
 	/******************
 	*    component    *
 	******************/
-	// vuerオブジェクトの利用
-	app.useVuer();
-	app.vuer
+	// vuwerオブジェクトの利用
+	app.vuwer = Vuw.useVuwer()
 	// [window]
 	.setProp({
 		_positionTrackings: [],
-		positionTracking: function(vue) {
-			vue.$pt = $("<div/>").addClass("position-tracker")
-			.insertBefore(vue.$self);
-			vue.state.fixStart = parseInt( vue.$self.data("fix") );
-			vue.onChangeState(function(state) {
-//				app.cnLog(this.name, "onChangeState", state);
+		positionTracking: function(vuw) {
+			vuw.$pt = $("<div/>").addClass("position-tracker")
+			.insertBefore(vuw.$self);
+			vuw.state.fixStart = parseInt( vuw.$self.data("fix") );
+			vuw.onChangeState(function(state) {
+//				csl.log(this.name, "onChangeState", state);
 				if( app.isNumber(state.current) ) {
 					state.isFixed =
 						state.current >= state.fixStart &&
@@ -30,18 +29,18 @@
 				}
 			});
 			
-			this._positionTrackings.push(vue.name);
+			this._positionTrackings.push(vuw.name);
 		},
-		updPtFixEnd: function(vueName, h) {
-			var vue = this.get(vueName);
-			if(vue.isReady) {
-				return vue.setState("fixEnd", vue.$pt.offset().top - h);
+		updPtFixEnd: function(vuwName, h) {
+			var vuw = this.get(vuwName);
+			if(vuw.isReady) {
+				return vuw.setState("fixEnd", vuw.$pt.offset().top - h);
 			}
 		},
-		onScroll: function(vueName, t) {
-			var vue = this.get(vueName);
-			if(vue.isReady) {
-				return vue.setState("current", t);
+		onScroll: function(vuwName, t) {
+			var vuw = this.get(vuwName);
+			if(vuw.isReady) {
+				return vuw.setState("current", t);
 			}
 		},
 		onReady: function($self) {
@@ -49,25 +48,25 @@
 			.on("resize", function(e, isTrigger) {
 				var
 					$this = $(this),
-					vuer = $.data(this, "vue"),
+					vuwer = $.data(this, "vuw"),
 					h = $this.height();
 				
-				!!vuer._resizeTimer && clearTimeout(vuer._resizeTimer);
-				vuer._resizeTimer = setTimeout(function() {
-					vuer._positionTrackings.forEach(function(vueName) {
-						this.updPtFixEnd(vueName, h);
-					}, vuer);
+				!!vuwer._resizeTimer && clearTimeout(vuwer._resizeTimer);
+				vuwer._resizeTimer = setTimeout(function() {
+					vuwer._positionTrackings.forEach(function(vuwName) {
+						this.updPtFixEnd(vuwName, h);
+					}, vuwer);
 				}, !!isTrigger ? 0 : 100);
 			})
 			.on("scroll", function() {
 				var
 					$this = $(this),
-					vuer = $.data(this, "vue"),
+					vuwer = $.data(this, "vuw"),
 					t = $this.scrollTop();
 				
-				vuer._positionTrackings.forEach(function(vueName) {
-					this.onScroll(vueName, t);
-				}, vuer);
+				vuwer._positionTrackings.forEach(function(vuwName) {
+					this.onScroll(vuwName, t);
+				}, vuwer);
 			});
 		}
 	})
@@ -100,7 +99,7 @@
 			._addDeviceInfoClass()
 			._initSmoothScroll()
 			._attachHoverStatus()
-			._attachLink4SP($self);
+			._attachLink4SP();
 		},
 		
 		// [端末情報をクラス名として登録]
@@ -117,20 +116,23 @@
 		// [smooth scroll]
 		_initSmoothScroll: function() {
 			this.$self.on("click", "a", function(e) {
-				var vue, $target;
+				var vuw, $target, origin = this.origin;
 				
+				!origin && (origin = !this.protocol ? "" : this.protocol + "\/\/" + this.hostname);
 				// ページ内リンクのクリック時のみ発火
-				if(this.hash && this.origin + this.pathname === app.URL) {
+				if(this.hash && (
+					origin + this.pathname === app.URL || !origin
+				)) {
 					e.preventDefault();
-					vue = $.data(e.delegateTarget, "vue");
+					vuw = $.data(e.delegateTarget, "vuw");
 					$target = $(this.hash);
 					$("html, body").animate({
 						scrollTop: $target.offset().top - 20
 					}, {
-						complete: app.isFunction(vue.smoothScrollCallBack) ? function() {
+						complete: app.isFunction(vuw.smoothScrollCallBack) ? function() {
 							// ブラウザによっては2回実行されるためclearTimeout処理で対応
-							!!vue._smoothScrollTimer && clearTimeout(vue._smoothScrollTimer);
-							vue._smoothScrollTimer = setTimeout(vue.smoothScrollCallBack.bind($target), 100);
+							!!vuw._smoothScrollTimer && clearTimeout(vuw._smoothScrollTimer);
+							vuw._smoothScrollTimer = setTimeout(vuw.smoothScrollCallBack.bind($target), 100);
 						} : null,
 						duration: 600
 					});
@@ -139,12 +141,12 @@
 			return this;
 		},
 		smoothScrollCallBack: function() {
-			app.cnLog("scrolled.", this.offset().top);
+			csl.log("scrolled.", this.offset().top);
 		},
 		
 		// [attach hover status]
 		_attachHoverStatus: function() {
-			this.getVuer().$window
+			this.getVuwer().$window
 			.on("pageshow", function(e) {
 				$(".is-hover").removeClass("is-hover");
 			});
@@ -156,8 +158,8 @@
 				$(this).addClass("is-hover");
 			})
 			.on("mouseleave touchend", "a:not(.btn), .btn, .hoverTarget", function(e) {
-				var vue = $.data(e.delegateTarget, "vue");
-				setTimeout( $.fn.removeClass.bind($(this), "is-hover"), vue.hoverDecayTime);
+				var vuw = $.data(e.delegateTarget, "vuw");
+				setTimeout( $.fn.removeClass.bind($(this), "is-hover"), vuw.hoverDecayTime);
 			});
 			
 			return this;
@@ -168,8 +170,8 @@
 		* 動作条件：「link4SP」というclassを付ける　data-hrefにリンク先URLを記述する
 		*（例）<span class="link4SP" data-href="tel:電話番号">電話番号</span>
 		*/
-		_attachLink4SP: function($self) {
-			$self.on("click", ".link4SP", function() {
+		_attachLink4SP: function() {
+			this.$self.on("click", ".link4SP", function() {
 				var
 					$this = $(this),
 					t = {
@@ -200,12 +202,12 @@
 		selector: "#site_header",
 		onReady: function($self) {
 			$self.on("click", ".icon-keeshkas", function(e) {
-				var vue = $.data(e.delegateTarget, "vue");
+				var vuw = $.data(e.delegateTarget, "vuw");
 				e.preventDefault();
-				if( vue.getOther("nav").getState("isFixed") ) {
-					vue.getOther("switchNavLinks").$self.trigger("click", [true]);
+				if( vuw.getOther("nav").getState("isFixed") ) {
+					vuw.getOther("switchNavLinks").$self.trigger("click", [true]);
 				} else {
-					vue.getOther("scrollToPageTop").execScroll();
+					vuw.getOther("scrollToPageTop").execScroll();
 				}
 			});
 		}
@@ -240,7 +242,7 @@
 			// 更新スタイル取得関数
 			this.updStyle = function() {
 				var css = {
-					"min-height": this.getVuer().$window.outerHeight() - 1,
+					"min-height": this.getVuwer().$window.outerHeight() - 1,
 					"padding-bottom": this.$self.outerHeight(true)
 				};
 				this.$wrap.isBorderBox || (css["min-height"] -= css["padding-bottom"]);
@@ -251,7 +253,7 @@
 			this.updStyle();
 			
 			// for window resize event
-			this.getVuer().$window
+			this.getVuwer().$window
 			.on("resize", function(e, isTrigger) {
 				(_self._fixTimer) && clearTimeout(_self._fixTimer);
 				_self._fixTimer = setTimeout(_self.updStyle.bind(_self), !!isTrigger ? 0 : 50);
@@ -271,7 +273,7 @@
 	.add("nav", {
 		selector: "#site_nav",
 		onReady: function($self) {
-			this.getVuer().positionTracking(this);
+			this.getVuwer().positionTracking(this);
 		},
 		onChangeState: function(state) {
 			this.$self.toggleClass("lock-fixed", !!state.isLockFixed);
@@ -285,11 +287,11 @@
 			this.$link = $self.closest(".btn-toggle");
 			$self.on("change", function(e, isTrigger) {
 				var
-					vue = $.data(this, "vue"),
+					vuw = $.data(this, "vuw"),
 					section = app.isString(isTrigger) ? isTrigger : "posts";
-				vue.setState("isChecked", this.checked);
-				vue.getOther("nav").setState("isLockFixed", this.checked);
-				vue.getOther("siteBody").setState("view", this.checked ? "" : section);
+				vuw.setState("isChecked", this.checked);
+				vuw.getOther("nav").setState("isLockFixed", this.checked);
+				vuw.getOther("siteBody").setState("view", this.checked ? "" : section);
 			});
 		},
 		onChangeState: function(state) {
@@ -303,12 +305,12 @@
 		onReady: function($self) {
 			$self
 			.on("focus", ".inp-txt", function(e) {
-				var vue = $.data(e.delegateTarget, "vue");
-				vue.setState("focus", true);
+				var vuw = $.data(e.delegateTarget, "vuw");
+				vuw.setState("focus", true);
 			})
 			.on("blur", ".inp-txt", function(e) {
-				var vue = $.data(e.delegateTarget, "vue");
-				vue.setState("focus", false);
+				var vuw = $.data(e.delegateTarget, "vuw");
+				vuw.setState("focus", false);
 			});
 			
 			this.$inp = $("#inp_q");
@@ -321,7 +323,8 @@
 		onChangeState: function(state) {
 			this.$self
 			.toggleClass("is-focus", state.focus)
-			.toggleClass("is-rockOpen", state.rockOpen);
+			.toggleClass("is-rockOpen", state.rockOpen)
+			.closest(".link-list").toggleClass("is-form-focus", state.focus);
 		}
 	})
 	
@@ -331,6 +334,8 @@
 			return this.getOther("searchBox").$self.find(".btn-search");
 		},
 		onReady: function($self) {
+			this.state.htmlFor = this.$self.attr("for");
+			
 			this.getOther("searchBox").onChangeState(function(state) {
 				var htmlFor;
 				if(state.rockOpen) {
@@ -344,16 +349,15 @@
 			});
 			
 			this.$self.on("click", function(e) {
-				var vue = $.data(this, "vue");
-				alert("click ... " + vue.getState("htmlFor"));
-				if(vue.getState("htmlFor") === "inp_q") {
+				var vuw = $.data(this, "vuw");
+				if(vuw.getState("htmlFor") === "inp_q") {
 					e.preventDefault();
-					vue.getOther("searchBox").$inp.trigger("focus", [true]);
+					vuw.getOther("searchBox").$inp.trigger("focus", [true]);
 				}
 			});
 		},
 		onChangeState: function(state) {
-			!!state.htmlFor && this.$self.attr("for", state.htmlFor);
+//			!!state.htmlFor && this.$self.attr("for", state.htmlFor);
 		}
 	})
 	
@@ -361,7 +365,7 @@
 	.add("scrollToPageTop", {
 		selector: "#scroll_to_pageTop",
 		onReady: function($self) {
-			this.getVuer().positionTracking(this);
+			this.getVuwer().positionTracking(this);
 		},
 		execScroll: function() {
 			this.$self.children(".btn-exec").trigger("click", [true]);
@@ -385,8 +389,8 @@
 				return df.promise();
 			}) );
 			$.when.apply($, methods).then( (function() {
-				app.cnLog("main bg loaded");
-				this.getVuer().$window.trigger("resize", [true]);
+				csl.log("main bg loaded");
+				this.getVuwer().$window.trigger("resize", [true]);
 			}).bind(this) );
 			
 			this.$title = $self.children(".main-title");
@@ -395,22 +399,22 @@
 				this.getOther("body").onChangeState(function(state) {
 					if(state.wndH && state.ttlH) {
 						state.t = (state.wndH * 0.6 < state.ttlH) ? state.ttlH : "";
-						app.cnLog("body.onChangeState", state);
+						csl.log("body.onChangeState", state);
 						this.$self.css("padding-top", state.t);
 						delete state.t;
 					}
 				});
 				
 				this.$mainBG = $self.children(".main-background");
-				this.getVuer().$window.on("resize", function(e, isTrigger) {
+				this.getVuwer().$window.on("resize", function(e, isTrigger) {
 					var
-						vuer = $.data(this, "vue"),
-						secTitle =	vuer.get("secTitle");
+						vuwer = $.data(this, "vuw"),
+						secTitle =	vuwer.get("secTitle");
 					
 					!!secTitle._timer && clearTimeout(secTitle._timer);
 					secTitle._timer = setTimeout(function() {
-						vuer.get("body").setState({
-							wndH: vuer.$window.height(),
+						vuwer.get("body").setState({
+							wndH: vuwer.$window.height(),
 							ttlH: secTitle.$mainBG.height()
 						});
 					}, !!isTrigger ? 0 : 100);
@@ -430,15 +434,15 @@
 			
 			$self.on("click", ".btn-close", function(e) {
 				e.preventDefault();
-				var vue = $.data(e.delegateTarget, "vue");
-				vue.getOther("siteBody").setState("view", "")
+				var vuw = $.data(e.delegateTarget, "vuw");
+				vuw.getOther("siteBody").setState("view", "")
 				.then( (function() {
 					var df = $.Deferred();
 					setTimeout(df.resolve, this._delay);
 					return df.promise();
 				}).bind(this) )
 				.then(function() {
-					vue.getOther("siteBody").setState("view", "posts");
+					vuw.getOther("siteBody").setState("view", "posts");
 				});
 			});
 		}
@@ -450,8 +454,8 @@
 		onReady: function($self) {
 			$self.on("click", function(e) {
 				e.preventDefault();
-				var vue = $.data(e.delegateTarget, "vue");
-				vue.getOther("switchNavLinks").$self.prop({
+				var vuw = $.data(e.delegateTarget, "vuw");
+				vuw.getOther("switchNavLinks").$self.prop({
 					checked: false
 				}).trigger("change", ["description"]);
 			});
@@ -478,7 +482,7 @@
 				}) );
 			});
 			return $.when.apply($, methods).then(function() {
-				app.cnLog("checkLoaded", "complete");
+				csl.log("checkLoaded", "complete");
 			});
 		},
 		addLoadListener: function($elm, cb) {
@@ -508,7 +512,7 @@
 									alt: "artwork"
 								}).appendTo($post);
 								_self.scMap[postID] = music;
-								app.cnLog("soundcloud", postID, music);
+								csl.log("soundcloud", postID, music);
 							});
 						});
 					}
@@ -516,14 +520,14 @@
 			}
 		},
 		onReady: function($self) {
-			var vue = this;
+			var vuw = this;
 //			return this.checkLoaded().then(function() {
 				if( (/^index/).test(app.pageType) ) {
-					vue.$posts = $self.children(".post").each(function() {
-						vue.postCheck( $(this) );
+					vuw.$posts = $self.children(".post").each(function() {
+						vuw.postCheck( $(this) );
 					});
 					if( (/\.top/).test(app.pageType) ) {
-						vue.$posts.eq(5).before(
+						vuw.$posts.eq(5).before(
 							$("<div/>").addClass("post more-box").append(
 								$("<a/>").addClass("icon-more-after").append(
 									$("<span/>").text("more")

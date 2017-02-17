@@ -5,11 +5,13 @@
 		rootdir ={
 			prod: "keeshkassoundservice.tumblr.com",
 			test: "_test",
-			dev: "kss_site"
+			dev: "127.0.0.1"
 		};
 	
-	window.app = new window.WebAppBase("KSS", rootdir);
-	(app._environment === "prod") && (app.LOG = false);
+	window.app = Klass.new_("WebAppBase", "KSS", rootdir);
+	(location.hostname === rootdir.dev) && (app._environment = "dev");
+	(app._environment === "prod") || csl.on("log");
+	csl.on("warn");
 	
 	app.writeHTML = function(htmlFile, cache) {
 		var
@@ -53,4 +55,6 @@
 	(window.loadGoogleAnalytics) && (function(trackingID) {
 		(app._environment === "prod") && window.loadGoogleAnalytics(trackingID);
 	})("");
+	
+	csl.log.gray("init WebAppBase (version:" + app.getVersion() + ")");
 })();

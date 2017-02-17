@@ -9,7 +9,10 @@
 	"debug"    : true,  // debugger を許可
 	"jquery" : true,  // jQueryの用意しているオブジェクトがグローバル宣言されていることになる
 	"globals": {
+		"Klass": false,
+		"csl": false,
 		"app": false,
+		"Vuw": false,
 		"moment": false
 	},
 	

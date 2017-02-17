@@ -38,8 +38,13 @@
 		min-width: 100%;
 		position: relative;
 		
-		@media (orientation: landscape) {
+		@media (orientation: landscape) and (max-width: @mq_w) {
 			height: auto;
+		}
+		
+		@media (orientation: portrait) and (max-width: @mq_w) {
+			max-height: 106vw;
+			min-height: 106vw;
 		}
 	}
 	
@@ -61,6 +66,7 @@
 	position: absolute;
 	top: 0;
 	width: 100%;
+	z-index: 1;
 }
 
 /**------------------------------------
@@ -72,7 +78,7 @@
 	padding: 5px 0;
 	position: relative;
 	text-align: center;
-	z-index: 1;
+	z-index: 2;
 	
 	@media(max-width: @mq_w) {
 		padding-top: 50px;
@@ -127,7 +133,7 @@
 	&.is-anime {
 		.title-main {
 			> span {
-				.animation(title, 5.0s ease-in-out infinite alternate);
+				.animation(title, 4.0s ease-in-out infinite alternate);
 				
 				&:nth-child(2) {
 					.animation-delay(.15s);
@@ -161,7 +167,7 @@
 		
 		.title-sub {
 			> span {
-				.animation(title, 5.0s ease-in-out infinite alternate);
+				.animation(title, 4.0s ease-in-out infinite alternate);
 			}
 		}
 	}
