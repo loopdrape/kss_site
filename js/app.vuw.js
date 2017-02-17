@@ -44,7 +44,7 @@
 			}
 		},
 		onReady: function($self) {
-			this.state.height = $self.height();
+			this.state.height = $self.height() + 10;
 			
 			$self
 			.on("resize", function(e, isTrigger) {
@@ -74,9 +74,7 @@
 				vuwer._scrollTimer = setTimeout(function() {
 					var diff = vuwer.$self.height() - vuwer.state.height;
 					if(diff !== 0) {
-						if(diff < 0) {
-							app.setScroll(diff * -1);
-						}
+						vuwer.get("body").$self.toggleClass("visible-urlbar", diff < 0);
 						vuwer.state.height += diff;
 					}
 				}, 100);

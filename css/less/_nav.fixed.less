@@ -152,10 +152,10 @@
 					padding-top: 10vh;
 					
 					@media (max-width: @mq_w) {
-//						.transition(transform .2s);
-						
 						&.is-form-focus {
-							.transform( translate3d(0, 0, 0) );
+							body:not(.visible-urlbar) {
+								.transform( translate3d(0, 0, 0) );
+							}
 						}
 					}
 				}
