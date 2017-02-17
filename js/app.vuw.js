@@ -67,6 +67,12 @@
 				vuwer._positionTrackings.forEach(function(vuwName) {
 					this.onScroll(vuwName, t);
 				}, vuwer);
+				
+				!!vuwer._scrollTimer && clearTimeout(vuwer._scrollTimer);
+				vuwer._scrollTimer = setTimeout(function() {
+					$this.scrollTop(t + 10);
+//					app.setScroll(t + 10);
+				}, 100);
 			});
 		}
 	})
@@ -306,6 +312,7 @@
 			$self
 			.on("focus", ".inp-txt", function(e) {
 				var vuw = $.data(e.delegateTarget, "vuw");
+				alert("focus inp");
 				vuw.setState("focus", true);
 			})
 			.on("blur", ".inp-txt", function(e) {

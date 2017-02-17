@@ -37,7 +37,6 @@
 	}).then(function() {
 		return app.hideLoading();
 	}).then(function() {
-		(app.device[0] === "sp") && app.setScroll(10);
 		app.vuwer.$window.trigger("scroll", [true]);
 		
 //		setTimeout(function() {
