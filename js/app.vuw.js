@@ -44,6 +44,8 @@
 			}
 		},
 		onReady: function($self) {
+			this.state.height = $self.height();
+			
 			$self
 			.on("resize", function(e, isTrigger) {
 				var
@@ -70,8 +72,13 @@
 				
 				!!vuwer._scrollTimer && clearTimeout(vuwer._scrollTimer);
 				vuwer._scrollTimer = setTimeout(function() {
-//					$this.scrollTop(t + 10);
-					app.setScroll(t + 10);
+					var diff = vuwer.$self.height() - vuwer.state.height;
+					if(diff !== 0) {
+						if(diff < 0) {
+							app.setScroll(diff * -1);
+						}
+						vuwer.state.height += diff;
+					}
 				}, 100);
 			});
 		}
