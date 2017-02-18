@@ -102,7 +102,7 @@
 		Klass._klassMap = {
 			"Klass": Core
 		};
-		Core.klass = "Klass";
+		Core.prototype.klass = "Klass";
 		
 		// [Class継承関数]
 		Klass.extends_ = function(Ctor, parentName, prop) {	// 'extends'はIEで予約語になっているため使用不可
@@ -143,7 +143,6 @@
 			Ctor = function() {
 				this._initialize.apply(this, arguments);
 			};
-			Ctor.klass = klassName;
 			// コンストラクタへextends_関数を登録
 			Ctor.extends_ = function(parentName, prop) {
 				return window.Klass.extends_(this, parentName, prop);
@@ -154,6 +153,7 @@
 				// コアClassから継承
 				this.extends_(Ctor, "Klass", prop);
 			}
+			Ctor.prototype.klass = klassName;
 			return Ctor;
 		};
 		
@@ -171,9 +171,9 @@
 	})();
 	
 	////////////////
-	// Klass Cnsl //
+	// Klass Console //
 	////////////////
-	window.Klass.create("Cnsl", {
+	window.Klass.create("Console", {
 		// [constructor]
 		_initialize: function() {
 			// default methods [log, warn]
@@ -181,16 +181,16 @@
 		},
 		colors: {
 			blue: "#0862b1",
-			green: "#109f20",
-			orange: "#ef750c",
+			green: "#0c861a",
+			orange: "#de6d0b",
 			red: "#e2291e",
-			purple: "#b411cc",
+			purple: "#920ea5",
 			gray: "#aaa"
 		},
 		_attachColors: function(method, isOn) {
 			var
 				func = this[method],
-				isIE = window.Klass("Cnsl").browser[0] === "ie";
+				isIE = window.Klass("Console").browser[0] === "ie";
 			
 			Object.keys(this.colors).forEach(function(k) {
 				if(isOn) {
@@ -232,9 +232,9 @@
 	});
 	
 	// [add static var]
-	(function(Cnsl) {
+	(function(Console) {
 		// [browser info]
-		Cnsl.browser = (function() {
+		Console.browser = (function() {
 			var
 				ua = window.navigator.userAgent.toLowerCase(),
 				ver = window.navigator.appVersion.toLowerCase(),
@@ -274,7 +274,7 @@
 		})();
 		
 		// [device info]
-		Cnsl.device = (function() {
+		Console.device = (function() {
 			var
 				ua = window.navigator.userAgent.toLowerCase(),
 				arr = ["pc"];
@@ -296,10 +296,10 @@
 			
 			return arr;
 		})();
-	})( window.Klass("Cnsl") );
+	})( window.Klass("Console") );
 	
 	// **** define csl ****
-	window.csl = window.Klass.new_("Cnsl");
+	window.csl = window.Klass.new_("Console");
 	
 	
 	//////////////////////
@@ -311,6 +311,8 @@
 		ACTION_URL:  "",
 		_environment: "",
 		_GET: {},
+		browser: window.Klass("Console").browser,
+		device: window.Klass("Console").device,
 		
 		// [constructor]
 		_initialize: function(str, rootdir) {
@@ -329,8 +331,6 @@
 			
 			this.URL = location.origin + location.pathname;
 			this._GET = this.parseQueryString(window.location.search);
-			this.browser = window.Klass("Cnsl").browser;
-			this.device = window.Klass("Cnsl").device;
 			this.config = {};
 			
 			// set rootpath
@@ -388,7 +388,7 @@
 			return window.csl.log.apply(this, arguments);
 		},
 		cnWarn: function() {	// for legacy (LT version 2.0)
-			return window.csl.apply(this, arguments);
+			return window.csl.warn.apply(this, arguments);
 		},
 		
 		// **** base param & metohds ****

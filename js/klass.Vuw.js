@@ -585,7 +585,6 @@
 			* @return this
 			*/
 			appendKlass: function(name, prop, parent) {
-				var Super;
 				if( !this.isString(name) ) {
 					csl.warn("vuwer.appendKlass() ... arguments[0] is must be string.", typeof name);
 					return this;
@@ -714,7 +713,7 @@
 							if(["absolute", "fixed"].indexOf( $self.css("position") ) >= 0) {
 								this.orgHeight = $self.height();
 							}
-							$self.attr("data-visible", "0");
+							$self.addClass("vuw-fade").attr("data-visible", "0");
 							delay = parseFloat( $self.css("transition-duration") );
 							if( isNaN(delay) ) {
 								 $self.css("transition-duration", String(this.delay / 1000) + "s");
@@ -726,38 +725,28 @@
 					
 					// [push onChangeState callback]
 					this.onChangeState(function(state) {
-						var current;
+						var current, toVisible = !state.visible ? false : true;
 						if(!this.$self) {
 							csl.log.red("  " + this.name + ".onChangeState", "$self is false.");
 							return false;
 						}
 						
 						current = (this.$self.attr("data-visible") === "1") ? true : false;
-						if(current === (state.visible) ? true : false) {
+						if(current === toVisible) {
 							return false;
 						}
 						
 						return $.Deferred( (function(df) {
 							// CSSアニメーション様に処理をずらす
 							!!this.orgHeight && this.$self.css("height", this.orgHeight);
-							this.$self.attr("data-visible", "");
-							if(state.visible) {
-								// show
-//								setTimeout( (function() {
-									this.$self.attr("data-visible", "1");
-									setTimeout( (function() {
-										!!this.orgHeight && this.$self.css("height", "");
-										df.resolve();
-									}).bind(this), this.delay );
-//								}).bind(this), 0);
-							} else {
-								// hide
-								setTimeout( (function() {
-									this.$self.attr("data-visible", "0");
-									!!this.orgHeight && this.$self.css("height", "");
-									df.resolve();
-								}).bind(this), this.delay );
-							}
+							// [show or clear]
+							this.$self.attr("data-visible", toVisible ? "1" : "");
+							setTimeout( (function() {
+								// [hide]
+								toVisible || this.$self.attr("data-visible", "0");
+								!!this.orgHeight && this.$self.css("height", "");
+								df.resolve();
+							}).bind(this), this.delay );
 							return df.promise();
 						}).bind(this) );
 					});
