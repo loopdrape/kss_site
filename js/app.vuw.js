@@ -301,6 +301,7 @@
 					vuw = $.data(this, "vuw"),
 					section = app.isString(isTrigger) ? isTrigger : "posts";
 				vuw.setState("isChecked", this.checked);
+				vuw.getOther("body").setState("lockScroll", this.checked);
 				vuw.getOther("nav").setState("isLockFixed", this.checked);
 				vuw.getOther("siteBody").setState("view", this.checked ? "" : section);
 			});

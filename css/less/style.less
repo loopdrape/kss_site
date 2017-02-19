@@ -4,6 +4,10 @@
 
 /**------------------------------------
 * parts style */
+html {
+	height:  100%;
+}
+
 body {
 	padding-top: 22vh;
 	
@@ -21,6 +25,10 @@ body {
 			overflow: hidden;
 			padding: 0;
 		}
+	}
+	
+	&.is-lock-scroll {
+		overflow: hidden;
 	}
 }
 
@@ -171,7 +179,7 @@ body {
 	
 	body.page-index & {
 		.transform( skew(0, @base_skewY) );
-		.transform-origin(0 0);
+		.transform-origin(100% 0);
 	}
 }
 
