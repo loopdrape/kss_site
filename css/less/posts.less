@@ -12,6 +12,10 @@
 		flex-direction: row;
 		flex-wrap: wrap;
 		justify-content: flex-start;
+		
+		.more-box ~ .post {
+			display: none;
+		}
 	}
 }
 
@@ -36,7 +40,6 @@
 		height: 24vh;
 		overflow: hidden;
 		position: relative;
-		text-align: center;
 		width: 50%;
 		
 		@media (orientation: portrait) and (max-width: @mq_w) {
@@ -48,19 +51,53 @@
 		}
 		
 		> a {
-			.transition(opacity .2s);
-			background-color: @theme_c;
+			.transition(background .2s);
 			display: block;
 			height: 100%;
 			left: 0;
-			opacity: 0;
+			padding: @block_pad @block_pad (@block_pad + 2px);
 			position: absolute;
 			top: 0;
 			width: 100%;
 			z-index: 2;
 			
+			@media (max-width: @mq_w) {
+				@this_pad: (@block_pad * 3 / 4);
+				padding: @this_pad @this_pad (@this_pad + 2px);
+			}
+			
+			&:before,
+			&:after {
+				.box-sizing(border);
+				content: "";
+				display: block;
+				height: 100%;
+				width: 100%;
+			}
+			
+			&:before {
+				border: 2px solid fade(@theme_c, 35%);
+				position: relative;
+				z-index: 1;
+			}
+			
+			&:after {
+				border: @block_pad solid fade(@base_bgc, 70%);
+				height: 100%;
+				left: 0;
+				position: absolute;
+				top: 0;
+				width: 100%;
+				z-index: 0;
+				
+				@media (max-width: @mq_w) {
+					@this_pad: (@block_pad * 3 / 4);
+					border-width: (@this_pad / 2);
+				}
+			}
+			
 			&.is-hover {
-				opacity: .2;
+				background-color: fade(@theme_c, 20%);
 			}
 		}
 		
@@ -80,30 +117,32 @@
 		}
 		
 		.entry-header {
-			background-color: fade(@theme_c, 90%);
-			bottom: 0;
-			left: 0;
-			padding-bottom: (14px * 1.6);
+			color: @theme_c;
+			height: 100%;
 			position: absolute;
 			width: 100%;
-			z-index: 1;
+			z-index: 2;
 			
 			.entry-title {
+				text-shadow: 2px -2px 2px fade(@base_bgc, 40%);
 				border-bottom-width: 0px;
-				color: @base_bgc;
 				margin-bottom: 0;
-				text-align: center;
+				padding-left: @block_pad;
+				
+				@media (max-width: @mq_w) {
+					font-size: 1.8rem;
+				}
 			}
 			
 			.date {
 				bottom: 0;
-				color: @base_bgc;
-				left: 0;
-				padding-right: 1em;
+				right: @block_pad;
 				position: absolute;
-				text-align: right;
-				width: 100%;
 				z-index: 1;
+				
+				@media (max-width: @mq_w) {
+					font-size: 1.2rem;
+				}
 			}
 		}
 		

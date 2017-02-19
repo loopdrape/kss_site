@@ -362,7 +362,7 @@
 				var vuw = $.data(this, "vuw");
 				if(vuw.getState("htmlFor") === "inp_q") {
 					e.preventDefault();
-					vuw.getOther("searchBox").$inp.trigger("focus", [true]);
+					vuw.getOther("searchBox").$inp.trigger("click", [true]);
 				}
 			});
 		},
@@ -536,15 +536,17 @@
 					vuw.$posts = $self.children(".post").each(function() {
 						vuw.postCheck( $(this) );
 					});
-					if( (/\.top/).test(app.pageType) ) {
-						vuw.$posts.eq(5).before(
-							$("<div/>").addClass("post more-box").append(
-								$("<a/>").addClass("icon-more-after").append(
+					(/\.top/).test(app.pageType) && (function() {
+						var $more = $("<div/>").addClass("post more-box")
+							.append(
+								$("<a/>").addClass("load-next"),
+								$("<p/>").addClass("icon-more-after").append(
 									$("<span/>").text("more")
 								)
-							)
-						);
-					}
+							);
+						vuw.$posts.eq(5).before( $more.clone() );
+						vuw.$posts.eq(-1).after( $more );
+					})();
 				}
 //			});
 		}
