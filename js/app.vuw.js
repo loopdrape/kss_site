@@ -58,6 +58,7 @@
 					var diff = vuwer.$self.height() - vuwer.state.height;
 					if(diff !== 0) {
 						vuwer.get("body").$self.toggleClass("visible-urlbar", diff < 0);
+						alert("visible-urlbar", diff);
 						vuwer.state.height += diff;
 					}
 					
