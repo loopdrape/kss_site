@@ -55,6 +55,12 @@
 				
 				!!vuwer._resizeTimer && clearTimeout(vuwer._resizeTimer);
 				vuwer._resizeTimer = setTimeout(function() {
+					var diff = vuwer.$self.height() - vuwer.state.height;
+					if(diff !== 0) {
+						vuwer.get("body").$self.toggleClass("visible-urlbar", diff < 0);
+						vuwer.state.height += diff;
+					}
+					
 					vuwer._positionTrackings.forEach(function(vuwName) {
 						this.updPtFixEnd(vuwName, h);
 					}, vuwer);
@@ -69,15 +75,6 @@
 				vuwer._positionTrackings.forEach(function(vuwName) {
 					this.onScroll(vuwName, t);
 				}, vuwer);
-				
-				!!vuwer._scrollTimer && clearTimeout(vuwer._scrollTimer);
-				vuwer._scrollTimer = setTimeout(function() {
-					var diff = vuwer.$self.height() - vuwer.state.height;
-					if(diff !== 0) {
-						vuwer.get("body").$self.toggleClass("visible-urlbar", diff < 0);
-						vuwer.state.height += diff;
-					}
-				}, 100);
 			});
 		}
 	})
