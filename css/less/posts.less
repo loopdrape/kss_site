@@ -55,15 +55,69 @@
 			display: block;
 			height: 100%;
 			left: 0;
-			padding: @block_pad @block_pad (@block_pad + 2px);
 			position: absolute;
 			top: 0;
 			width: 100%;
-			z-index: 2;
+			z-index: 3;
+			
+			&.is-hover {
+				background-color: fade(@theme_c, 20%);
+			}
+		}
+		
+		> .thumbnail {
+			.transform( skew(0, (@base_skewY * -1)) translate(-50%, -50%) );
+			max-width: 110%;
+			min-height: 116%;
+			left: 50%;
+			position: absolute;
+			top: 45%;
+			z-index: -1;
+		}
+		
+		> p,
+		.caption {
+			text-align: left;
+		}
+		
+		.entry-header {
+			color: @theme_c;
+			height: 100%;
+			padding: @block_pad @block_pad (@block_pad + 2px);
+			width: 100%;
 			
 			@media (max-width: @mq_w) {
 				@this_pad: (@block_pad * 3 / 4);
 				padding: @this_pad @this_pad (@this_pad + 2px);
+			}
+			
+			.entry-title {
+				text-shadow: 2px 2px 2px fade(#000, 35%);
+				border-bottom-width: 0;
+				font-size: 2rem;
+				left: 0;
+				margin-bottom: 0;
+				padding-left: @block_pad;
+				position: absolute;
+				top: 0;
+				width: 100%;
+				z-index: 2;
+				
+				@media (max-width: @mq_w) {
+					font-size: 1.8rem;
+				}
+			}
+			
+			.date {
+				bottom: 0;
+				font-weight: 500;
+				right: @block_pad;
+				position: absolute;
+				z-index: 2;
+				
+				@media (max-width: @mq_w) {
+					font-size: 1.2rem;
+				}
 			}
 			
 			&:before,
@@ -92,56 +146,7 @@
 				
 				@media (max-width: @mq_w) {
 					@this_pad: (@block_pad * 3 / 4);
-					border-width: (@this_pad / 2);
-				}
-			}
-			
-			&.is-hover {
-				background-color: fade(@theme_c, 20%);
-			}
-		}
-		
-		> .thumbnail {
-			.transform( skew(0, (@base_skewY * -1)) translate(-50%, -50%) );
-			max-width: 110%;
-			min-height: 116%;
-			left: 50%;
-			position: absolute;
-			top: 45%;
-			z-index: 0;
-		}
-		
-		> p,
-		.caption {
-			text-align: left;
-		}
-		
-		.entry-header {
-			color: @theme_c;
-			height: 100%;
-			position: absolute;
-			width: 100%;
-			z-index: 2;
-			
-			.entry-title {
-				text-shadow: 2px -2px 2px fade(@base_bgc, 40%);
-				border-bottom-width: 0px;
-				margin-bottom: 0;
-				padding-left: @block_pad;
-				
-				@media (max-width: @mq_w) {
-					font-size: 1.8rem;
-				}
-			}
-			
-			.date {
-				bottom: 0;
-				right: @block_pad;
-				position: absolute;
-				z-index: 1;
-				
-				@media (max-width: @mq_w) {
-					font-size: 1.2rem;
+					border-width: @this_pad;
 				}
 			}
 		}
