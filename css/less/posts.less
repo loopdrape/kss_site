@@ -67,9 +67,10 @@
 		
 		> .thumbnail {
 			.transform( skew(0, (@base_skewY * -1)) translate(-50%, -50%) );
-			max-width: 110%;
-			min-height: 116%;
 			left: 50%;
+			max-width: initial;
+			max-width: auto;
+			min-height: 116%;
 			position: absolute;
 			top: 45%;
 			z-index: -1;
@@ -130,7 +131,7 @@
 			}
 			
 			&:before {
-				border: 2px solid fade(@theme_c, 35%);
+				.box-shadow(inset, 0, 0, 4px, 1px, @theme_c);
 				position: relative;
 				z-index: 1;
 			}
@@ -158,6 +159,28 @@
 		
 		.entry-footer {
 			display: none;
+		}
+		
+		&.more-box {
+			background-color: tint(@theme_c, 20%);
+			
+			> a {
+				.box-shadow( inset, 1px, 1px, 6px, 0, #000, .3 );
+			}
+			
+			> p {
+				.transform( translate(-50%, -50%) );
+				color: @base_bgc;
+				font-size: 2.6rem;
+				line-height: 1;
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				
+				&:after {
+					vertical-align: middle;
+				}
+			}
 		}
 	}
 	

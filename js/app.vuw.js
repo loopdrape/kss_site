@@ -48,33 +48,30 @@
 			
 			$self
 			.on("resize", function(e, isTrigger) {
-				var
-					$this = $(this),
-					vuwer = $.data(this, "vuw"),
-					h = $this.height();
-				
+				var vuwer = $.data(this, "vuw");
 				!!vuwer._resizeTimer && clearTimeout(vuwer._resizeTimer);
-				vuwer._resizeTimer = setTimeout(function() {
-					var diff = vuwer.$self.height() - vuwer.state.height;
+				vuwer._resizeTimer = setTimeout( (function() {
+					var
+						h = vuwer.$self.height(),
+						diff = h - vuwer.state.height;
+					
 					if(diff !== 0) {
 						vuwer.get("body").$self.toggleClass("visible-urlbar", diff < 0);
-						alert("visible-urlbar", diff);
 						vuwer.state.height += diff;
 					}
 					
 					vuwer._positionTrackings.forEach(function(vuwName) {
 						this.updPtFixEnd(vuwName, h);
 					}, vuwer);
-				}, !!isTrigger ? 0 : 100);
+				}).bind(this), !!isTrigger ? 0 : 100 );
 			})
 			.on("scroll", function() {
 				var
 					$this = $(this),
-					vuwer = $.data(this, "vuw"),
-					t = $this.scrollTop();
+					vuwer = $.data(this, "vuw");
 				
 				vuwer._positionTrackings.forEach(function(vuwName) {
-					this.onScroll(vuwName, t);
+					this.onScroll(vuwName, $this.scrollTop());
 				}, vuwer);
 			});
 		}
@@ -314,9 +311,10 @@
 		selector: "#search_box",
 		onReady: function($self) {
 			$self
-			.on("focus", ".inp-txt", function(e) {
+			.on("click", ".inp-txt", function(e, isTrigger) {
 				var vuw = $.data(e.delegateTarget, "vuw");
 				vuw.setState("focus", true);
+				!!isTrigger && $(this).trigger("focus", [true]);
 			})
 			.on("blur", ".inp-txt", function(e) {
 				var vuw = $.data(e.delegateTarget, "vuw");
@@ -365,8 +363,8 @@
 					vuw.getOther("searchBox").$inp.trigger("click", [true]);
 				}
 			});
-		},
-		onChangeState: function(state) {
+//		},
+//		onChangeState: function(state) {
 //			!!state.htmlFor && this.$self.attr("for", state.htmlFor);
 		}
 	})
