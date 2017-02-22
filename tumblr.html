@@ -182,7 +182,9 @@
 				{block:Photo}
 					<!-- post: 画像 -->
 					{block:IndexPage}
-					<img class="thumbnail" src="{PhotoURL-HighRes}" alt="{PhotoAlt}"/>
+					<div class="thumbnail">
+						<img src="{PhotoURL-HighRes}" alt="{PhotoAlt}"/>
+					</div>
 					{/block:IndexPage}
 					<div class="entry-content">
 					{block:PermalinkPage}
@@ -249,7 +251,9 @@
 					<!-- post: ビデオ -->
 					{block:IndexPage}
 						{block:VideoThumbnail}
-					<img class="thumbnail" src="{VideoThumbnailURL}" alt="videoThumbnail"/>
+					<div class="thumbnail">
+						<img src="{VideoThumbnailURL}" alt="videoThumbnail"/>
+					</div>
 						{/block:VideoThumbnail}
 					{/block:IndexPage}
 					<div class="entry-content">
@@ -266,7 +270,9 @@
 					<!-- post: オーディオ -->
 					{block:IndexPage}
 						{block:AlbumArt}
-							<img class="thumbnail" src="{AlbumArtURL}" alt="album artwork"/>
+					<div class="thumbnail">
+						<img src="{AlbumArtURL}" alt="album artwork"/>
+					</div>
 						{/block:AlbumArt}
 					{/block:IndexPage}
 					<div class="entry-content">

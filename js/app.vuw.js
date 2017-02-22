@@ -495,36 +495,58 @@
 		},
 		addLoadListener: function($elm, cb) {
 			if($elm && $elm.length & app.isFunction(cb)) {
+				$elm = $elm.eq(0);
 				$.Deferred(function(df) {
-					$elm.eq(0).on("load", df.resolve);
-					setTimeout(df.resolve, 1000);
+					$elm.on("load.once", df.resolve);
+					setTimeout(function() {
+						$elm.off(".once");
+						df.resolve();
+					}, 1500);
 					return df.promise();
 				}).then(function() {
 					cb.call( $elm.get(0) );
 				});
 			}
 		},
-		scMap: {},
-		postCheck: function($post) {
+		createThumbnail: function($post) {
 			var
 				_self = this,
-				postID = $post.attr("id");
+				postID = $post.attr("id"),
+				$thumb;
 			
-			switch( $post.data("type") ) {
-				case "audio":
-					if($post.hasClass("soundcloud") && window.SC) {
-						this.addLoadListener($post.find("iframe"), function() {
-							window.SC.Widget(this).getCurrentSound(function(music) {
-								$("<img/>").addClass("thumbnail").attr({
-									src: music.artwork_url.replace('-large', '-t500x500'),
-									alt: "artwork"
-								}).appendTo($post);
-								_self.scMap[postID] = music;
-								csl.log("soundcloud", postID, music);
-							});
+			if($post.data("type") === "audio" && $post.hasClass("soundcloud") ) {
+				if(window.SC) {
+					this.addLoadListener($post.find("iframe"), function() {
+						window.SC.Widget(this).getCurrentSound(function(music) {
+							var src = music.artwork_url.replace("-large", "-t500x500");
+							$("<div/>").addClass("thumbnail").append(
+								$("<img/>").attr({
+									"src": src,
+									"alt": "artwork"
+								})
+							).css({
+								"background-image": "url(" + src + ")"
+							}).appendTo($post);
+						});
+					});
+				}
+			} else {
+				$thumb = $post.children(".thumbnail");
+				if($thumb.length) {
+					$thumb.$img = $thumb.children("img");
+					if($thumb.$img.length) {
+						$thumb.css({
+							"background-image": "url(" + $thumb.$img.src + ")"
 						});
 					}
-					break;
+				} else {
+					$thumb = $post.find("img").eq(0);
+					if($thumb.length) {
+						$thumb = $("<div/>").addClass("thumbnail").append($thumb).css({
+							"background-image": "url(" + $thumb.src + ")"
+						}).appendTo($post);
+					}
+				}
 			}
 		},
 		onReady: function($self) {
@@ -532,18 +554,26 @@
 //			return this.checkLoaded().then(function() {
 				if( (/^index/).test(app.pageType) ) {
 					vuw.$posts = $self.children(".post").each(function() {
-						vuw.postCheck( $(this) );
+						vuw.createThumbnail( $(this) );
 					});
 					(/\.top/).test(app.pageType) && (function() {
 						var $more = $("<div/>").addClass("post more-box")
 							.append(
-								$("<a/>").addClass("load-next"),
+								$("<a/>").addClass("load-next").attr("href", "./"),
 								$("<p/>").addClass("icon-more-after").append(
 									$("<span/>").text("more")
 								)
 							);
 						vuw.$posts.eq(5).before( $more.clone() );
 						vuw.$posts.eq(-1).after( $more );
+						
+						$self.on("click", ".load-next", function(e) {
+							var $more = $(this).parent();
+							if( $more.next().length ) {
+								e.preventDefault();
+								$more.remove();
+							}
+						});
 					})();
 				}
 //			});
