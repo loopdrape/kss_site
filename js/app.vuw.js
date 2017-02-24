@@ -1,7 +1,7 @@
 ;(function($) {
 	"use strict";
 	
-	if(!app || !Vuw) {
+	if( !app || !Klass("Vuw") ) {
 		return false;
 	}
 	
@@ -9,7 +9,8 @@
 	*    component    *
 	******************/
 	// vuwerオブジェクトの利用
-	app.vuwer = Vuw.useVuwer()
+	Klass("Vuw").useVuwer();
+	vuwer
 	// [window]
 	.setProp({
 		_positionTrackings: [],
@@ -48,7 +49,6 @@
 			
 			$self
 			.on("resize", function(e, isTrigger) {
-				var vuwer = $.data(this, "vuw");
 				!!vuwer._resizeTimer && clearTimeout(vuwer._resizeTimer);
 				vuwer._resizeTimer = setTimeout( (function() {
 					var
@@ -66,13 +66,10 @@
 				}).bind(this), !!isTrigger ? 0 : 100 );
 			})
 			.on("scroll", function() {
-				var
-					$this = $(this),
-					vuwer = $.data(this, "vuw");
-				
+				var $this = $(this);
 				vuwer._positionTrackings.forEach(function(vuwName) {
-					this.onScroll(vuwName, $this.scrollTop());
-				}, vuwer);
+					vuwer.onScroll(vuwName, $this.scrollTop());
+				});
 			});
 		}
 	})
@@ -152,7 +149,7 @@
 		
 		// [attach hover status]
 		_attachHoverStatus: function() {
-			this.getVuwer().$window
+			vuwer.$window
 			.on("pageshow", function(e) {
 				$(".is-hover").removeClass("is-hover");
 			});
@@ -248,7 +245,7 @@
 			// 更新スタイル取得関数
 			this.updStyle = function() {
 				var css = {
-					"min-height": this.getVuwer().$window.outerHeight() - 1,
+					"min-height": vuwer.$window.outerHeight() - 1,
 					"padding-bottom": this.$self.outerHeight(true)
 				};
 				this.$wrap.isBorderBox || (css["min-height"] -= css["padding-bottom"]);
@@ -259,7 +256,7 @@
 			this.updStyle();
 			
 			// for window resize event
-			this.getVuwer().$window
+			vuwer.$window
 			.on("resize", function(e, isTrigger) {
 				(_self._fixTimer) && clearTimeout(_self._fixTimer);
 				_self._fixTimer = setTimeout(_self.updStyle.bind(_self), !!isTrigger ? 0 : 50);
@@ -279,7 +276,7 @@
 	.add("nav", {
 		selector: "#site_nav",
 		onReady: function($self) {
-			this.getVuwer().positionTracking(this);
+			vuwer.positionTracking(this);
 		},
 		onChangeState: function(state) {
 			this.$self.toggleClass("lock-fixed", !!state.isLockFixed);
@@ -373,7 +370,7 @@
 	.add("scrollToPageTop", {
 		selector: "#scroll_to_pageTop",
 		onReady: function($self) {
-			this.getVuwer().positionTracking(this);
+			vuwer.positionTracking(this);
 		},
 		execScroll: function() {
 			this.$self.children(".btn-exec").trigger("click", [true]);
@@ -398,7 +395,7 @@
 			}) );
 			$.when.apply($, methods).then( (function() {
 				csl.log("main bg loaded");
-				this.getVuwer().$window.trigger("resize", [true]);
+				vuwer.$window.trigger("resize", [true]);
 			}).bind(this) );
 			
 			this.$title = $self.children(".main-title");
@@ -414,11 +411,8 @@
 				});
 				
 				this.$mainBG = $self.children(".main-background");
-				this.getVuwer().$window.on("resize", function(e, isTrigger) {
-					var
-						vuwer = $.data(this, "vuw"),
-						secTitle =	vuwer.get("secTitle");
-					
+				vuwer.$window.on("resize", function(e, isTrigger) {
+					var secTitle = vuwer.get("secTitle");
 					!!secTitle._timer && clearTimeout(secTitle._timer);
 					secTitle._timer = setTimeout(function() {
 						vuwer.get("body").setState({

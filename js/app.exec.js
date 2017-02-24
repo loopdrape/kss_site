@@ -1,7 +1,7 @@
 ;(function($) {
 	"use strict";
 	
-	if(!app || !Vuw) {
+	if( !app || !Klass("Vuw") ) {
 		return false;
 	}
 	
@@ -11,7 +11,7 @@
 	$.Deferred(function(df) {
 		$(function() {
 			// コンポーネントの準備
-			app.vuwer.getReady().then(df.resolve);
+			vuwer.getReady().then(df.resolve);
 		});
 		return df.promise();
 	}).then(function() {
@@ -26,21 +26,21 @@
 		);
 	}).then(function() {
 		var df = $.Deferred();
-		app.vuwer.get("body").$self.addClass("is-ready");
+		vuwer.get("body").$self.addClass("is-ready");
 		setTimeout(df.resolve, 0);
 		return df.promise();
 	}).then(function() {
 		var df = $.Deferred();
-		app.vuwer.$window.trigger("resize", [true]);
+		vuwer.$window.trigger("resize", [true]);
 		setTimeout(df.resolve, 600);
 		return df.promise();
 	}).then(function() {
 		return app.hideLoading();
 	}).then(function() {
-		app.vuwer.$window.trigger("scroll", [true]);
+		vuwer.$window.trigger("scroll", [true]);
 		
 //		setTimeout(function() {
-//			app.vuwer.get("siteFooter").fixBottom();
+//			vuwer.get("siteFooter").fixBottom();
 			csl.log.blue("**** app ready. ****");
 //		}, 0);
 	});
