@@ -1,6 +1,6 @@
 ;(function() {
 	"use strict";
-	var ver = "2.0";
+	var ver = "2.0.0";
 	
 	//////////////////
 	// define Klass // Class処理用関数

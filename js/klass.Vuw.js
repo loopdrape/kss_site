@@ -21,7 +21,7 @@
 	///////////////
 	// klass Vuw //
 	///////////////
-	window.Vuw = Klass.create("Vuw", {
+	Klass.create("Vuw", {
 		// メンバ変数
 		_ver: "1.0.0",
 		$self: false,
@@ -60,6 +60,11 @@
 				*/
 				onReady: function($self) {},
 				
+				// DOM操作準備関数のコールバック（必ず最初に実行される） ※非同期対応可
+				onReadyFirst: function($self) {},
+				// DOM操作準備関数のコールバック（必ず最後に実行される） ※非同期対応可
+				onReadyLast: function($self) {},
+				
 				/**
 				* 状態が変化した際のコールバック
 				* ※非同期対応可
@@ -89,18 +94,8 @@
 			
 			this.isReady = false;
 			this.state = {};		// 状態オブジェクト
-			
-			this._onReadyCallbacks = [];
-			if(conf.onReady) {
-				this.onReady(conf.onReady);
-				delete conf.onReady;
-			}
-			
-			this._onChangeStateCallbacks = [];
-			if(conf.onChangeState) {
-				this.onChangeState(conf.onChangeState);
-				delete conf.onChangeState;
-			}
+			this._onReadyCallbacks = [];		// onReady用
+			this._onChangeStateCallbacks = [];		// onChangeState用
 			
 			return this.setProp(conf);
 		},
@@ -169,17 +164,12 @@
 		* @return $ instance || HTMLElement
 		*/
 		getTemplateArea: function(as$) {
-			var $templateArea;
-			!this[this._templateAreaPropTo] && (this[this._templateAreaPropTo] = {});
-			if(!this[this._templateAreaPropTo]._$templateArea) {
+			if(!Klass("Vuw")._$templateArea) {
 				// [create _$templateArea]
-				// 上記_templateAreaPropToで指定されているオブジェクトに_$templateAreaプロパティとして格納される
-				this[this._templateAreaPropTo]._$templateArea =
-					$("<div/>").addClass("vuw-template-area").hide()
-					.appendTo(document.body);
+				Klass("Vuw")._$templateArea = $("<div/>").addClass("vuw-template-area").hide()
+				.appendTo(document.body);
 			}
-			$templateArea = this[this._templateAreaPropTo]._$templateArea;
-			return (as$ === false) ? $templateArea.get(0) : $templateArea;
+			return (as$ === false) ? Klass("Vuw")._$templateArea.get(0) : Klass("Vuw")._$templateArea;
 		},
 		
 		/**
@@ -188,9 +178,7 @@
 		* @return $.Deferred().promise()
 		*/
 		getReady: function() {
-			var
-				df = $.Deferred(),
-				methods;
+			var df = $.Deferred();
 			
 			if(this.isReady) {
 				csl.log("** " + this.name +  ".getReady() is already executed.");
@@ -241,12 +229,33 @@
 				// $templateが生成されている場合、body直下の専用領域に退避する
 				!!this.$template && this.$template.appendTo( this.getTemplateArea() );
 				
-				// コールバックの実行
-				methods = this._onReadyCallbacks.map(function(fn) {
-					return fn.call(this, this.$self, this.$template);
-				}, this);
-				
-				$.when.apply($, methods).then( (function() {
+				$.when(
+					// execute onReadyFirst
+					this.isFunction(this.onReadyFirst) && this.onReadyFirst(this, this.$self, this.$template)
+				).then( (function() {
+					// コールバックの実行
+					var methods = this._onReadyCallbacks.map(function(fn) {
+						return fn.call(this, this.$self, this.$template);
+					}, this);
+					return $.when.apply($, methods);
+				}).bind(this) )
+				.then( (function() {
+					var
+						args = Array.prototype.slice.call(arguments, 0),
+						d = $.Deferred();
+					
+					$.when(
+						// execute onReadyLast
+						this.isFunction(this.onReadyLast) ? this.onReadyLast(this, this.$self, this.$template) : undefined
+					).then( (function() {
+						if(arguments.length && arguments[0] !== undefined) {
+							args = args.concat( Array.prototype.slice.call(arguments, 0) );
+						}
+						d.resolve.apply(d, args);
+					}).bind(this), d.reject.bind(d) );
+					return d.promise();
+				}).bind(this) )
+				.then( (function() {
 					this.isReady = true;
 					delete this.isGettingReady;
 					df.resolve.apply( df, Array.prototype.slice.call(arguments, 0) );
@@ -435,22 +444,27 @@
 		renderComplete: function(renderedElm) {}
 	});
 	
+	Klass("Vuw").getVersion = function() {
+		return this.prototype._ver;
+	};
+	
 	/************************
 	* vuwer (Vuw container) *
 	************************/
 	/**
 	* 使用宣言関数
-	* （実行するとVuwの格納用Vuwインスタンスとして vuwer が生成される）
+	* （実行するとVuwの格納用Vuwインスタンスとして vuwer がwindow直下に生成される）
 	*/
-	window.Vuw.useVuwer = function() {
-		this.vuwer = Klass.new_("Vuw", {
+	Klass("Vuw").useVuwer = function() {
+		csl.log.gray("** use vuwer (Vuw version:" + this.getVersion() + ") **");
+		window.vuwer = Klass.new_("Vuw", {
 			name: "vuwer",
 			selector: function() {
 				return $(window);
 			},
 			
 			_vuwMap: {},
-			_childKlass: "VuwerComponent",
+			childKlass: "VuwerComponent",
 			
 			_getComponentsReady: function() {
 				var
@@ -460,7 +474,7 @@
 				// add()で追加されたVuwのgetReady()を実行する
 				methods = Object.keys(this._vuwMap).map(function(name) {
 					var vuw = this._vuwMap[name];
-					if(vuw instanceof Klass(this._childKlass) && !vuw.isReady) {
+					if(vuw instanceof Klass(this.childKlass) && !vuw.isReady) {
 						return vuw.getReady();
 					}
 				}, this);
@@ -474,8 +488,10 @@
 					Array.prototype.slice.call(arguments, 0).forEach(function(res, i) {
 						if( Array.isArray(res) ) {
 							res = res.filter(function(arg) {
-								return !!arg;
-							});
+								return !!arg &&
+									(!this.isObject(arg) || Object.keys(arg).length) &&
+									(!this.isArray(arg) || arg.length);
+							}, this);
 							!res.length && (res = undefined);
 						}
 						
@@ -495,63 +511,99 @@
 			},
 			
 			/**
-			* Vuwの追加関数
-			* @param name [string || Vuw instance] Vuwの名称 || _childKlassで指定したFunctionのインスタンス
-			* @param (optional) opt [object] Vuwコンストラクタのオプション
+			* 子Vuwの追加関数
+			* @param name [string] Vuwの名称 （optがVuwインスタンスの場合はvuwerへの登録名)
+			* @param (optional) opt [object || Vuw instance] Vuwコンストラクタのオプション || childKlassで指定したKlassのインスタンス
 			* @param (optional) isOverride [boolean] true: 既に存在していた場合に上書きを行う
 			* @return this
 			*/
 			add: function(name, opt, isOverride) {
-				var vuw;
+				var vuw, klass;
 				
-				if( this.isFunction(name) && name instanceof Klass(this._childKlass) ) {
-					vuw = name;
-					
+				if( !this.isString(name) ) {
+					csl.warn.red(this.name + ".add() ... arguments[0] is must be string.", typeof name);
+					return this;
+				}
+				if(name in this._vuwMap && !isOverride) {
+					csl.warn(this.name + ".add() ... '" + name + "' is already defined.");
+					return this;
+				}
+				
+				if( this.isObject(opt) ) {
+					if( opt instanceof Klass(this.childKlass) ) {
+						vuw = opt;
+					}
 				} else {
-					if( !this.isString(name) ) {
-						csl.warn("vuwer.add() ... arguments[0] is must be string.", typeof name);
-						return this;
-					}
-					if(name in this._vuwMap && !isOverride) {
-						csl.warn("vuwer.add() ... '" + name + "' is already defined.");
-						return this;
-					}
+					opt = {};
+				}
 					
-					this.isObject(opt) || (opt = {});
-					
+				if(!vuw) {
 					Object.assign(opt, {
 						name: name
 					});
 					
 					if( opt.vuwType && this.isString(opt.vuwType) ) {
-						name = "Vuw" + opt.vuwType.slice(0, 1).toUpperCase() + opt.vuwType.slice(1);
-						if( !this.isFunction( Klass(name) ) ) {
-							name = this._childKlass;
+						klass = "Vuw" + opt.vuwType.slice(0, 1).toUpperCase() + opt.vuwType.slice(1);
+						if( !this.isFunction( Klass(klass) ) ) {
+							klass = this.childKlass;
 							opt.vuwType = "component";
 						}
 					} else {
-						name = this._childKlass;
+						klass = this.childKlass;
 						opt.vuwType = "component";
 					}
 					
-					vuw = Klass.new_(name, opt);
+					vuw = Klass.new_(klass, opt);
 				}
 				
-				this._vuwMap[vuw.name] = vuw;
+				this._vuwMap[name] = vuw;
+				vuw.container = this;
 				return this;
 			},
 			
 			/**
-			* Vuwの取得関数
-			* @param name [string] Vuwの名称
-			* @return Vuw instance
+			* 子Vuwの取得関数
+			* @param name [string] Vuwの名称 || アドレス
+			* @return Vuw instance || false
 			*/
 			get: function(name) {
+				var i, arr, rtn = false;
 				if( !this.isString(name) ) {
-					csl.warn("vuwer.get() ... arguments[0] is must be string.", typeof name);
-					return false;
+					csl.warn(this.name + ".get() ... arguments[0] is must be string.", typeof name);
+					return rtn;
 				}
-				return this._vuwMap[name] || false;
+				
+				rtn = this._vuwMap[name] || false;
+				
+				if( !rtn && (/\./).test(name) ) {
+					// 引数にアドレスを指定した場合
+					arr = name.split(".");
+					rtn = this._vuwMap[ arr.pop() ] || false;
+					for(i = arr.length - 1; i >= 0; i--) {
+						if(rtn) {
+							if(rtn._vuwMap) {
+								rtn._vuwMap[ arr[i] ] || false;
+							} else {
+								rtn = false;
+								break;
+							}
+						} else {
+							break;
+						}
+					}
+				}
+				
+				return rtn;
+			},
+			
+			/**
+			* 子Vuwリストの取得関数
+			* @return array
+			*/
+			getChildren: function() {
+				return Object.keys(this._vuwMap).map(function(k) {
+					return this[k];
+				}, this._vuwMap);
 			},
 			
 			/**
@@ -562,7 +614,7 @@
 			remove: function(name) {
 				var vuw;
 				if( !this.isString(name) ) {
-					csl.warn("vuwer.remove() ... arguments[0] is must be string.", typeof name);
+					csl.warn(this.name + ".remove() ... arguments[0] is must be string.", typeof name);
 					return this;
 				}
 				
@@ -586,26 +638,26 @@
 			*/
 			appendKlass: function(name, prop, parent) {
 				if( !this.isString(name) ) {
-					csl.warn("vuwer.appendKlass() ... arguments[0] is must be string.", typeof name);
+					csl.warn.red(this.name + ".appendKlass() ... arguments[0] is must be string.", typeof name);
 					return this;
 				} else
 				if( Klass(name) ) {
-					csl.warn("vuwer.appendKlass() ... '" + name + "' is already defined.");
+					csl.warn.red(this.name + ".appendKlass() ... '" + name + "' is already defined.");
 					return this;
 				}
 				
 				if( this.isString(parent) ) {
 					if( !this.isFunction( Klass(parent) ) ) {
-						csl.warn("vuwer.appendKlass() ... '" + parent + "' is undefined.");
+						csl.warn(this.name + ".appendKlass() ... '" + parent + "' is undefined.");
 						return this;
 					}
 				} else {
 					// default
-					if( !this.isFunction( Klass(this._childKlass) ) ) {
-						csl.warn("vuwer.appendKlass() ... '" + this._childKlass + "' is undefined.");
+					if( !this.isFunction( Klass(this.childKlass) ) ) {
+						csl.warn(this.name + ".appendKlass() ... '" + this.childKlass + "' is undefined.");
 						return this;
 					}
-					parent = this._childKlass;
+					parent = this.childKlass;
 				}
 				
 				Klass.create(name).extends_(parent, prop);
@@ -613,32 +665,19 @@
 			}
 		});
 		
+		window.vuwer
 		/*************************************
 		* define VuwerComponent (extends Vuw) *
 		*************************************/
 		// prototype継承して登録
-		this.vuwer.appendKlass("VuwerComponent", {
-			_vuwer: this.vuwer,
-			_templateAreaPropTo: "_vuwer",
-			
-			_initialize: function(opt) {
-				return Klass("VuwerComponent").parent._initialize.call(this, opt);
-			},
-			/**
-			* vuwerの取得
-			* （下記useVuwer()を実行していない場合はfalseが返される
-			* @return vuwer object
-			*/
-			getVuwer: function() {
-				return this._vuwer;
-			},
+		.appendKlass("VuwerComponent", {
 			
 			/**
 			* vuwerに登録されている他のvuwを取得
 			* @return Vuw instance
 			*/
 			getOther: function(vuwName) {
-				return this.getVuwer().get(vuwName);
+				return this.container.get(vuwName);
 			},
 			
 			/**
@@ -671,39 +710,52 @@
 				}
 				return $clone;
 			}
-		}, "Vuw");
+		}, "Vuw")
 		
-		/**********************************************
+		/***********************************************
 		* define VuwContainer (extends VuwerComponent) *
-		**********************************************/
+		***********************************************/
 		// prototype継承して登録
-		this.vuwer.appendKlass("VuwContainer", {
+		.appendKlass("VuwContainer", {
+			childKlass: "",
 			_initialize: function(opt) {
 				if( Klass("VuwContainer").parent._initialize.call(this, opt) ) {
-					// [push onReady callback]
-					this.onReady( this.getVuwer()._getComponentsReady.bind(this) );
-					return this;
+					if(this.childKlass) {
+						this._vuwMap = {};
+						
+						// [push onReady callback]
+						this.onReady( window.vuwer._getComponentsReady.bind(this) );
+						return this;
+					} else {
+						csl.warn("VuwContainer._initialize() ... 'childKlass' is required prop.");
+						return false;
+					}
 				} else {
 					return false;
 				}
 			},
-			_vuwMap: {},
-			_childKlass: "",
-			add: function(name, opt, isOverride) {
-				var args = Array.prototype.slice.call(arguments, 0);
-				this.getVuwer().add.apply(this, args);
+			add: function(name) {
+				window.vuwer.add.apply( this, Array.prototype.slice.call(arguments, 0) );
 				return this;
 			},
 			get: function(name) {
-				return this.getVuwer().get.call(this, name);
+				return window.vuwer.get.call(this, name);
+			},
+			getChildren: function() {
+				return window.vuwer.getChildren.call(this);
+			},
+			remove: function(name) {
+				window.vuwer.remove.call(this, name);
+				// vuwerからも削除する
+				this.isString(name) && window.vuwer.remove(name + "." + this.name);
 			}
-		}, "VuwerComponent");
+		}, "VuwerComponent")
 		
-		/**********************************************
+		/******************************************
 		* define VuwFade (extends VuwerComponent) *
-		**********************************************/
+		******************************************/
 		// prototype継承して登録
-		this.vuwer.appendKlass("VuwFade", {
+		.appendKlass("VuwFade", {
 			_initialize: function(opt) {
 				if( Klass("VuwFade").parent._initialize.call(this, opt) ) {
 					// [push onReady callback]
@@ -759,6 +811,6 @@
 			delay: 0
 		}, "VuwerComponent");
 		
-		return this.vuwer;
+		return this;
 	};
 }(window.Klass, window.jQuery || window.$));
