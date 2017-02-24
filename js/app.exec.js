@@ -60,7 +60,7 @@
 	* @return $.Deferred().promise()
 	*/
 	app.showLoading = function() {
-		return app.vuwer.get("secTitle").setState("anime", true);
+		return vuwer.get("secTitle").setState("anime", true);
 	};
 	
 	/*----------------
@@ -68,7 +68,7 @@
 	* @return $.Deferred().promise()
 	*/
 	app.hideLoading = function() {
-		return app.vuwer.get("secTitle").setState("anime", false);
+		return vuwer.get("secTitle").setState("anime", false);
 	};
 	
 	// ** override ** (for Google Analytics)
