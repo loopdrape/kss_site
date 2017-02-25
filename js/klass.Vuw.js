@@ -582,7 +582,7 @@
 					for(i = arr.length - 1; i >= 0; i--) {
 						if(rtn) {
 							if(rtn._vuwMap) {
-								rtn._vuwMap[ arr[i] ] || false;
+								rtn = rtn._vuwMap[ arr[i] ] || false;
 							} else {
 								rtn = false;
 								break;
@@ -678,6 +678,20 @@
 			*/
 			getOther: function(vuwName) {
 				return this.container.get(vuwName);
+			},
+			
+			/**
+			* vuwerからのアドレスを取得
+			* @return string
+			*/
+			getAddress: function() {
+				var addr = !arguments.length ? [] : arguments[0];
+				addr.push(this.name);
+				if(this.container && this.container.getAddress) {	// getAddressを持たないcontainer　=== vuwer
+					return this.container.getAddress(addr);
+				} else {
+					return addr.join(".");
+				}
 			},
 			
 			/**
