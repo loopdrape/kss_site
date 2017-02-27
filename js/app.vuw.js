@@ -61,8 +61,8 @@
 					}
 					
 					vuwer._positionTrackings.forEach(function(vuwName) {
-						this.updPtFixEnd(vuwName, h);
-					}, vuwer);
+						vuwer.updPtFixEnd(vuwName, h);
+					});
 				}).bind(this), !!isTrigger ? 0 : 100 );
 			})
 			.on("scroll", function() {
@@ -495,7 +495,7 @@
 					setTimeout(function() {
 						$elm.off(".once");
 						df.resolve();
-					}, 1500);
+					}, 3000);
 					return df.promise();
 				}).then(function() {
 					cb.call( $elm.get(0) );
@@ -506,40 +506,38 @@
 			var
 				_self = this,
 				postID = $post.attr("id"),
-				$thumb;
+				$thumb, bgi;
 			
 			if($post.data("type") === "audio" && $post.hasClass("soundcloud") ) {
 				if(window.SC) {
 					this.addLoadListener($post.find("iframe"), function() {
 						window.SC.Widget(this).getCurrentSound(function(music) {
-							var src = music.artwork_url.replace("-large", "-t500x500");
-							$("<div/>").addClass("thumbnail").append(
-								$("<img/>").attr({
-									"src": src,
-									"alt": "artwork"
-								})
-							).css({
-								"background-image": "url(" + src + ")"
+							bgi = "url(" + music.artwork_url.replace("-large", "-t500x500") + ")";
+							$("<div/>").addClass("post-background").css({
+								"background-image": bgi
 							}).appendTo($post);
+							
+							$post.children(".entry-header").prepend(
+								$("<div/>").addClass("thumbnail").css({
+									"background-image": bgi
+								})
+							);
 						});
 					});
 				}
 			} else {
-				$thumb = $post.children(".thumbnail");
+				$thumb = $post.find("img").eq(0);
 				if($thumb.length) {
-					$thumb.$img = $thumb.children("img");
-					if($thumb.$img.length) {
-						$thumb.css({
-							"background-image": "url(" + $thumb.$img.src + ")"
-						});
-					}
-				} else {
-					$thumb = $post.find("img").eq(0);
-					if($thumb.length) {
-						$thumb = $("<div/>").addClass("thumbnail").append($thumb).css({
-							"background-image": "url(" + $thumb.src + ")"
-						}).appendTo($post);
-					}
+					bgi = "url(" + $thumb.attr("src") + ")";
+					$thumb = $("<div/>").addClass("post-background").css({
+						"background-image": bgi
+					}).appendTo($post);
+					
+					$post.children(".entry-header").prepend(
+						$("<div/>").addClass("thumbnail").css({
+							"background-image": bgi
+						})
+					);
 				}
 			}
 		},

@@ -181,12 +181,10 @@
 
 				{block:Photo}
 					<!-- post: 画像 -->
-					{block:IndexPage}
-					<div class="thumbnail">
-						<img src="{PhotoURL-HighRes}" alt="{PhotoAlt}"/>
-					</div>
-					{/block:IndexPage}
 					<div class="entry-content">
+					{block:IndexPage}
+						<img class="thumbnail" src="{PhotoURL-HighRes}" alt="{PhotoAlt}"/>
+					{/block:IndexPage}
 					{block:PermalinkPage}
 						{LinkOpenTag}
 						<img src="{PhotoURL-HighRes}" alt="{PhotoAlt}"/>
@@ -201,7 +199,17 @@
 				{block:Photoset}
 					<!-- post: フォトセット -->
 					<div class="entry-content">
-						<div class="imgs">{Photoset}</div>
+					{block:Photos}
+						{block:IndexPage}
+						<img class="thumbnail" src="{PhotoURL-500}" alt="photo">
+						{/block:IndexPage}
+						{block:PermalinkPage}
+						<img src="{PhotoURL-700}" alt="photo">
+						{/block:PermalinkPage}
+					{/block:Photos}
+					{block:PermalinkPage}
+						{Photoset}
+					{/block:PermalinkPage}
 					{block:Caption}
 						<div class="caption">{Caption}</div>
 					{/block:Caption}
@@ -249,14 +257,12 @@
 
 				{block:Video}
 					<!-- post: ビデオ -->
+					<div class="entry-content">
 					{block:IndexPage}
 						{block:VideoThumbnail}
-					<div class="thumbnail">
-						<img src="{VideoThumbnailURL}" alt="videoThumbnail"/>
-					</div>
+						<img class="thumbnail" src="{VideoThumbnailURL}" alt="videoThumbnail"/>
 						{/block:VideoThumbnail}
 					{/block:IndexPage}
-					<div class="entry-content">
 					{block:PermalinkPage}
 						<div class="embed-box video-embed">{VideoEmbed-500}</div>
 						{block:Caption}
@@ -268,14 +274,12 @@
 
 				{block:Audio}
 					<!-- post: オーディオ -->
+					<div class="entry-content">
 					{block:IndexPage}
 						{block:AlbumArt}
-					<div class="thumbnail">
-						<img src="{AlbumArtURL}" alt="album artwork"/>
-					</div>
+						<img class="thumbnail" src="{AlbumArtURL}" alt="album artwork"/>
 						{/block:AlbumArt}
 					{/block:IndexPage}
-					<div class="entry-content">
 					{block:PermalinkPage}
 						{block:AlbumArt}
 							<img class="album-art" src="{AlbumArtURL}" alt="album artwork"/>

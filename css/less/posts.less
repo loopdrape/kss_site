@@ -64,15 +64,17 @@
 			
 			&.is-hover {
 				+ .entry-header {
-					.box-shadow(0, 0, 6px, 1px, @theme_c, 60%);
-					background-color: fade(@base_bgc, 90%);
+					.box-shadow(0, 1px, 6px, 1px, @theme_c, 80%);
+//					background-color: fade(@base_bgc, 90%);
 				}
 			}
 		}
 		
-		> .thumbnail {
+		> .post-background {
 			.transform( skew(0, (@base_skewY * -1)) translate(-50%, -50%) );
 			background-position: 45% 50%;
+			background-repeat: no-repeat;
+			background-size: cover;
 			height: 116%;
 			left: 50%;
 			position: absolute;
@@ -93,12 +95,28 @@
 		}
 		
 		.entry-header {
-			.box-shadow(0, 0, 4px, 0, @theme_c, 40%);
+			.box-shadow(0, 1px, 2px, 0, #000, .4);
 			.transition(all .4s);
-			background-color: fade(@base_bgc, 70%);
 			color: @theme_c;
 			height: 100%;
+			overflow: hidden;
 			position: relative;
+			
+			&:before {
+				background-color: fade(@base_bgc, 70%);
+				height: 100%;
+				left: 0;
+				position: absolute;
+				top: 0;
+				width: 100%;
+			}
+			
+			.thumbnail {
+				&:extend(body.page-index .post>.post-background);
+				filter: blur(8px);
+				-webkit-filter: blur(8px);
+				z-index: 0;
+			}
 			
 			.entry-title {
 				&:extend(.break-word);
