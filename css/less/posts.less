@@ -64,8 +64,13 @@
 			
 			&.is-hover {
 				+ .entry-header {
-					.box-shadow(0, 1px, 6px, 1px, @theme_c, 80%);
-//					background-color: fade(@base_bgc, 90%);
+					.box-shadow(0, 1px, 4px, 0, shade(@theme_c, 30%), .6);
+					
+					.thumbnail {
+						&:before {
+							opacity: .4;
+						}
+					}
 				}
 			}
 		}
@@ -113,9 +118,22 @@
 			
 			.thumbnail {
 				&:extend(body.page-index .post>.post-background);
+				.box-sizing(content);
+				background-position: 45% 55%;
 				filter: blur(8px);
 				-webkit-filter: blur(8px);
+				padding: @this_pad @this_pad (@this_pad + 2px);
 				z-index: 0;
+				
+				&:before {
+					.transition(opacity .4s);
+					background-color: @base_bgc;
+					content: "";
+					display: block;
+					height: 100%;
+					opacity: .2;
+					width: 100%;
+				}
 			}
 			
 			.entry-title {
@@ -123,6 +141,7 @@
 				text-shadow: 2px -2px 2px fade(#000, 35%);
 				border-bottom-width: 0;
 				bottom: .2em;
+				color: inherit;
 				margin-bottom: 0;
 				padding: 0 5px;
 				position: relative;
