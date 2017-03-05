@@ -80,24 +80,20 @@
 
 	<div class="site-body" id="site_body" data-view="posts" role="main">
 		<div class="section" id="sec_title" data-section="title">
-	{block:IndexPage}
+			<div class="main-background">
+				<div class="bg-grey"></div>
+				<div class="bg-color"></div>
+				<div class="bg-cover"></div>
+			</div>
 			<h2 class="main-title is-anime">
-		{block:TagPage}
+		{block:IndexPage}
+			{block:TagPage}
 				<em class="title-tagged"><span>{Tag}</span></em>
-		{/block:TagPage}
+			{/block:TagPage}
+		{/block:IndexPage}
 				<em class="title-main"><span>K</span><span>E</span><span>E</span><span>S</span><span>H</span><span>K</span><span>A</span><span>S</span></em>
 				<em class="title-sub"><span>soundservice</span></em>
 			</h2>
-	{block:IndexPage}
-			
-			<div class="main-background">
-				<video id="main_bg_video" preload="auto" autobuffer autoplay muted loop poster="https://loopdrape.github.io/kss_site/img/pa_face.png">
-					<source type="video/mp4" src="https://loopdrape.github.io/kss_site/img/parmanent.mp4">
-					<span class="no-video"></span>
-				</video>
-				<img id="main_bg_image" src="https://loopdrape.github.io/kss_site/img/pa_face.png" alt="" />
-				<div class="cover"></div>
-			</div>
 		</div>
 
 	{block:Description}

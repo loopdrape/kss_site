@@ -1,8 +1,12 @@
 // out:null, main: style.less
+@img_dir: "//loopdrape.github.io/kss_site/img";
+
 /**------------------------------------
 * section title */
 .section[data-section="title"] {
+	height: 100%;
 	left: 0;
+	overflow: hidden;
 	position: fixed;
 	top: 0;
 	width: 100%;
@@ -12,40 +16,58 @@
 /**------------------------------------
 * background (video, img) */
 .main-background {
+	height: 110%;
 	left: 0;
-	position: fixed;
+	position: absolute;
 	top: 0;
-	width: 100%;
+	width: 110%;
 	z-index: 0;
 	
-	> video {
-		.transform( translate3d(-50%, 0, 0) );
-		display: block;
-		left: 50%;
-		min-height: 60vh;
-		min-width: 100%;
-		position: relative;
+	.bg-grey,
+	.bg-color {
+		height: 100%;
+		left: 0;
+		position: absolute;
+		top: 0;
+		width: 100%;
+		
+		&:before,
+		&:after {
+			content: "";
+			display: block;
+			background-position: 0 100%;
+			background-repeat: no-repeat;
+			background-size: cover;
+		}
+		
+		&:before {
+			height: 60%;
+		}
+		
+		&:after {
+			height: 40%;
+		}
 	}
 	
-	> img {
-		.transform( translate3d(-50%, 0, 0) );
-		display: none;
-		left: 50%;
-		max-height: 60vh;
-		max-width: initial;
-		max-width: auto;
-		min-height: 60vh;
-		min-width: 100%;
-		position: relative;
+	.bg-grey {
+		opacity: .6;
 		
-		@media (orientation: landscape) and (max-width: @mq_w) {
-			height: auto;
+		&:before,
+		&:after {
+			background-image: url("@{img_dir}/bg_grey.jpg");
 		}
+	}
+	
+	.bg-color {
+		opacity: .25;
 		
-		@media (orientation: portrait) and (max-width: @mq_w) {
-			max-height: 106vw;
-			min-height: 106vw;
+		&:before,
+		&:after {
+			background-image: url("@{img_dir}/bg_color.jpg");
 		}
+	}
+	
+	@media (orientation: landscape) and (max-width: @mq_w) {
 	}
 	
 	@media(max-width: @mq_w) {
@@ -59,8 +81,8 @@
 	}
 }
 
-.cover {
-	background-image: url(//loopdrape.github.io/kss_site/img/pattern.png);
+.bg-cover {
+	background-image: url("@{img_dir}/pattern.png");
 	height: 100%;
 	left: 0;
 	position: absolute;
@@ -81,7 +103,7 @@
 	z-index: 2;
 	
 	@media(max-width: @mq_w) {
-		padding-top: 50px;
+		padding-top: (@block_space * 2);
 	}
 	
 	em {

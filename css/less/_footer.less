@@ -1,10 +1,23 @@
 // out:null
 .site-footer {
-	.background-hexToRgba(@base_bgc, .9);
 	.transition(filter .4s);
 	font-size: 2rem;
 	line-height: 1;
+	position: relative;
 	text-align: center;
+	z-index: 0;
+	
+	&:before {
+		background-color: fade(@base_bgc, 80%);
+		bottom: 0;
+		content: "";
+		display: block;
+		height: 40vh;
+		left: 0;
+		position: absolute;
+		width: 100%;
+		z-index: -1;
+	}
 	
 	.site-body:not([data-view="posts"]) ~ & {
 		.filter( blur(4px) );
