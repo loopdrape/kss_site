@@ -87,22 +87,25 @@
 	<div class="site-body" id="site_body" data-view="posts" role="main">
 		<div class="section" id="sec_title" data-section="title">
 <!--	{block:IndexPage}-->
-			<div class="main-background">
-<!--				<img id="main_bg_image" src="https://loopdrape.github.io/kss_site/img/pa_face.png" alt="" />-->
-				<img src="./img/bg_grey.jpg">
-				<img src="./img/bg_color.jpg">
-			</div>
-			<div class="cover"></div>
 			<h2 class="main-title is-anime">
 <!--
-			{block:TagPage}
+		{block:TagPage}
 				<em class="title-tagged"><span>{Tag}</span></em>
-			{/block:TagPage}
+		{/block:TagPage}
 -->
 				<em class="title-main"><span>K</span><span>E</span><span>E</span><span>S</span><span>H</span><span>K</span><span>A</span><span>S</span></em>
 				<em class="title-sub"><span>soundservice</span></em>
 			</h2>
 <!--	{/block:IndexPage}-->
+			
+			<div class="main-background">
+				<video id="main_bg_video" preload="auto" autobuffer autoplay muted loop poster="https://loopdrape.github.io/kss_site/img/pa_face.png">
+					<source type="video/mp4" src="https://loopdrape.github.io/kss_site/img/parmanent.mp4">
+					<span class="no-video"></span>
+				</video>
+				<img id="main_bg_image" src="https://loopdrape.github.io/kss_site/img/pa_face.png" alt="" />
+			</div>
+			<div class="cover"></div>
 		</div>
 		
 <!--	{block:Description}-->
@@ -210,6 +213,7 @@
 
 	<script src="//code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 	<script src="//w.soundcloud.com/player/api.js"></script>
+	<script src="./js/parallax.min.js"></script>
 	<script src="./js/klass.Vuw.min.js"></script>
 	<script src="./js/app.vuw.min.js"></script>
 	<script src="./js/app.exec.min.js"></script>

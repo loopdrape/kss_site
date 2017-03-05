@@ -381,6 +381,7 @@
 	.add("secTitle", {
 		selector: "#sec_title",
 		onReady: function($self) {
+/*
 			var methods;
 			methods = [];
 			methods.push( $.Deferred(function(df) {
@@ -397,9 +398,10 @@
 				csl.log("main bg loaded");
 				vuwer.$window.trigger("resize", [true]);
 			}).bind(this) );
-			
+*/
+
 			this.$title = $self.children(".main-title");
-			
+/*
 			if(app.isTop) {
 				this.getOther("body").onChangeState(function(state) {
 					if(state.wndH && state.ttlH) {
@@ -422,6 +424,7 @@
 					}, !!isTrigger ? 0 : 100);
 				});
 			}
+*/
 		},
 		onChangeState: function(state) {
 			("anime" in state) && this.$title.toggleClass("is-anime", !!state.anime);
