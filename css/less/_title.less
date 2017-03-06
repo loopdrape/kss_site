@@ -1,5 +1,4 @@
 // out:null, main: style.less
-@img_dir: "//loopdrape.github.io/kss_site/img";
 
 /**------------------------------------
 * section title */
@@ -23,6 +22,10 @@
 	width: 110%;
 	z-index: 0;
 	
+	@media (orientation: portrait) and (max-width: @mq_w) {
+		height: 100%;
+	}
+	
 	.bg-grey,
 	.bg-color {
 		height: 100%;
@@ -42,10 +45,18 @@
 		
 		&:before {
 			height: 60%;
+			
+			@media (orientation: portrait) and (max-width: @mq_w) {
+				height: 110vw;
+			}
 		}
 		
 		&:after {
 			height: 40%;
+			
+			@media (orientation: portrait) and (max-width: @mq_w) {
+				height: 70vw;
+			}
 		}
 	}
 	
@@ -70,12 +81,18 @@
 	@media (orientation: landscape) and (max-width: @mq_w) {
 	}
 	
-	@media(max-width: @mq_w) {
-		> video {
+	> video {
+		display: block;
+		
+		@media(max-width: @mq_w) {
 			display: none;
 		}
+	}
+
+	> img {
+		display: none;
 		
-		> img {
+		@media(max-width: @mq_w) {
 			display: block;
 		}
 	}
@@ -138,17 +155,19 @@
 		line-height: 1;
 		margin: 2px 0 0;
 		
-		@media(min-width: (@mq_w + 1px)) {
-			font-size: 4rem;
-		}
-	}
-	
-	body.is-ready & {
-		.title-tagged {
-			~ .title-main,
-			~ .title-sub {
+		.tagged {
+			&:before,
+			&:after {
+				content: "\"";
+			}
+			
+			+ span {
 				display: none;
 			}
+		}
+		
+		@media(min-width: (@mq_w + 1px)) {
+			font-size: 4rem;
 		}
 	}
 	

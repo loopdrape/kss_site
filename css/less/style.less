@@ -2,6 +2,7 @@
 @import (less) "./_common";
 @import (less) "./_setting";
 
+@img_dir: "//loopdrape.github.io/kss_site/img";
 /**------------------------------------
 * parts style */
 body {
@@ -164,7 +165,7 @@ body {
 	background-color: @sub_c;
 	padding-bottom: 28px;
 	position: relative;
-	z-index: 0;
+	z-index: 1;
 	
 	@media (min-width: (@mq_w + 1px)) {
 		padding-bottom: 0;
@@ -172,6 +173,22 @@ body {
 		z-index: 2;
 	}
 	
+	&:before {
+		background-attachment: fixed;
+		background-image: url("@{img_dir}/bg_grey.jpg");
+		background-size: cover;
+		content: "";
+		display: block;
+		filter: blur(2px);
+		-webkit-filter: blur(2px);
+		height: 100%;
+		left: 0;
+		opacity: .6;
+		position: absolute;
+		top: 0;
+		width: 100%;
+		z-index: -1;
+	}
 	
 	body.page-index & {
 		.transform( skew(0, @base_skewY) );

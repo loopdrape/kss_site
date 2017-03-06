@@ -86,13 +86,8 @@
 				<div class="bg-cover"></div>
 			</div>
 			<h2 class="main-title is-anime">
-		{block:IndexPage}
-			{block:TagPage}
-				<em class="title-tagged"><span>{Tag}</span></em>
-			{/block:TagPage}
-		{/block:IndexPage}
 				<em class="title-main"><span>K</span><span>E</span><span>E</span><span>S</span><span>H</span><span>K</span><span>A</span><span>S</span></em>
-				<em class="title-sub"><span>soundservice</span></em>
+				<em class="title-sub">{block:IndexPage}{block:TagPage}<span class="tagged">{Tag}</span>{/block:TagPage}{/block:IndexPage}<span>sound</span><span>service</span></em>
 			</h2>
 		</div>
 
