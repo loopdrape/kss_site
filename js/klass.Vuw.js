@@ -731,19 +731,25 @@
 		***********************************************/
 		// prototype継承して登録
 		.appendKlass("VuwContainer", {
-			childKlass: "",
+			childKlass: "VuwerComponent",
 			_initialize: function(opt) {
 				if( Klass("VuwContainer").parent._initialize.call(this, opt) ) {
-					if(this.childKlass) {
-						this._vuwMap = {};
-						
-						// [push onReady callback]
-						this.onReady( window.vuwer._getComponentsReady.bind(this) );
-						return this;
-					} else {
+					if(!this.childKlass) {
 						csl.warn("VuwContainer._initialize() ... 'childKlass' is required prop.");
 						return false;
 					}
+					
+					if( !this.isString(this.childKlass) || !Klass(this.childKlass) ) {
+						csl.warn("VuwContainer._initialize() ... 'childKlass' is must be Klass.");
+						return false;
+					}
+					
+					this._vuwMap = {};
+					
+					// [push onReady callback]
+					this.onReady( window.vuwer._getComponentsReady.bind(this) );
+					return this;
+					
 				} else {
 					return false;
 				}
@@ -766,7 +772,7 @@
 		}, "VuwerComponent")
 		
 		/******************************************
-		* define VuwFade (extends VuwerComponent) *
+		* define VuwFade (extends VuwContainer) *
 		******************************************/
 		// prototype継承して登録
 		.appendKlass("VuwFade", {
@@ -823,7 +829,7 @@
 				}
 			},
 			delay: 0
-		}, "VuwerComponent");
+		}, "VuwContainer");
 		
 		return this;
 	};
