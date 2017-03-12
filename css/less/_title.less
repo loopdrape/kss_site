@@ -10,31 +10,31 @@
 	top: 0;
 	width: 100%;
 	z-index: -1;
+	
+	@media (orientation: portrait) and (max-width: @mq_w) {
+		height: 110vw;
+	}
+	
+	@media (orientation: landscape) and (max-width: @mq_w) {
+		height: 50vw;
+	}
 }
 
 /**------------------------------------
 * background (video, img) */
 .main-background {
 	height: 100%;
-	left: 0;
+	left: -5%;
 	position: absolute;
 	top: 0;
-	width: 100%;
+	width: 110%;
 	z-index: 0;
-	
-	@media (orientation: portrait) and (max-width: @mq_w) {
-		height: 100vw;
-	}
-	
-	@media (orientation: landscape) and (max-width: @mq_w) {
-		height: 50vw;
-	}
 	
 	.bg-grey,
 	.bg-color {
 		background-position: 50% 100%;
 		background-repeat: no-repeat;
-		background-size: 110% auto;
+		background-size: 100% auto;
 		height: 100%;
 		left: 0;
 		position: absolute;

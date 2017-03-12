@@ -50,7 +50,7 @@
 			$self
 			.on("resize", function(e, isTrigger) {
 				!!vuwer._resizeTimer && clearTimeout(vuwer._resizeTimer);
-				vuwer._resizeTimer = setTimeout( (function() {
+				vuwer._resizeTimer = setTimeout(function() {
 					var
 						h = vuwer.$self.height(),
 						diff = h - vuwer.state.height;
@@ -60,10 +60,12 @@
 						vuwer.state.height += diff;
 					}
 					
+					vuwer.centerX = vuwer.$window.outerWidth() / 2;
+					
 					vuwer._positionTrackings.forEach(function(vuwName) {
 						vuwer.updPtFixEnd(vuwName, h);
 					});
-				}).bind(this), !!isTrigger ? 0 : 100 );
+				}, !!isTrigger ? 0 : 100);
 			})
 			.on("scroll", function() {
 				var $this = $(this);
@@ -71,6 +73,22 @@
 					vuwer.onScroll(vuwName, $this.scrollTop());
 				});
 			});
+			
+			if(app.device[0] === "sp") {
+				$self.on("deviceorientation", function(e) {
+					vuwer.get("secTitle").setState({
+						slopeX: e.gamma / 2
+					});
+				});
+			} else {
+				$self.on("mousemove", function(e) {
+					if( vuwer.isNumber(vuwer.centerX) ) {
+						vuwer.get("secTitle").setState({
+							slopeX: (e.clientX - vuwer.centerX) / 100
+						});
+					}
+				});
+			}
 		}
 	})
 	
@@ -370,7 +388,7 @@
 	.add("scrollToPageTop", {
 		selector: "#scroll_to_pageTop",
 		onReady: function($self) {
-			vuwer.positionTracking(this);
+//			vuwer.positionTracking(this);
 		},
 		execScroll: function() {
 			this.$self.children(".btn-exec").trigger("click", [true]);
@@ -381,53 +399,22 @@
 	.add("secTitle", {
 		selector: "#sec_title",
 		onReady: function($self) {
-/*
-			var methods;
-			methods = [];
-			methods.push( $.Deferred(function(df) {
-				$("#main_bg_video").on("load", df.resolve);
-				setTimeout(df.resolve, 1000);
-				return df.promise();
-			}) );
-			methods.push( $.Deferred(function(df) {
-				$("#main_bg_image").on("load", df.resolve);
-				setTimeout(df.resolve, 1000);
-				return df.promise();
-			}) );
-			$.when.apply($, methods).then( (function() {
-				csl.log("main bg loaded");
-				vuwer.$window.trigger("resize", [true]);
-			}).bind(this) );
-*/
-
 			this.$title = $self.children(".main-title");
-/*
-			if(app.isTop) {
-				this.getOther("body").onChangeState(function(state) {
-					if(state.wndH && state.ttlH) {
-						state.t = (state.wndH * 0.6 < state.ttlH) ? state.ttlH : "";
-						csl.log("body.onChangeState", state);
-						this.$self.css("padding-top", state.t);
-						delete state.t;
-					}
-				});
-				
-				this.$mainBG = $self.children(".main-background");
-				vuwer.$window.on("resize", function(e, isTrigger) {
-					var secTitle = vuwer.get("secTitle");
-					!!secTitle._timer && clearTimeout(secTitle._timer);
-					secTitle._timer = setTimeout(function() {
-						vuwer.get("body").setState({
-							wndH: vuwer.$window.height(),
-							ttlH: secTitle.$mainBG.height()
-						});
-					}, !!isTrigger ? 0 : 100);
-				});
-			}
-*/
+			this.$bgColor = $self.find(".bg-color");
 		},
 		onChangeState: function(state) {
-			("anime" in state) && this.$title.toggleClass("is-anime", !!state.anime);
+			if("anime" in state) {
+				this.$title.toggleClass("is-anime", !!state.anime);
+			} else
+			if("slopeX" in state) {
+				this.$title.css({
+					transform: "translateX(" + (state.slopeX * -0.1) + "%)"
+				});
+				this.$bgColor.css({
+					transform: "translateX(" + (state.slopeX * -0.3) + "%)"
+				});
+			}
+			
 		}
 	})
 	

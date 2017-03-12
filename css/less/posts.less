@@ -66,10 +66,8 @@
 				+ .entry-header {
 //					.box-shadow(0, 1px, 4px, 0, shade(@theme_c, 30%), .6);
 					
-					.thumbnail {
-						&:before {
-							opacity: .4;
-						}
+					&:before {
+						opacity: .8;
 					}
 				}
 			}
@@ -102,46 +100,39 @@
 		.entry-header {
 			.box-shadow(0, 1px, 2px, 0, #000, .4);
 			.transition(all .4s);
-			background-color: fade(@base_bgc, 50%);
-			color: #82a5b7;
+			@this_c: #2f6f90;
+			color: @this_c;
 			height: 100%;
 			overflow: hidden;
 			position: relative;
 			
 			&:before {
-				background-color: fade(@base_bgc, 70%);
+				.transition(opacity .4s);
+				background-color: @base_bgc;
+				content: "";
+				display: block;
 				height: 100%;
 				left: 0;
+				opacity: .5;
 				position: absolute;
 				top: 0;
 				width: 100%;
+				z-index: 1;
 			}
 			
 			.thumbnail {
 				&:extend(body.page-index .post>.post-background);
 				.box-sizing(content);
+				.filter( blur(8px) );
 				background-position: 45% 55%;
-				filter: blur(8px);
-				-webkit-filter: blur(8px);
 				padding: @this_pad @this_pad (@this_pad + 2px);
 				z-index: 0;
-				
-				&:before {
-					.transition(opacity .4s);
-					background-color: @base_bgc;
-					content: "";
-					display: block;
-					height: 100%;
-					opacity: .2;
-					width: 100%;
-				}
 			}
-			
+				
 			.entry-title {
 				&:extend(.break-word);
-				text-shadow: 2px -2px 2px fade(#000, 50%);
+				text-shadow: 2px -2px 2px fade(shade(@this_c, 30%), 50%);
 				border-bottom-width: 0;
-				bottom: .2em;
 				color: inherit;
 				margin-bottom: 0;
 				padding: 2px 5px;
