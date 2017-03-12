@@ -5,18 +5,34 @@
 	line-height: 1;
 	position: relative;
 	text-align: center;
-	z-index: 0;
 	
-	&:before {
-		background-color: fade(@base_bgc, 80%);
+	&:before,
+	&:after {
 		bottom: 0;
 		content: "";
 		display: block;
 		height: 40vh;
 		left: 0;
-		position: fixed;
+		position: absolute;
 		width: 100%;
 		z-index: -1;
+		
+		@media (orientation: portrait) and (max-width: @mq_w) {
+			height: 75vw;
+		}
+	}
+	
+	&:before {
+		.filter( blur(1px) );
+		background-attachment: fixed;
+		background-position: 50% 100%;
+		background-repeat: no-repeat;
+		background-size: 110% auto;
+		background-image: url("@{img_dir}/bg_grey.jpg");
+	}
+	
+	&:after {
+		background-color: fade(@base_bgc, 70%);
 	}
 	
 	.site-body:not([data-view="posts"]) ~ & {

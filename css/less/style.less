@@ -178,13 +178,13 @@ body {
 	}
 	
 	&:before {
+		.filter( blur(2px) );
 		background-attachment: fixed;
 		background-image: url("@{img_dir}/bg_grey.jpg");
-		background-size: cover;
+		background-position: 50% -2%;
+		background-size: 110% auto;
 		content: "";
 		display: block;
-		filter: blur(2px);
-		-webkit-filter: blur(2px);
 		height: 100%;
 		left: 0;
 		opacity: .6;
