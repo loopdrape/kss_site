@@ -7,6 +7,14 @@
 .page-top {
 	padding-top: 60vh;
 	
+	@media (orientation: portrait) and (max-width: @mq_w) {
+		padding-top: 100vw;
+	}
+	
+	@media (orientation: landscape) and (max-width: @mq_w) {
+		padding-top: 0;
+	}
+	
 	.main-title {
 		position: absolute;
 		top: 0;

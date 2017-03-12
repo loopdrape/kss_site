@@ -4,9 +4,9 @@
 	&.lock-fixed {
 		.transform( translate3d(0 ,0, 0) );
 		background-color: transparent;
+		bottom: 0;
 		position: fixed;
 		right: 0;
-		top: 0;
 		width: 100%;
 		z-index: 998;
 		
@@ -27,7 +27,7 @@
 				.transform-origin(100% 100%);
 				.transition(all .4s);
 				background-color: @base_bgc;
-				top: 0;
+				bottom: 0;
 				content: "";
 				display: block;
 				height: 100vh;
@@ -59,7 +59,7 @@
 					.transform( rotate(-180deg) );
 					.transition(transform .4s);
 					@top_negative: ( @this_size + (@block_pad / 4) );
-					top: calc(~"100vh - @{top_negative}");
+					bottom: 0;
 					cursor: pointer;
 					display: block;
 					height: @this_size;
@@ -146,16 +146,14 @@
 				}
 				
 				+ .link-list {
-					.transform( translate3d(0, -10vh, 0) );
+					.transform( translate3d(0, 10vh, 0) );
 					height: 120vh;
 					opacity: 1;
 					padding-top: 10vh;
 					
 					@media (max-width: @mq_w) {
 						&.is-form-focus {
-//							body:not(.visible-urlbar) {
-								.transform( translate3d(0, 0, 0) );
-//							}
+							.transform( translate3d(0, 0, 0) );
 						}
 					}
 				}
@@ -226,10 +224,10 @@
 						.transform(none);
 						.transition(opacity .5s);
 						background: radial-gradient(ellipse at center,
-							rgba(red(@base_bgc), green(@base_bgc), blue(@base_bgc), .8) 0%,
-							rgba(red(@base_bgc), green(@base_bgc), blue(@base_bgc), .6) 40%,
-							rgba(red(@base_bgc), green(@base_bgc), blue(@base_bgc), .2) 60%,
-							rgba(255, 255, 255, 0) 100%
+							fade(@base_bgc, 80%) 0%,
+							fade(@base_bgc, 60%) 40%,
+							fade(@base_bgc, 20%) 60%,
+							#fff 100%
 						);
 						height: 100%;
 						left: 0;

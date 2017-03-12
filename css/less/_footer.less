@@ -5,18 +5,35 @@
 	line-height: 1;
 	position: relative;
 	text-align: center;
-	z-index: 0;
 	
-	&:before {
-		background-color: fade(@base_bgc, 80%);
+	&:before,
+	&:after {
 		bottom: 0;
 		content: "";
 		display: block;
 		height: 40vh;
-		left: 0;
+		left: -5%;
 		position: absolute;
-		width: 100%;
+		width: 110%;
 		z-index: -1;
+		
+		@media (orientation: portrait) and (max-width: @mq_w) {
+			height: 75vw;
+		}
+	}
+		
+	&:before {
+		background-attachment: fixed;
+		background-image: url("@{img_dir}/bg_grey.jpg");
+		background-position: 0 100%;
+		background-repeat: no-repeat;
+		background-size: cover;
+		filter: blur(4px);
+		-webkit-filter: blur(1px);
+	}
+	
+	&:after {
+		background-color: fade(@base_bgc, 60%);
 	}
 	
 	.site-body:not([data-view="posts"]) ~ & {

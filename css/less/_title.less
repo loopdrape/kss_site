@@ -15,67 +15,41 @@
 /**------------------------------------
 * background (video, img) */
 .main-background {
-	height: 110%;
-	left: 0;
+	height: 60%;
+	left: -5%;
 	position: absolute;
 	top: 0;
 	width: 110%;
 	z-index: 0;
 	
 	@media (orientation: portrait) and (max-width: @mq_w) {
-		height: 100%;
+		height: 100vw;
+	}
+	
+	@media (orientation: landscape) and (max-width: @mq_w) {
+		height: 100vw;
 	}
 	
 	.bg-grey,
 	.bg-color {
+		background-position: 0 100%;
+		background-repeat: no-repeat;
+		background-size: cover;
 		height: 100%;
 		left: 0;
 		position: absolute;
 		top: 0;
 		width: 100%;
-		
-		&:before,
-		&:after {
-			content: "";
-			display: block;
-			background-position: 0 100%;
-			background-repeat: no-repeat;
-			background-size: cover;
-		}
-		
-		&:before {
-			height: 60%;
-			
-			@media (orientation: portrait) and (max-width: @mq_w) {
-				height: 110vw;
-			}
-		}
-		
-		&:after {
-			height: 40%;
-			
-			@media (orientation: portrait) and (max-width: @mq_w) {
-				height: 70vw;
-			}
-		}
 	}
 	
 	.bg-grey {
+		background-image: url("@{img_dir}/bg_grey.jpg");
 		opacity: .6;
-		
-		&:before,
-		&:after {
-			background-image: url("@{img_dir}/bg_grey.jpg");
-		}
 	}
 	
 	.bg-color {
+		background-image: url("@{img_dir}/bg_color.jpg");
 		opacity: .25;
-		
-		&:before,
-		&:after {
-			background-image: url("@{img_dir}/bg_color.jpg");
-		}
 	}
 	
 	@media (orientation: landscape) and (max-width: @mq_w) {

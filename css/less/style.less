@@ -6,10 +6,14 @@
 /**------------------------------------
 * parts style */
 body {
-	padding-top: 22vh;
+	padding-top: 25vh;
 	
-	@media (min-width: (@mq_w + 1px)) {
-		padding-top: 25vh;
+	@media (orientation: portrait) and (max-width: @mq_w) {
+		padding-top: 40vw;
+	}
+	
+	@media (orientation: landscape) and (max-width: @mq_w) {
+		padding-top: 0;
 	}
 	
 	&:not(.is-ready) {
