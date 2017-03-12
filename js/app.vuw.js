@@ -75,11 +75,11 @@
 			});
 			
 			if(app.device[0] === "sp") {
-				$self.on("deviceorientation", function(e) {
+				$self.get(0).addEventListener("deviceorientation", function(e) {
 					vuwer.get("secTitle").setState({
 						slopeX: e.gamma / 2
 					});
-				});
+				}, false);
 			} else {
 				$self.on("mousemove", function(e) {
 					if( vuwer.isNumber(vuwer.centerX) ) {
