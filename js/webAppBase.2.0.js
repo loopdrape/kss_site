@@ -185,7 +185,8 @@
 			orange: "#de6d0b",
 			red: "#e2291e",
 			purple: "#920ea5",
-			gray: "#aaa"
+			gray: "#aaa",
+			grey: "#aaa"
 		},
 		_attachColors: function(method, isOn) {
 			var
