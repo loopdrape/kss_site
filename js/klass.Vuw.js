@@ -96,6 +96,8 @@
 			this.state = {};		// 状態オブジェクト
 			this._onReadyCallbacks = [];		// onReady用
 			this._onChangeStateCallbacks = [];		// onChangeState用
+			this._stateBooked = {};		// _bookState用
+			this._stateBookedCBs = [];		// _bookState用
 			
 			return this.setProp(conf);
 		},
@@ -229,9 +231,12 @@
 				// $templateが生成されている場合、body直下の専用領域に退避する
 				!!this.$template && this.$template.appendTo( this.getTemplateArea() );
 				
+				// isReady -> ON
+				this.isReady = true;
+				
 				$.when(
 					// execute onReadyFirst
-					this.isFunction(this.onReadyFirst) && this.onReadyFirst(this, this.$self, this.$template)
+					this.isFunction(this.onReadyFirst) && this.onReadyFirst(this.$self, this.$template)
 				).then( (function() {
 					// コールバックの実行
 					var methods = this._onReadyCallbacks.map(function(fn) {
@@ -246,7 +251,7 @@
 					
 					$.when(
 						// execute onReadyLast
-						this.isFunction(this.onReadyLast) ? this.onReadyLast(this, this.$self, this.$template) : undefined
+						this.isFunction(this.onReadyLast) ? this.onReadyLast(this.$self, this.$template) : undefined
 					).then( (function() {
 						if(arguments.length && arguments[0] !== undefined) {
 							args = args.concat( Array.prototype.slice.call(arguments, 0) );
@@ -256,7 +261,6 @@
 					return d.promise();
 				}).bind(this) )
 				.then( (function() {
-					this.isReady = true;
 					delete this.isGettingReady;
 					df.resolve.apply( df, Array.prototype.slice.call(arguments, 0) );
 				}).bind(this), df.reject.bind(df) );
@@ -272,7 +276,7 @@
 		onReady: function(fn) {
 			if( this.isFunction(fn) ) {
 				if(this.isReady) {
-					csl.log.gray(this.name, "isReady to execute.");
+					csl.log.gray(this.name + "... isReady to execute.");
 					fn.call(this, this.$self, this.$template);
 				} else {
 					this._onReadyCallbacks.push(fn);
@@ -308,40 +312,90 @@
 		setState: function(k, v) {
 			var
 				df = $.Deferred(),
-				flg = false;
+				flg = false,
+				isBook = false;
 			
 			if(!this.isReady) {
 				csl.warn(this.name + ".setState() ... getReady() didn't execute yet.");
-				df.reject();
-			} else
-			if(this.isChangingState) {
-				csl.log(this.name + " is changing state...", [k, v]);
-				df.reject();
 			} else
 			if(k) {
 				if( this.isString(k) ) {
-					this.state[k] = v;
-					flg = true;
+					if(this.isChangingState) {
+						// [book]
+						this._bookState( {k: v}, df.resolve.bind(df) );
+						isBook = true;
+					} else {
+						// [state change]
+						this.state[k] = v;
+						flg = true;
+					}
 				} else
 				if( this.isObject(k) ) {
-					this.state = k;
-					flg = true;
+					if(this.isChangingState) {
+						// [book]
+						this._bookState( k, df.resolve.bind(df) );
+						isBook = true;
+					} else {
+						// [state change]
+						this.state = k;
+						flg = true;
+					}
 				} else {
 					csl.warn(this.name + ".setState() ... arguments error.");
-					df.reject();
 				}
 			} else {
 				csl.warn(this.name + ".setState() ... arguments[0] is required.");
-				df.reject();
 			}
 			
 			if(flg) {
-				this.changeState().then( (function() {
-					!!this.$self && this.$self.trigger("changeState");
+				// call changeState
+				this.changeState()
+				.then( (function() {
 					df.resolve.apply(df, Array.prototype.slice.call(arguments, 0) );
+					!!this.$self && this.$self.trigger("changeState");
+					// apply booked (if it has.)
+					this._setStateBooked();
 				}).bind(this), df.reject.bind(df) );
+			} else
+			if(!isBook) {
+				df.reject();
 			}
 			return df.promise();
+		},
+		
+		/**
+		* 状態が変化の予約関数（setState()でisChangingState: trueの場合に実行される）
+		* @return this
+		*/
+		_bookState: function(state, cb) {
+			Object.assign(this._stateBooked, state);
+			this._stateBookedCBs.push(cb);
+			return this;
+		},
+		
+		/**
+		* 状態が変化の予約用コールバックの実行関数
+		* @return $.Deferred().promise()
+		*/
+		_setStateBooked: function() {
+			var stateBooked;
+			if( !Object.keys(this._stateBooked).length ) {
+				return false;
+			}
+			stateBooked = Object.assign({}, this._stateBooked);
+			this._stateBooked = {};
+			return this.setState(stateBooked).then( (function() {
+				csl.log.gray(this.name + " ... set booked state", Object.assign({
+					CB_count: this._stateBookedCBs.length
+				}, stateBooked));
+				var i, len = this._stateBookedCBs.length;
+				if(len) {
+					for(i = 0; i < len; i++) {
+						this._stateBookedCBs[i]();
+					}
+					this._stateBookedCBs = [];
+				}
+			}).bind(this) );
 		},
 		
 		/**
@@ -435,7 +489,7 @@
 		* returnで$elementを返すと$selfと置き換わる
 		* @param $templateClone [$instance] $templateから生成したクローン
 		*/
-		render: function($templateClone) {},
+		render: function($templateClone, state) {},
 		
 		/**
 		* renderの完了コールバック
@@ -514,11 +568,15 @@
 			* 子Vuwの追加関数
 			* @param name [string] Vuwの名称 （optがVuwインスタンスの場合はvuwerへの登録名)
 			* @param (optional) opt [object || Vuw instance] Vuwコンストラクタのオプション || childKlassで指定したKlassのインスタンス
+			* @param (optional) callback [function] 追加したVuwに対する処理（this = 追加したVuw）※非同期非対応
 			* @param (optional) isOverride [boolean] true: 既に存在していた場合に上書きを行う
 			* @return this
 			*/
-			add: function(name, opt, isOverride) {
+			add: function(name, opt, callback, isOverride) {
 				var vuw, klass;
+				
+				// 第3引数がbooleanの場合の処理
+				(typeof callback === "boolean") && (isOverride = callback);
 				
 				if( !this.isString(name) ) {
 					csl.warn.red(this.name + ".add() ... arguments[0] is must be string.", typeof name);
@@ -558,6 +616,9 @@
 				
 				this._vuwMap[name] = vuw;
 				vuw.container = this;
+				
+				this.isFunction(callback) && callback.call(vuw);
+				
 				return this;
 			},
 			
@@ -671,6 +732,44 @@
 		*************************************/
 		// prototype継承して登録
 		.appendKlass("VuwerComponent", {
+			childKlass: "VuwerComponent",
+			_initialize: function(opt) {
+				if( Klass("VuwerComponent").parent._initialize.call(this, opt) ) {
+					if(!this.childKlass) {
+						csl.warn("VuwerComponent._initialize() ... 'childKlass' is required prop.");
+						return false;
+					}
+					
+					if( !this.isString(this.childKlass) || !Klass(this.childKlass) ) {
+						csl.warn("VuwerComponent._initialize() ... 'childKlass' is must be Klass.");
+						return false;
+					}
+					
+					this._vuwMap = {};
+					
+					// [push onReady callback]
+					this.onReady( window.vuwer._getComponentsReady.bind(this) );
+					return this;
+					
+				} else {
+					return false;
+				}
+			},
+			add: function(name) {
+				window.vuwer.add.apply( this, Array.prototype.slice.call(arguments, 0) );
+				return this;
+			},
+			get: function(name) {
+				return window.vuwer.get.call(this, name);
+			},
+			getChildren: function() {
+				return window.vuwer.getChildren.call(this);
+			},
+			remove: function(name) {
+				window.vuwer.remove.call(this, name);
+				// vuwerからも削除する
+				this.isString(name) && window.vuwer.remove(name + "." + this.name);
+			},
 			
 			/**
 			* vuwerに登録されている他のvuwを取得
@@ -726,53 +825,8 @@
 			}
 		}, "Vuw")
 		
-		/***********************************************
-		* define VuwContainer (extends VuwerComponent) *
-		***********************************************/
-		// prototype継承して登録
-		.appendKlass("VuwContainer", {
-			childKlass: "VuwerComponent",
-			_initialize: function(opt) {
-				if( Klass("VuwContainer").parent._initialize.call(this, opt) ) {
-					if(!this.childKlass) {
-						csl.warn("VuwContainer._initialize() ... 'childKlass' is required prop.");
-						return false;
-					}
-					
-					if( !this.isString(this.childKlass) || !Klass(this.childKlass) ) {
-						csl.warn("VuwContainer._initialize() ... 'childKlass' is must be Klass.");
-						return false;
-					}
-					
-					this._vuwMap = {};
-					
-					// [push onReady callback]
-					this.onReady( window.vuwer._getComponentsReady.bind(this) );
-					return this;
-					
-				} else {
-					return false;
-				}
-			},
-			add: function(name) {
-				window.vuwer.add.apply( this, Array.prototype.slice.call(arguments, 0) );
-				return this;
-			},
-			get: function(name) {
-				return window.vuwer.get.call(this, name);
-			},
-			getChildren: function() {
-				return window.vuwer.getChildren.call(this);
-			},
-			remove: function(name) {
-				window.vuwer.remove.call(this, name);
-				// vuwerからも削除する
-				this.isString(name) && window.vuwer.remove(name + "." + this.name);
-			}
-		}, "VuwerComponent")
-		
 		/******************************************
-		* define VuwFade (extends VuwContainer) *
+		* define VuwFade (extends VuwerComponent) *
 		******************************************/
 		// prototype継承して登録
 		.appendKlass("VuwFade", {
@@ -785,7 +839,7 @@
 							if(["absolute", "fixed"].indexOf( $self.css("position") ) >= 0) {
 								this.orgHeight = $self.height();
 							}
-							$self.addClass("vuw-fade").attr("data-visible", "0");
+							$self.addClass("vuw-fade").attr("data-visible", $self.attr("data-visible") || "0");
 							delay = parseFloat( $self.css("transition-duration") );
 							if( isNaN(delay) ) {
 								 $self.css("transition-duration", String(this.delay / 1000) + "s");
@@ -805,6 +859,7 @@
 						
 						current = (this.$self.attr("data-visible") === "1") ? true : false;
 						if(current === toVisible) {
+							// 引数で渡されたstate.visibleと現状が同じであれば処理終了
 							return false;
 						}
 						
@@ -829,7 +884,7 @@
 				}
 			},
 			delay: 0
-		}, "VuwContainer");
+		}, "VuwerComponent");
 		
 		return this;
 	};
