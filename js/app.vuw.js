@@ -19,13 +19,20 @@
 			.insertBefore(vuw.$self);
 			vuw.state.fixStart = parseInt( vuw.$self.data("fix") );
 			vuw.onChangeState(function(state) {
+				var isFixed;
 //				csl.log(this.name, "onChangeState", state);
 				if( app.isNumber(state.current) ) {
-					state.isFixed =
+					isFixed =
 						state.current >= state.fixStart &&
 						state.current <= (state.fixEnd || 0);
 					
-					this.$self.toggleClass("is-fixed", state.isFixed);
+					if(state.isFixed !== isFixed) {
+						this.$self.toggleClass("is-fixed", isFixed);
+						this.$pt.css({
+							height: isFixed ? this.height : ""
+						});
+						state.isFixed = isFixed;
+					}
 					delete state.current;
 				}
 			});
@@ -35,6 +42,7 @@
 		updPtFixEnd: function(vuwName, h) {
 			var vuw = this.get(vuwName);
 			if(vuw.isReady) {
+				vuw.height = vuw.$self.outerHeight();
 				return vuw.setState("fixEnd", vuw.$pt.offset().top - h);
 			}
 		},
@@ -77,14 +85,14 @@
 			if(app.device[0] === "sp") {
 				$self.get(0).addEventListener("deviceorientation", function(e) {
 					vuwer.get("secTitle").setState({
-						slopeX: e.gamma / 2
+						slopeX: e.gamma / 4
 					});
 				}, false);
 			} else {
 				$self.on("mousemove", function(e) {
 					if( vuwer.isNumber(vuwer.centerX) ) {
 						vuwer.get("secTitle").setState({
-							slopeX: (e.clientX - vuwer.centerX) / 100
+							slopeX: (e.clientX - vuwer.centerX) / 200
 						});
 					}
 				});

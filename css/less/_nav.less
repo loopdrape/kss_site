@@ -16,14 +16,15 @@
 		flex-direction: row;
 		flex-wrap: nowrap;
 		justify-content: space-between;
-		padding-bottom: (@icon_size + @block_pad / 2);
+		margin-bottom: (@icon_size + @block_pad / 2);
+//		padding-bottom: 0
 		text-align: center;
 		
 		@media (max-width: @mq_w) {
 			.transform( skew(0, @base_skewY) );
 			.transform-origin(100% 0);
 			flex-wrap: wrap;
-			padding-bottom: (@icon_size + @block_pad);
+			margin-bottom: (@icon_size + @block_pad);
 		}
 		
 		> li {
@@ -40,7 +41,7 @@
 			
 			&:first-child {	// .search-box's wrapper
 				.transform( translateX(-50%) );
-				bottom: 0;
+				bottom: (@icon_size + @block_pad / -2);
 				font-size: inherit;
 				padding: 0;
 				position: absolute;

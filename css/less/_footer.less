@@ -6,32 +6,34 @@
 	position: relative;
 	text-align: center;
 	
-	&:before,
-	&:after {
-		bottom: 0;
-		content: "";
-		display: block;
-		height: 40vh;
-		left: 0;
-		position: fixed;
-		width: 100%;
-		z-index: -1;
-		
-		@media (orientation: portrait) and (max-width: @mq_w) {
-			height: 70vw;
+	body.is-ready & {
+		&:before,
+		&:after {
+			bottom: 0;
+			content: "";
+			display: block;
+			height: 40vh;
+			left: 0;
+			position: fixed;
+			width: 100%;
+			z-index: -1;
+			
+			@media (orientation: portrait) and (max-width: @mq_w) {
+				height: 65vw;
+			}
 		}
-	}
-	
-	&:before {
-		.filter( blur(1px) );
-		background-position: 50% 100%;
-		background-repeat: no-repeat;
-		background-size: 110% auto;
-		background-image: url("@{img_dir}/bg_grey.jpg");
-	}
-	
-	&:after {
-		background-color: fade(@base_bgc, 70%);
+		
+		&:before {
+			.filter( blur(1px) );
+			background-position: 50% 100%;
+			background-repeat: no-repeat;
+			background-size: 110% auto;
+			background-image: url("@{img_dir}/bg_grey.jpg");
+		}
+		
+		&:after {
+			background-color: fade(@base_bgc, 70%);
+		}
 	}
 	
 	.site-body:not([data-view="posts"]) ~ & {
