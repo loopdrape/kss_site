@@ -322,7 +322,10 @@
 				if( this.isString(k) ) {
 					if(this.isChangingState) {
 						// [book]
-						this._bookState( {k: v}, df.resolve.bind(df) );
+						this._bookState( (function(obj) {
+							obj[k] = v;
+							return obj;
+						})({}), df.resolve.bind(df) );
 						isBook = true;
 					} else {
 						// [state change]
