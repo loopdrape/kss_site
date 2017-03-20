@@ -41,7 +41,7 @@
 			
 			&:first-child {	// .search-box's wrapper
 				.transform( translateX(-50%) );
-				bottom: (@icon_size + @block_pad / -2);
+				bottom: (@block_pad / 2 - @icon_size);
 				font-size: inherit;
 				padding: 0;
 				position: absolute;
@@ -316,8 +316,7 @@
 		}
 		
 		&.is-focus {
-			@pad_v: (@block_pad / 4);
-			padding: @pad_v 0 @pad_v 37px;
+			padding-left: 37px;
 			
 			fieldset:first-child {
 				&:after {

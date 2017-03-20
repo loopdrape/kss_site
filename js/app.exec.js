@@ -5,6 +5,8 @@
 		return false;
 	}
 	
+	app.isReady = false;
+	
 	/******************
 	*    app start    *
 	******************/
@@ -27,6 +29,7 @@
 	}).then(function() {
 		var df = $.Deferred();
 		vuwer.get("body").$self.addClass("is-ready");
+		app.isReady = true;
 		setTimeout(df.resolve, 0);
 		return df.promise();
 	}).then(function() {

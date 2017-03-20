@@ -21,7 +21,7 @@
 			vuw.onChangeState(function(state) {
 				var isFixed;
 //				csl.log(this.name, "onChangeState", state);
-				if( app.isNumber(state.current) ) {
+				if( this.isNumber(state.current) ) {
 					isFixed =
 						state.current >= state.fixStart &&
 						state.current <= (state.fixEnd || 0);
@@ -37,26 +37,25 @@
 				}
 			});
 			
-			this._positionTrackings.push(vuw.name);
+			this._positionTrackings.push( vuw.getAddress() );
 		},
-		updPtFixEnd: function(vuwName, h) {
-			var vuw = this.get(vuwName);
-			if(vuw.isReady) {
-				vuw.height = vuw.$self.outerHeight();
-				return vuw.setState("fixEnd", vuw.$pt.offset().top - h);
-			}
+		updPtFixEnd: function(vuwAddr, h) {
+			var vuw = this.get(vuwAddr);
+			vuw.height = vuw.$self.outerHeight();
+			return vuw.setState("fixEnd", vuw.$pt.offset().top - h);
 		},
-		onScroll: function(vuwName, t) {
-			var vuw = this.get(vuwName);
-			if(vuw.isReady) {
-				return vuw.setState("current", t);
-			}
+		onScroll: function(vuwAddr, t) {
+			var vuw = this.get(vuwAddr);
+			return vuw.setState("current", t);
 		},
 		onReady: function($self) {
 			this.state.height = $self.height() + 10;
 			
 			$self
 			.on("resize", function(e, isTrigger) {
+				if(!app.isReady) {
+					return true;
+				}
 				!!vuwer._resizeTimer && clearTimeout(vuwer._resizeTimer);
 				vuwer._resizeTimer = setTimeout(function() {
 					var
@@ -70,27 +69,30 @@
 					
 					vuwer.centerX = vuwer.$window.outerWidth() / 2;
 					
-					vuwer._positionTrackings.forEach(function(vuwName) {
-						vuwer.updPtFixEnd(vuwName, h);
+					vuwer._positionTrackings.forEach(function(vuwAddr) {
+						vuwer.updPtFixEnd(vuwAddr, h);
 					});
 				}, !!isTrigger ? 0 : 100);
 			})
 			.on("scroll", function() {
 				var $this = $(this);
-				vuwer._positionTrackings.forEach(function(vuwName) {
-					vuwer.onScroll(vuwName, $this.scrollTop());
+				if(!app.isReady) {
+					return true;
+				}
+				vuwer._positionTrackings.forEach(function(vuwAddr) {
+					vuwer.onScroll(vuwAddr, $this.scrollTop());
 				});
 			});
 			
 			if(app.device[0] === "sp") {
 				$self.get(0).addEventListener("deviceorientation", function(e) {
-					vuwer.get("secTitle").setState({
+					app.isReady && vuwer.get("secTitle").setState({
 						slopeX: e.gamma / 4
 					});
 				}, false);
 			} else {
 				$self.on("mousemove", function(e) {
-					if( vuwer.isNumber(vuwer.centerX) ) {
+					if( app.isReady && vuwer.isNumber(vuwer.centerX) ) {
 						vuwer.get("secTitle").setState({
 							slopeX: (e.clientX - vuwer.centerX) / 200
 						});
@@ -183,10 +185,10 @@
 			this.hoverDecayTime = (app.device[0] === "sp") ? 250 : 0;
 			
 			this.$self
-			.on("mouseenter touchstart", "a:not(.btn), .btn, .hoverTarget", function(e) {
+			.on("mouseenter touchstart", "a, .hoverTarget", function(e) {
 				$(this).addClass("is-hover");
 			})
-			.on("mouseleave touchend", "a:not(.btn), .btn, .hoverTarget", function(e) {
+			.on("mouseleave touchend", "a, .hoverTarget", function(e) {
 				var vuw = $.data(e.delegateTarget, "vuw");
 				setTimeout( $.fn.removeClass.bind($(this), "is-hover"), vuw.hoverDecayTime);
 			});
@@ -231,12 +233,11 @@
 		selector: "#site_header",
 		onReady: function($self) {
 			$self.on("click", ".icon-keeshkas", function(e) {
-				var vuw = $.data(e.delegateTarget, "vuw");
 				e.preventDefault();
-				if( vuw.getOther("nav").getState("isFixed") ) {
-					vuw.getOther("switchNavLinks").$self.trigger("click", [true]);
+				if( vuwer.get("nav").getState("isFixed") ) {
+					vuwer.get("switchNavLinks.nav").$self.trigger("click", [true]);
 				} else {
-					vuw.getOther("scrollToPageTop").execScroll();
+					vuwer.get("scrollToPageTop.siteFooter").execScroll();
 				}
 			});
 		}
@@ -296,6 +297,18 @@
 			
 			return this;
 		}
+	}, function() {
+		this
+		// [scrollToPageTop] ページトップへスクロールするボタン
+		.add("scrollToPageTop", {
+			selector: "#scroll_to_pageTop",
+			onReady: function($self) {
+				vuwer.positionTracking(this);
+			},
+			execScroll: function() {
+				this.$self.children(".btn-exec").trigger("click", [true]);
+			}
+		});
 	})
 	
 	// [nav]
@@ -306,101 +319,89 @@
 		},
 		onChangeState: function(state) {
 			this.$self.toggleClass("lock-fixed", !!state.isLockFixed);
+			this.get("searchBox").setState("rockOpen", !!state.isFixed);
 		}
-	})
-	
-	// [switch for open nav]
-	.add("switchNavLinks", {
-		selector: "#show_nav_links",
-		onReady: function($self) {
-			this.$link = $self.closest(".btn-toggle");
-			$self.on("change", function(e, isTrigger) {
-				var
-					vuw = $.data(this, "vuw"),
-					section = app.isString(isTrigger) ? isTrigger : "posts";
-				vuw.setState("isChecked", this.checked);
-				vuw.getOther("body").setState("lockScroll", this.checked);
-				vuw.getOther("nav").setState("isLockFixed", this.checked);
-				vuw.getOther("siteBody").setState("view", this.checked ? "" : section);
-			});
-		},
-		onChangeState: function(state) {
-			this.$link.toggleClass("is-checked", !!state.isChecked);
-		}
-	})
-	
-	// [searchBox]
-	.add("searchBox", {
-		selector: "#search_box",
-		onReady: function($self) {
-			$self
-			.on("click", ".inp-txt", function(e, isTrigger) {
-				var vuw = $.data(e.delegateTarget, "vuw");
-				vuw.setState("focus", true);
-				!!isTrigger && $(this).trigger("focus", [true]);
-			})
-			.on("blur", ".inp-txt", function(e) {
-				var vuw = $.data(e.delegateTarget, "vuw");
-				vuw.setState("focus", false);
-			});
-			
-			this.$inp = $("#inp_q");
-			
-			this.getOther("nav").onChangeState(function(state) {
-				this.getOther("searchBox").setState("rockOpen", !!state.isFixed);
-			});
-			this.state.focus = false;
-		},
-		onChangeState: function(state) {
-			this.$self
-			.toggleClass("is-focus", state.focus)
-			.toggleClass("is-rockOpen", state.rockOpen)
-			.closest(".link-list").toggleClass("is-form-focus", state.focus);
-		}
-	})
-	
-	// [btnSearch]
-	.add("btnSearch", {
-		selector: function() {
-			return this.getOther("searchBox").$self.find(".btn-search");
-		},
-		onReady: function($self) {
-			this.state.htmlFor = this.$self.attr("for");
-			
-			this.getOther("searchBox").onChangeState(function(state) {
-				var htmlFor;
-				if(state.rockOpen) {
-					htmlFor = "search_submit";
-				} else {
-					htmlFor = state.focus ? "search_submit" : "inp_q";
-				}
-				this.getOther("btnSearch").setState({
-					htmlFor: htmlFor
+	}, function() {
+		this
+		// [switch for open nav]
+		.add("switchNavLinks", {
+			selector: "#show_nav_links",
+			onReady: function($self) {
+				this.$link = $self.closest(".btn-toggle");
+				$self.on("change", function(e, isTrigger) {
+					var
+						vuw = $.data(this, "vuw"),
+						section = app.isString(isTrigger) ? isTrigger : "posts";
+					
+					vuw.setState("isChecked", this.checked);
+					vuwer.get("body").setState("lockScroll", this.checked);
+					vuwer.get("nav").setState("isLockFixed", this.checked);
+					vuwer.get("siteBody").setState("view", this.checked ? "" : section);
 				});
-			});
-			
-			this.$self.on("click", function(e) {
-				var vuw = $.data(this, "vuw");
-				if(vuw.getState("htmlFor") === "inp_q") {
-					e.preventDefault();
-					vuw.getOther("searchBox").$inp.trigger("click", [true]);
-				}
-			});
-//		},
-//		onChangeState: function(state) {
-//			!!state.htmlFor && this.$self.attr("for", state.htmlFor);
-		}
-	})
-	
-	// [scrollToPageTop] ページトップへスクロールするボタン
-	.add("scrollToPageTop", {
-		selector: "#scroll_to_pageTop",
-		onReady: function($self) {
-//			vuwer.positionTracking(this);
-		},
-		execScroll: function() {
-			this.$self.children(".btn-exec").trigger("click", [true]);
-		}
+			},
+			onChangeState: function(state) {
+				this.$link.toggleClass("is-checked", !!state.isChecked);
+			}
+		})
+		
+		// [searchBox]
+		.add("searchBox", {
+			selector: "#search_box",
+			onReady: function($self) {
+				$self
+				.on("click", ".inp-txt", function(e, isTrigger) {
+					var vuw = $.data(e.delegateTarget, "vuw");
+					vuw.setState("focus", true);
+					!!isTrigger && $(this).trigger("focus", [true]);
+				})
+				.on("blur", ".inp-txt", function(e) {
+					var vuw = $.data(e.delegateTarget, "vuw");
+					vuw.setState("focus", false);
+				});
+				
+				this.$inp = $("#inp_q");
+				this.state.focus = false;
+			},
+			onChangeState: function(state) {
+				this.$self
+				.toggleClass("is-focus", state.focus)
+				.toggleClass("is-rockOpen", state.rockOpen)
+				.closest(".link-list").toggleClass("is-form-focus", state.focus);
+			}
+		})
+		
+		// [btnSearch]
+		.add("btnSearch", {
+			selector: function() {
+				return this.getOther("searchBox").$self.find(".btn-search");
+			},
+			onReady: function($self) {
+				this.state.htmlFor = this.$self.attr("for");
+				
+				this.getOther("searchBox").onChangeState(function(state) {
+					var htmlFor;
+					if(state.rockOpen) {
+						htmlFor = "search_submit";
+					} else {
+						htmlFor = state.focus ? "search_submit" : "inp_q";
+					}
+					this.getOther("btnSearch").setState({
+						htmlFor: htmlFor
+					});
+				});
+				
+				this.$self.on("click", function(e) {
+					var vuw = $.data(this, "vuw");
+					if(vuw.getState("htmlFor") === "inp_q") {
+						e.preventDefault();
+						vuw.getOther("searchBox").$inp.trigger("click", [true]);
+					}
+				});
+//			},
+//			onChangeState: function(state) {
+//				!!state.htmlFor && this.$self.attr("for", state.htmlFor);
+			}
+		});
 	})
 	
 	// [title section] for index page
@@ -454,8 +455,7 @@
 		onReady: function($self) {
 			$self.on("click", function(e) {
 				e.preventDefault();
-				var vuw = $.data(e.delegateTarget, "vuw");
-				vuw.getOther("switchNavLinks").$self.prop({
+				vuwer.get("switchNavLinks.nav").$self.prop({
 					checked: false
 				}).trigger("change", ["description"]);
 			});
@@ -569,6 +569,5 @@
 //			});
 		}
 	});
-	
 	
 })(window.jQuery || window.$);
