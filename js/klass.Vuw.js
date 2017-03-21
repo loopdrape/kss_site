@@ -889,6 +889,20 @@
 			delay: 0
 		}, "VuwerComponent");
 		
+		
+		// [execute after callbacks]
+		this._useVuwerAfter.forEach(function(fn) {
+			fn.call(this);
+		}, this);
+		
 		return this;
 	};
+	
+	//[useVuwer's after callbacks]
+	Klass("Vuw")._useVuwerAfter = [];
+	Klass("Vuw").onUseVuwer = function(fn) {
+		Klass.isFunction(fn) && this._useVuwerAfter.push(fn);
+		return this;
+	};
+	
 }(window.Klass, window.jQuery || window.$));
