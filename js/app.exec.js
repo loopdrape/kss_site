@@ -5,8 +5,6 @@
 		return false;
 	}
 	
-	app.isReady = false;
-	
 	/******************
 	*    app start    *
 	******************/
@@ -29,11 +27,6 @@
 	}).then(function() {
 		var df = $.Deferred();
 		vuwer.get("body").$self.addClass("is-ready");
-		app.isReady = true;
-		setTimeout(df.resolve, 0);
-		return df.promise();
-	}).then(function() {
-		var df = $.Deferred();
 		vuwer.$window.trigger("resize", [true]);
 		setTimeout(df.resolve, 600);
 		return df.promise();
@@ -48,6 +41,77 @@
 //		}, 0);
 	});
 	
+	// [position tracker]
+	app.positionTracking = {
+		_targets: [],
+		add: function(vuw) {
+			if( !( vuw instanceof Klass("Vuw") ) ) {
+				throw new TypeError("arguments[0] must be Vuw instance.");
+			}
+			
+			vuw.$pt = $("<div/>").addClass("position-tracker")
+			.insertBefore(vuw.$self);
+			
+			vuw.state.fixStart = parseInt( vuw.$self.data("fix") );
+			
+			vuw.onChangeState(function(state) {
+				var isFixed;
+				if( !this.isNumber(state.current) ) {
+					return false;
+				}
+				
+				isFixed =
+					state.current >= state.fixStart &&
+					state.current <= (state.fixEnd || 0);
+				
+				if(state.isFixed !== isFixed) {
+					this.$self.toggleClass("is-fixed", isFixed);
+					this.$pt.css({
+						height: isFixed ? this.height : ""
+					});
+					state.isFixed = isFixed;
+				}
+				delete state.current;
+			});
+			
+			this._targets.push( vuw.getAddress() );
+		},
+		updFixEnd: function(h) {
+			var methods = this._targets.map(function(vuwAddr) {
+				var vuw = vuwer.get(vuwAddr);
+				if(vuw.isReady) {
+					vuw.height = vuw.$self.outerHeight();
+					return vuw.setState("fixEnd", vuw.$pt.offset().top - h);
+				}
+			});
+			return $.when.apply($, methods);
+		},
+		onScroll: function(t) {
+			var methods = this._targets.map(function(vuwAddr) {
+				var vuw = vuwer.get(vuwAddr);
+				if(vuw.isReady) {
+					return vuw.setState("current", t);
+				}
+			});
+			return $.when.apply($, methods);
+		}
+	};
+	
+	vuwer.onReady(function($window) {
+		$window
+		.on("resize.pt", function(e, isTrigger) {
+			!!vuwer._resizePtTimer && clearTimeout(vuwer._resizePtTimer);
+			vuwer._resizePtTimer = setTimeout(function() {
+				app.positionTracking.updFixEnd( $window.height() );
+			}, !!isTrigger ? 0 : 100);
+		})
+		.on("scroll.pt", function(e, isTrigger) {
+			!!vuwer._scrollPtTimer && clearTimeout(vuwer._scrollPtTimer);
+			vuwer._scrollPtTimer = setTimeout(function() {
+				app.positionTracking.onScroll( $window.scrollTop() );
+			}, 0);
+		});
+	});
 	
 	// attach execute callbacks
 	app._execCallbacks = [];

@@ -5,98 +5,54 @@
 		return false;
 	}
 	
+	// [vuwerオブジェクトの利用]
+	Klass("Vuw").useVuwer();
+	
 	/******************
 	*    component    *
 	******************/
-	// vuwerオブジェクトの利用
-	Klass("Vuw").useVuwer();
 	vuwer
 	// [window]
 	.setProp({
-		_positionTrackings: [],
-		positionTracking: function(vuw) {
-			vuw.$pt = $("<div/>").addClass("position-tracker")
-			.insertBefore(vuw.$self);
-			vuw.state.fixStart = parseInt( vuw.$self.data("fix") );
-			vuw.onChangeState(function(state) {
-				var isFixed;
-//				csl.log(this.name, "onChangeState", state);
-				if( this.isNumber(state.current) ) {
-					isFixed =
-						state.current >= state.fixStart &&
-						state.current <= (state.fixEnd || 0);
-					
-					if(state.isFixed !== isFixed) {
-						this.$self.toggleClass("is-fixed", isFixed);
-						this.$pt.css({
-							height: isFixed ? this.height : ""
-						});
-						state.isFixed = isFixed;
-					}
-					delete state.current;
-				}
-			});
+		onReady: function($window) {
+			this.state.height = $window.height() + 10;
 			
-			this._positionTrackings.push( vuw.getAddress() );
-		},
-		updPtFixEnd: function(vuwAddr, h) {
-			var vuw = this.get(vuwAddr);
-			vuw.height = vuw.$self.outerHeight();
-			return vuw.setState("fixEnd", vuw.$pt.offset().top - h);
-		},
-		onScroll: function(vuwAddr, t) {
-			var vuw = this.get(vuwAddr);
-			return vuw.setState("current", t);
-		},
-		onReady: function($self) {
-			this.state.height = $self.height() + 10;
-			
-			$self
+			$window
 			.on("resize", function(e, isTrigger) {
-				if(!app.isReady) {
-					return true;
-				}
 				!!vuwer._resizeTimer && clearTimeout(vuwer._resizeTimer);
 				vuwer._resizeTimer = setTimeout(function() {
-					var
-						h = vuwer.$self.height(),
-						diff = h - vuwer.state.height;
+					var diff = $window.height() - vuwer.state.height;
 					
 					if(diff !== 0) {
 						vuwer.get("body").$self.toggleClass("visible-urlbar", diff < 0);
 						vuwer.state.height += diff;
 					}
 					
-					vuwer.centerX = vuwer.$window.outerWidth() / 2;
-					
-					vuwer._positionTrackings.forEach(function(vuwAddr) {
-						vuwer.updPtFixEnd(vuwAddr, h);
-					});
+					vuwer.centerX = $window.outerWidth() / 2;
 				}, !!isTrigger ? 0 : 100);
-			})
-			.on("scroll", function() {
-				var $this = $(this);
-				if(!app.isReady) {
-					return true;
-				}
-				vuwer._positionTrackings.forEach(function(vuwAddr) {
-					vuwer.onScroll(vuwAddr, $this.scrollTop());
-				});
 			});
 			
 			if(app.device[0] === "sp") {
-				$self.get(0).addEventListener("deviceorientation", function(e) {
-					app.isReady && vuwer.get("secTitle").setState({
-						slopeX: e.gamma / 4
-					});
+				window.addEventListener("deviceorientation", function(e) {
+					!!vuwer._slopeTimer && clearTimeout(vuwer._slopeTimer);
+					vuwer._slopeTimer = setTimeout(function() {
+						vuwer.get("secTitle").setState({
+							slopeX: e.gamma / 4
+						});
+					}, 0);
 				}, false);
 			} else {
-				$self.on("mousemove", function(e) {
-					if( app.isReady && vuwer.isNumber(vuwer.centerX) ) {
+				$window.on("mousemove", function(e) {
+					if( !vuwer.isNumber(vuwer.centerX) ) {
+						return true;
+					}
+					
+					!!vuwer._slopeTimer && clearTimeout(vuwer._slopeTimer);
+					vuwer._slopeTimer = setTimeout(function() {
 						vuwer.get("secTitle").setState({
 							slopeX: (e.clientX - vuwer.centerX) / 200
 						});
-					}
+					}, 0);
 				});
 			}
 		}
@@ -185,10 +141,10 @@
 			this.hoverDecayTime = (app.device[0] === "sp") ? 250 : 0;
 			
 			this.$self
-			.on("mouseenter touchstart", "a, .hoverTarget", function(e) {
+			.on("mouseenter touchstart", "a:not(.btn), .btn, .hoverTarget", function(e) {
 				$(this).addClass("is-hover");
 			})
-			.on("mouseleave touchend", "a, .hoverTarget", function(e) {
+			.on("mouseleave touchend", "a:not(.btn), .btn, .hoverTarget", function(e) {
 				var vuw = $.data(e.delegateTarget, "vuw");
 				setTimeout( $.fn.removeClass.bind($(this), "is-hover"), vuw.hoverDecayTime);
 			});
@@ -233,11 +189,12 @@
 		selector: "#site_header",
 		onReady: function($self) {
 			$self.on("click", ".icon-keeshkas", function(e) {
+				var vuw = $.data(e.delegateTarget, "vuw");
 				e.preventDefault();
-				if( vuwer.get("nav").getState("isFixed") ) {
-					vuwer.get("switchNavLinks.nav").$self.trigger("click", [true]);
+				if( vuw.getOther("nav").getState("isFixed") ) {
+					vuw.getOther("switchNavLinks").$self.trigger("click", [true]);
 				} else {
-					vuwer.get("scrollToPageTop.siteFooter").execScroll();
+					vuw.getOther("scrollToPageTop").execScroll();
 				}
 			});
 		}
@@ -297,111 +254,111 @@
 			
 			return this;
 		}
-	}, function() {
-		this
-		// [scrollToPageTop] ページトップへスクロールするボタン
-		.add("scrollToPageTop", {
-			selector: "#scroll_to_pageTop",
-			onReady: function($self) {
-				vuwer.positionTracking(this);
-			},
-			execScroll: function() {
-				this.$self.children(".btn-exec").trigger("click", [true]);
-			}
-		});
 	})
 	
 	// [nav]
 	.add("nav", {
 		selector: "#site_nav",
 		onReady: function($self) {
-			vuwer.positionTracking(this);
+			app.positionTracking.add(this);
 		},
 		onChangeState: function(state) {
 			this.$self.toggleClass("lock-fixed", !!state.isLockFixed);
-			this.get("searchBox").setState("rockOpen", !!state.isFixed);
 		}
-	}, function() {
-		this
-		// [switch for open nav]
-		.add("switchNavLinks", {
-			selector: "#show_nav_links",
-			onReady: function($self) {
-				this.$link = $self.closest(".btn-toggle");
-				$self.on("change", function(e, isTrigger) {
-					var
-						vuw = $.data(this, "vuw"),
-						section = app.isString(isTrigger) ? isTrigger : "posts";
-					
-					vuw.setState("isChecked", this.checked);
-					vuwer.get("body").setState("lockScroll", this.checked);
-					vuwer.get("nav").setState("isLockFixed", this.checked);
-					vuwer.get("siteBody").setState("view", this.checked ? "" : section);
+	})
+	
+	// [switch for open nav]
+	.add("switchNavLinks", {
+		selector: "#show_nav_links",
+		onReady: function($self) {
+			this.$link = $self.closest(".btn-toggle");
+			$self.on("change", function(e, isTrigger) {
+				var
+					vuw = $.data(this, "vuw"),
+					section = app.isString(isTrigger) ? isTrigger : "posts";
+				vuw.setState("isChecked", this.checked);
+				vuw.getOther("body").setState("lockScroll", this.checked);
+				vuw.getOther("nav").setState("isLockFixed", this.checked);
+				vuw.getOther("siteBody").setState("view", this.checked ? "" : section);
+			});
+		},
+		onChangeState: function(state) {
+			this.$link.toggleClass("is-checked", !!state.isChecked);
+		}
+	})
+	
+	// [searchBox]
+	.add("searchBox", {
+		selector: "#search_box",
+		onReady: function($self) {
+			$self
+			.on("click", ".inp-txt", function(e, isTrigger) {
+				var vuw = $.data(e.delegateTarget, "vuw");
+				vuw.setState("focus", true);
+				!!isTrigger && $(this).trigger("focus", [true]);
+			})
+			.on("blur", ".inp-txt", function(e) {
+				var vuw = $.data(e.delegateTarget, "vuw");
+				vuw.setState("focus", false);
+			});
+			
+			this.$inp = $("#inp_q");
+			
+			this.getOther("nav").onChangeState(function(state) {
+				this.getOther("searchBox").setState("rockOpen", !!state.isFixed);
+			});
+			this.state.focus = false;
+		},
+		onChangeState: function(state) {
+			this.$self
+			.toggleClass("is-focus", state.focus)
+			.toggleClass("is-rockOpen", state.rockOpen)
+			.closest(".link-list").toggleClass("is-form-focus", state.focus);
+		}
+	})
+	
+	// [btnSearch]
+	.add("btnSearch", {
+		selector: function() {
+			return this.getOther("searchBox").$self.find(".btn-search");
+		},
+		onReady: function($self) {
+			this.state.htmlFor = this.$self.attr("for");
+			
+			this.getOther("searchBox").onChangeState(function(state) {
+				var htmlFor;
+				if(state.rockOpen) {
+					htmlFor = "search_submit";
+				} else {
+					htmlFor = state.focus ? "search_submit" : "inp_q";
+				}
+				this.getOther("btnSearch").setState({
+					htmlFor: htmlFor
 				});
-			},
-			onChangeState: function(state) {
-				this.$link.toggleClass("is-checked", !!state.isChecked);
-			}
-		})
-		
-		// [searchBox]
-		.add("searchBox", {
-			selector: "#search_box",
-			onReady: function($self) {
-				$self
-				.on("click", ".inp-txt", function(e, isTrigger) {
-					var vuw = $.data(e.delegateTarget, "vuw");
-					vuw.setState("focus", true);
-					!!isTrigger && $(this).trigger("focus", [true]);
-				})
-				.on("blur", ".inp-txt", function(e) {
-					var vuw = $.data(e.delegateTarget, "vuw");
-					vuw.setState("focus", false);
-				});
-				
-				this.$inp = $("#inp_q");
-				this.state.focus = false;
-			},
-			onChangeState: function(state) {
-				this.$self
-				.toggleClass("is-focus", state.focus)
-				.toggleClass("is-rockOpen", state.rockOpen)
-				.closest(".link-list").toggleClass("is-form-focus", state.focus);
-			}
-		})
-		
-		// [btnSearch]
-		.add("btnSearch", {
-			selector: function() {
-				return this.getOther("searchBox").$self.find(".btn-search");
-			},
-			onReady: function($self) {
-				this.state.htmlFor = this.$self.attr("for");
-				
-				this.getOther("searchBox").onChangeState(function(state) {
-					var htmlFor;
-					if(state.rockOpen) {
-						htmlFor = "search_submit";
-					} else {
-						htmlFor = state.focus ? "search_submit" : "inp_q";
-					}
-					this.getOther("btnSearch").setState({
-						htmlFor: htmlFor
-					});
-				});
-				
-				this.$self.on("click", function(e) {
-					var vuw = $.data(this, "vuw");
-					if(vuw.getState("htmlFor") === "inp_q") {
-						e.preventDefault();
-						vuw.getOther("searchBox").$inp.trigger("click", [true]);
-					}
-				});
-//			},
-//			onChangeState: function(state) {
-//				!!state.htmlFor && this.$self.attr("for", state.htmlFor);
-			}
-		});
+			});
+			
+			this.$self.on("click", function(e) {
+				var vuw = $.data(this, "vuw");
+				if(vuw.getState("htmlFor") === "inp_q") {
+					e.preventDefault();
+					vuw.getOther("searchBox").$inp.trigger("click", [true]);
+				}
+			});
+//		},
+//		onChangeState: function(state) {
+//			!!state.htmlFor && this.$self.attr("for", state.htmlFor);
+		}
+	})
+	
+	// [scrollToPageTop] ページトップへスクロールするボタン
+	.add("scrollToPageTop", {
+		selector: "#scroll_to_pageTop",
+		onReady: function($self) {
+			app.positionTracking.add(this);
+		},
+		execScroll: function() {
+			this.$self.children(".btn-exec").trigger("click", [true]);
+		}
 	})
 	
 	// [title section] for index page
@@ -414,7 +371,8 @@
 		onChangeState: function(state) {
 			if("anime" in state) {
 				this.$title.toggleClass("is-anime", !!state.anime);
-			} else
+			}
+			
 			if("slopeX" in state) {
 				this.$title.css({
 					transform: "translateX(" + (state.slopeX * -0.1) + "%)"
@@ -455,7 +413,8 @@
 		onReady: function($self) {
 			$self.on("click", function(e) {
 				e.preventDefault();
-				vuwer.get("switchNavLinks.nav").$self.prop({
+				var vuw = $.data(e.delegateTarget, "vuw");
+				vuw.getOther("switchNavLinks").$self.prop({
 					checked: false
 				}).trigger("change", ["description"]);
 			});
@@ -569,5 +528,6 @@
 //			});
 		}
 	});
+	
 	
 })(window.jQuery || window.$);
