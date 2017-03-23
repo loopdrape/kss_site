@@ -665,9 +665,39 @@
 			* @return array
 			*/
 			getChildren: function() {
-				return Object.keys(this._vuwMap).map(function(k) {
+				var list = Object.keys(this._vuwMap).map(function(k) {
 					return this[k];
 				}, this._vuwMap);
+				list.get = function(idx) {
+					if( Klass.isNumber(idx) ) {
+						return this[idx] || false;
+					} else {
+						return this;
+					}
+				};
+				return list;
+			},
+			
+			/**
+			* 末端階層まで対象にしたVuwリストの取得関数
+			* @return array
+			*/
+			find: function(name) {
+				var list = [];
+				this.getChildren().forEach(function(vuw) {
+					if(vuw.name === name) {
+						list.push(vuw);
+					}
+					list = list.concat( window.vuwer.find.call(vuw, name) );
+				}, this);
+				list.get = function(idx) {
+					if( Klass.isNumber(idx) ) {
+						return this[idx] || false;
+					} else {
+						return this;
+					}
+				};
+				return list;
 			},
 			
 			/**
@@ -767,6 +797,9 @@
 			},
 			getChildren: function() {
 				return window.vuwer.getChildren.call(this);
+			},
+			find: function(name) {
+				return window.vuwer.find.call(this, name);
 			},
 			remove: function(name) {
 				window.vuwer.remove.call(this, name);
