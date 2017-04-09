@@ -189,12 +189,11 @@
 		selector: "#site_header",
 		onReady: function($self) {
 			$self.on("click", ".icon-keeshkas", function(e) {
-				var vuw = $.data(e.delegateTarget, "vuw");
 				e.preventDefault();
-				if( vuw.getOther("nav").getState("isFixed") ) {
-					vuw.getOther("switchNavLinks").$self.trigger("click", [true]);
+				if( vuwer.get("nav").getState("isFixed") ) {
+					vuwer.get("switchNavLinks.nav").$self.trigger("click", [true]);
 				} else {
-					vuw.getOther("scrollToPageTop").execScroll();
+					vuwer.get("scrollToPageTop").execScroll();
 				}
 			});
 		}
@@ -260,108 +259,120 @@
 	.add("nav", {
 		selector: "#site_nav",
 		onReady: function($self) {
-			app.positionTracking.add(this);
+			app.positionTracker.tracking(this, false, true);
 		},
 		onChangeState: function(state) {
-			this.$self.toggleClass("lock-fixed", !!state.isLockFixed);
-		}
-	})
-	
-	// [switch for open nav]
-	.add("switchNavLinks", {
-		selector: "#show_nav_links",
-		onReady: function($self) {
-			this.$link = $self.closest(".btn-toggle");
-			$self.on("change", function(e, isTrigger) {
-				var
-					vuw = $.data(this, "vuw"),
-					section = app.isString(isTrigger) ? isTrigger : "posts";
-				vuw.setState("isChecked", this.checked);
-				vuw.getOther("body").setState("lockScroll", this.checked);
-				vuw.getOther("nav").setState("isLockFixed", this.checked);
-				vuw.getOther("siteBody").setState("view", this.checked ? "" : section);
-			});
-		},
-		onChangeState: function(state) {
-			this.$link.toggleClass("is-checked", !!state.isChecked);
-		}
-	})
-	
-	// [searchBox]
-	.add("searchBox", {
-		selector: "#search_box",
-		onReady: function($self) {
-			$self
-			.on("click", ".inp-txt", function(e, isTrigger) {
-				var vuw = $.data(e.delegateTarget, "vuw");
-				vuw.setState("focus", true);
-				!!isTrigger && $(this).trigger("focus", [true]);
-			})
-			.on("blur", ".inp-txt", function(e) {
-				var vuw = $.data(e.delegateTarget, "vuw");
-				vuw.setState("focus", false);
-			});
+			var tmp = {};
 			
-			this.$inp = $("#inp_q");
+			if(typeof state.isLockFixed === "boolean") {
+				this.$self.toggleClass("lock-fixed", !!state.isLockFixed);
+				delete state.isLockFixed;
+			}
 			
-			this.getOther("nav").onChangeState(function(state) {
-				this.getOther("searchBox").setState("rockOpen", !!state.isFixed);
-			});
-			this.state.focus = false;
-		},
-		onChangeState: function(state) {
-			this.$self
-			.toggleClass("is-focus", state.focus)
-			.toggleClass("is-rockOpen", state.rockOpen)
-			.closest(".link-list").toggleClass("is-form-focus", state.focus);
-		}
-	})
-	
-	// [btnSearch]
-	.add("btnSearch", {
-		selector: function() {
-			return this.getOther("searchBox").$self.find(".btn-search");
-		},
-		onReady: function($self) {
-			this.state.htmlFor = this.$self.attr("for");
-			
-			this.getOther("searchBox").onChangeState(function(state) {
-				var htmlFor;
-				if(state.rockOpen) {
-					htmlFor = "search_submit";
+			tmp.searchBox = this.get("searchBox");
+			if(tmp.searchBox.getState("rockOpen") !== state.isFixed) {
+				tmp.methods = [];
+				tmp.methods.push( tmp.searchBox.setState("rockOpen", !!state.isFixed) );
+				
+				tmp.btnSearch = this.get("btnSearch");
+				if( state.isFixed || tmp.btnSearch.getState("focus") ) {
+					tmp.htmlFor = "search_submit";
 				} else {
-					htmlFor = state.focus ? "search_submit" : "inp_q";
+					tmp.htmlFor = "inp_q";
 				}
-				this.getOther("btnSearch").setState({
-					htmlFor: htmlFor
-				});
-			});
-			
-			this.$self.on("click", function(e) {
-				var vuw = $.data(this, "vuw");
-				if(vuw.getState("htmlFor") === "inp_q") {
-					e.preventDefault();
-					vuw.getOther("searchBox").$inp.trigger("click", [true]);
-				}
-			});
-//		},
-//		onChangeState: function(state) {
-//			!!state.htmlFor && this.$self.attr("for", state.htmlFor);
+				tmp.methods.push( tmp.btnSearch.setState("htmlFor",  tmp.htmlFor) );
+				
+				return $.when.apply($, tmp.methods);
+			}
 		}
+	}, function() {
+		// ** add child vuw **
+		this
+		// [switch for open nav]
+		.add("switchNavLinks", {
+			selector: "#show_nav_links",
+			onReady: function($self) {
+				this.$link = $self.closest(".btn-toggle");
+				$self.on("change", function(e, isTrigger) {
+					var
+						vuw = $.data(this, "vuw"),
+						section = app.isString(isTrigger) ? isTrigger : "posts";
+					
+					vuw.setState("isChecked", this.checked);
+					vuwer.get("body").setState("lockScroll", this.checked);
+					vuwer.get("nav").setState("isLockFixed", this.checked);
+					vuwer.get("siteBody").setState("view", this.checked ? "" : section);
+				});
+			},
+			onChangeState: function(state) {
+				if(typeof state.isChecked === "boolean") {
+					this.$link.toggleClass("is-checked", !!state.isChecked);
+					delete state.isChecked;
+				}
+			}
+		})
+		
+		// [searchBox]
+		.add("searchBox", {
+			selector: "#search_box",
+			onReady: function($self) {
+				$self
+				.on("click", ".inp-txt", function(e, isTrigger) {
+					var vuw = $.data(e.delegateTarget, "vuw");
+					vuw.setState("focus", true);
+					!!isTrigger && $(this).trigger("focus", [true]);
+				})
+				.on("blur", ".inp-txt", function(e) {
+					var vuw = $.data(e.delegateTarget, "vuw");
+					vuw.setState("focus", false);
+				});
+				
+				this.$inp = $("#inp_q");
+				
+				this.state.focus = false;
+			},
+			onChangeState: function(state) {
+				this.$self
+				.toggleClass("is-focus", state.focus)
+				.toggleClass("is-rockOpen", state.rockOpen)
+				.closest(".link-list").toggleClass("is-form-focus", state.focus);
+			}
+		})
+		
+		// [btnSearch]
+		.add("btnSearch", {
+			selector: function() {
+				return this.getOther("searchBox").$self.find(".btn-search");
+			},
+			onReady: function($self) {
+				this.state.htmlFor = this.$self.attr("for");
+				
+				this.$self.on("click", function(e) {
+					var vuw = $.data(this, "vuw");
+					if(vuw.getState("htmlFor") === "inp_q") {
+						e.preventDefault();
+						vuw.getOther("searchBox").$inp.trigger("click", [true]);
+					}
+				});
+//			},
+//			onChangeState: function(state) {
+//				!!state.htmlFor && this.$self.attr("for", state.htmlFor);
+			}
+		});
 	})
 	
 	// [scrollToPageTop] ページトップへスクロールするボタン
 	.add("scrollToPageTop", {
 		selector: "#scroll_to_pageTop",
 		onReady: function($self) {
-			app.positionTracking.add(this);
+//			app.positionTracker.tracking(this, true, true);
 		},
 		execScroll: function() {
 			this.$self.children(".btn-exec").trigger("click", [true]);
 		}
 	})
 	
-	// [title section] for index page
+	// [title section]
 	.add("secTitle", {
 		selector: "#sec_title",
 		onReady: function($self) {
@@ -371,6 +382,7 @@
 		onChangeState: function(state) {
 			if("anime" in state) {
 				this.$title.toggleClass("is-anime", !!state.anime);
+				delete state.anime;
 			}
 			
 			if("slopeX" in state) {
@@ -381,7 +393,6 @@
 					transform: "translateX(" + (state.slopeX * -0.3) + "%)"
 				});
 			}
-			
 		}
 	})
 	
@@ -413,8 +424,7 @@
 		onReady: function($self) {
 			$self.on("click", function(e) {
 				e.preventDefault();
-				var vuw = $.data(e.delegateTarget, "vuw");
-				vuw.getOther("switchNavLinks").$self.prop({
+				vuwer.get("switchNavLinks.nav").$self.prop({
 					checked: false
 				}).trigger("change", ["description"]);
 			});

@@ -42,74 +42,87 @@
 	});
 	
 	// [position tracker]
-	app.positionTracking = {
+	app.positionTracker = {
 		_targets: [],
-		add: function(vuw) {
+		tracking: function(vuw, trackingStart, trackingEnd) {
 			if( !( vuw instanceof Klass("Vuw") ) ) {
 				throw new TypeError("arguments[0] must be Vuw instance.");
 			}
 			
-			vuw.$pt = $("<div/>").addClass("position-tracker")
-			.insertBefore(vuw.$self);
+			vuw._pt = {
+				$elm: $("<div/>").addClass("position-tracker").insertBefore(vuw.$self),
+				buffer: vuw.$self.data("fix") || 0
+			};
 			
-			vuw.state.fixStart = parseInt( vuw.$self.data("fix") );
+			!!trackingStart && (vuw._pt.fixStart = 0);
+			!!trackingEnd && (vuw._pt.fixEnd = 0);
 			
 			vuw.onChangeState(function(state) {
 				var isFixed;
-				if( !this.isNumber(state.current) ) {
+				if( !app.isNumber(state.currentY) ) {
 					return false;
 				}
 				
 				isFixed =
-					state.current >= state.fixStart &&
-					state.current <= (state.fixEnd || 0);
+					(!this._pt.fixStart || state.currentY >= this._pt.fixStart) &&
+					(!this._pt.fixEnd || state.currentY <= this._pt.fixEnd);
 				
-				if(state.isFixed !== isFixed) {
-					this.$self.toggleClass("is-fixed", isFixed);
-					this.$pt.css({
-						height: isFixed ? this.height : ""
-					});
+				if(isFixed !== state.isFixed) {
 					state.isFixed = isFixed;
+					this.$self.toggleClass("is-fixed", state.isFixed);
+					this._pt.$elm.css("height", state.isFixed ? this._pt.height : "");
 				}
-				delete state.current;
+				delete state.currentY;
 			});
 			
 			this._targets.push( vuw.getAddress() );
 		},
-		updFixEnd: function(h) {
-			var methods = this._targets.map(function(vuwAddr) {
-				var vuw = vuwer.get(vuwAddr);
-				if(vuw.isReady) {
-					vuw.height = vuw.$self.outerHeight();
-					return vuw.setState("fixEnd", vuw.$pt.offset().top - h);
+		_updPtFixPosition: function() {
+			var h = vuwer.$window.height();
+			this._targets.forEach(function(vuwAddress) {
+				var
+					vuw = vuwer.get(vuwAddress),
+					top = vuw._pt.$elm.offset().top;
+				
+				if(vuw && vuw.isReady) {
+					vuw._pt.height = vuw.$self.outerHeight(true);
+					if( app.isNumber( vuw._pt.fixStart ) ) {
+						vuw._pt.fixStart = top + vuw._pt.buffer;
+					}
+					if( app.isNumber( vuw._pt.fixEnd ) ) {
+						vuw._pt.fixEnd = top + vuw._pt.height - h;
+					}
 				}
-			});
-			return $.when.apply($, methods);
+			}, this);
+			return this;
 		},
-		onScroll: function(t) {
-			var methods = this._targets.map(function(vuwAddr) {
-				var vuw = vuwer.get(vuwAddr);
-				if(vuw.isReady) {
-					return vuw.setState("current", t);
+		onWindowResize: function() {
+			return this._updPtFixPosition();
+		},
+		onChangeScrollTop: function(t) {
+			this._targets.forEach(function(vuwAddress) {
+				var vuw = vuwer.get(vuwAddress);
+				if(vuw && vuw.isReady) {
+					vuw.setState("currentY", t);
 				}
-			});
-			return $.when.apply($, methods);
+			}, this);
+			return this;
 		}
 	};
 	
 	vuwer.onReady(function($window) {
 		$window
 		.on("resize.pt", function(e, isTrigger) {
-			!!vuwer._resizePtTimer && clearTimeout(vuwer._resizePtTimer);
-			vuwer._resizePtTimer = setTimeout(function() {
-				app.positionTracking.updFixEnd( $window.height() );
-			}, !!isTrigger ? 0 : 100);
+				var scrollTop = $window.scrollTop();
+				!!vuwer._resizePtTimer && clearTimeout(vuwer._resizePtTimer);
+				vuwer._resizePtTimer = setTimeout(function() {
+					if( scrollTop === $window.scrollTop() ) {
+						app.positionTracker.onWindowResize();
+					}
+				}, !!isTrigger ? 0 : 100);
 		})
 		.on("scroll.pt", function(e, isTrigger) {
-			!!vuwer._scrollPtTimer && clearTimeout(vuwer._scrollPtTimer);
-			vuwer._scrollPtTimer = setTimeout(function() {
-				app.positionTracking.onScroll( $window.scrollTop() );
-			}, 0);
+			app.positionTracker.onChangeScrollTop( $window.scrollTop() );
 		});
 	});
 	
