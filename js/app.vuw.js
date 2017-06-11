@@ -15,23 +15,15 @@
 	// [window]
 	.setProp({
 		onReady: function($window) {
-			this.state.height = $window.height() + 10;
-			
 			$window
 			.on("resize", function(e, isTrigger) {
 				!!vuwer._resizeTimer && clearTimeout(vuwer._resizeTimer);
 				vuwer._resizeTimer = setTimeout(function() {
-					var diff = $window.height() - vuwer.state.height;
-					
-					if(diff !== 0) {
-						vuwer.get("body").$self.toggleClass("visible-urlbar", diff < 0);
-						vuwer.state.height += diff;
-					}
-					
 					vuwer.centerX = $window.outerWidth() / 2;
 				}, !!isTrigger ? 0 : 100);
 			});
 			
+/*
 			if(app.device[0] === "sp") {
 				window.addEventListener("deviceorientation", function(e) {
 					!!vuwer._slopeTimer && clearTimeout(vuwer._slopeTimer);
@@ -55,6 +47,7 @@
 					}, 0);
 				});
 			}
+*/
 		}
 	})
 	
@@ -141,10 +134,10 @@
 			this.hoverDecayTime = (app.device[0] === "sp") ? 250 : 0;
 			
 			this.$self
-			.on("mouseenter touchstart", "a:not(.btn), .btn, .hoverTarget", function(e) {
+			.on("mouseenter touchstart", "a, .hoverTarget", function(e) {
 				$(this).addClass("is-hover");
 			})
-			.on("mouseleave touchend", "a:not(.btn), .btn, .hoverTarget", function(e) {
+			.on("mouseleave touchend", "a, .hoverTarget", function(e) {
 				var vuw = $.data(e.delegateTarget, "vuw");
 				setTimeout( $.fn.removeClass.bind($(this), "is-hover"), vuw.hoverDecayTime);
 			});
@@ -190,7 +183,7 @@
 		onReady: function($self) {
 			$self.on("click", ".icon-keeshkas", function(e) {
 				e.preventDefault();
-				if( vuwer.get("nav").getState("isFixed") ) {
+				if( vuwer.$window.scrollTop() < 10 ) {
 					vuwer.get("switchNavLinks.nav").$self.trigger("click", [true]);
 				} else {
 					vuwer.get("scrollToPageTop").execScroll();
@@ -259,15 +252,10 @@
 	.add("nav", {
 		selector: "#site_nav",
 		onReady: function($self) {
-			app.positionTracker.tracking(this, false, true);
+//			app.positionTracker.tracking(this, false, true);
 		},
 		onChangeState: function(state) {
 			var tmp = {};
-			
-			if(typeof state.isLockFixed === "boolean") {
-				this.$self.toggleClass("lock-fixed", !!state.isLockFixed);
-				delete state.isLockFixed;
-			}
 			
 			tmp.searchBox = this.get("searchBox");
 			if(tmp.searchBox.getState("rockOpen") !== state.isFixed) {
@@ -300,7 +288,6 @@
 					
 					vuw.setState("isChecked", this.checked);
 					vuwer.get("body").setState("lockScroll", this.checked);
-					vuwer.get("nav").setState("isLockFixed", this.checked);
 					vuwer.get("siteBody").setState("view", this.checked ? "" : section);
 				});
 			},
@@ -354,9 +341,9 @@
 						vuw.getOther("searchBox").$inp.trigger("click", [true]);
 					}
 				});
-//			},
-//			onChangeState: function(state) {
-//				!!state.htmlFor && this.$self.attr("for", state.htmlFor);
+			},
+			onChangeState: function(state) {
+				!!state.htmlFor && this.$self.attr("for", state.htmlFor);
 			}
 		});
 	})
@@ -365,7 +352,7 @@
 	.add("scrollToPageTop", {
 		selector: "#scroll_to_pageTop",
 		onReady: function($self) {
-//			app.positionTracker.tracking(this, true, true);
+			app.positionTracker.tracking(this, true, true);
 		},
 		execScroll: function() {
 			this.$self.children(".btn-exec").trigger("click", [true]);

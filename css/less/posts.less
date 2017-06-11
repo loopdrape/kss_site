@@ -4,14 +4,14 @@
 .posts {
 	body.page-index & {
 		// flex box
-		display: -webkit-flex;
-		-webkit-flex-direction: row;
-		-webkit-flex-wrap: wrap;
-		-webkit-justify-content: flex-start;
 		display: flex;
+		display: -webkit-flex;
 		flex-direction: row;
 		flex-wrap: wrap;
 		justify-content: flex-start;
+		-webkit-flex-direction: row;
+		-webkit-flex-wrap: wrap;
+		-webkit-justify-content: flex-start;
 		
 		.more-box ~ .post {
 			display: none;
@@ -37,7 +37,7 @@
 	}
 	
 	body.page-index & {
-		height: 24vh;
+		height: 24vw;
 		overflow: hidden;
 		@this_pad: (@block_pad * 3 / 4);
 		padding: @this_pad @this_pad (@this_pad + 2px);
@@ -64,10 +64,8 @@
 			
 			&.is-hover {
 				+ .entry-header {
-//					.box-shadow(0, 1px, 4px, 0, shade(@theme_c, 30%), .6);
-					
 					&:before {
-						opacity: .8;
+						opacity: .6;
 					}
 				}
 			}
@@ -101,19 +99,19 @@
 			.box-shadow(0, 1px, 2px, 0, #000, .2);
 			.transition(all .4s);
 			@this_c: #2f6f90;
-			color: @this_c;
+			color: @base_bgc;
 			height: 100%;
 			overflow: hidden;
 			position: relative;
 			
 			&:before {
 				.transition(opacity .4s);
-				background-color: @base_bgc;
+				background-color: #000;
 				content: "";
 				display: block;
 				height: 100%;
 				left: 0;
-				opacity: .5;
+				opacity: .2;
 				position: absolute;
 				top: 0;
 				width: 100%;

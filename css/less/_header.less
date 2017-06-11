@@ -11,28 +11,27 @@
 		.box-shadow(0, 1px, 4px, 0, #000, .4);
 		.transform( skew(@base_skewX, 0) );
 		.transform-origin(0 0);
+		.transition(opacity .2s);
 		background-color: @base_bgc;
 		content: "";
 		display: block;
 		height: (@icon_size * 4);
 		left: 0;
 		position: absolute;
-		opacity: .8;
+		opacity: .5;
 		top: 0;
 		width: 80px;
 	}
 	
+	&.is-hover {
+		&:before {
+			opacity: .85;
+		}
+	}
+	
 	@media(min-width: (@mq_w + 1px)) {
 		&:before {
-			.transition(opacity .2s);
-			opacity: .5;
 			width: 100px;
-		}
-		
-		&:hover {
-			&:before {
-				opacity: .8;
-			}
 		}
 	}
 	
