@@ -5,6 +5,7 @@
 *
 * [history]
 * 1.0.0: 新規作成
+* 1.0.1: vuwer.add() で子Vuwにcontainerが付与されるタイミングを変更
 */
 
 ;(function(Klass, $) {
@@ -23,7 +24,7 @@
 	///////////////
 	Klass.create("Vuw", {
 		// メンバ変数
-		_ver: "1.0.0",
+		_ver: "1.0.1",
 		$self: false,
 		$template: false,
 		
@@ -598,9 +599,12 @@
 					opt = {};
 				}
 					
-				if(!vuw) {
+				if(vuw) {
+					vuw.container = this;
+				} else {
 					Object.assign(opt, {
-						name: name
+						name: name,
+						container: this
 					});
 					
 					if( opt.vuwType && this.isString(opt.vuwType) ) {
@@ -618,7 +622,6 @@
 				}
 				
 				this._vuwMap[name] = vuw;
-				vuw.container = this;
 				
 				this.isFunction(callback) && callback.call(vuw);
 				
@@ -802,9 +805,14 @@
 				return window.vuwer.find.call(this, name);
 			},
 			remove: function(name) {
-				window.vuwer.remove.call(this, name);
-				// vuwerからも削除する
-				this.isString(name) && window.vuwer.remove(name + "." + this.name);
+				var targetVuw = this.get(name);
+				if(targetVuw) {
+					targetVuw.getChildren().forEach(function(vuw) {
+						this.remove(vuw.name);
+					}, targetVuw);
+					window.vuwer.remove.call(this, name);
+				}
+				return this;
 			},
 			
 			/**
@@ -845,7 +853,7 @@
 						var
 							$this = $(this),
 							vuwName = $this.data("vuw"),
-							vuw = _self.getOther(vuwName),
+							vuw = _self.get(vuwName),
 							stateData;
 						
 						if(vuw) {
