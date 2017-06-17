@@ -74,7 +74,7 @@
 	<![endif]-->
 	<script>Object.assign || document.write('<script src="./js/polyfill.min.js"><\/script>');</script>
 	<script src="./js/loadGoogleAnalytics.min.js"></script>
-	<script src="./js/webAppBase.2.0.min.js"></script>
+	<script src="./js/webAppBase.2.1.min.js"></script>
 	<script src="./js/app.init.min.js"></script>
 </head>
 <body class="page-index" id="top">
@@ -155,12 +155,6 @@
 	<nav class="site-nav" id="site_nav" role="navigation" data-fix="-200">
 		<fieldset class="btn-toggle hoverTarget"><input type="checkbox" id="show_nav_links"><label class="hoverTarget" for="show_nav_links"><span class="icon"></span></label></fieldset>
 		<ul class="link-list">
-			<li>
-				<form class="search-box" id="search_box" action="/search" method="get" target="_self">
-					<fieldset><input type="text" class="inp-txt" name="q" id="inp_q" value="{SearchQuery}" /></fieldset>
-					<fieldset><input type="submit" id="search_submit" value="{lang:Search}"/><label class="btn-search icon-search" for="search_submit"></label></fieldset>
-				</form>
-			</li>
 			<li><a class="icon-home" href="/"><span>Home</span></a></li>
 			<li><a class="icon-info" href="/tagged/info"><span>Info</span></a></li>
 			<li><a class="icon-blog" href="/tagged/blog"><span>Blog</span></a></li>
@@ -179,6 +173,12 @@
 		{/block:HasPages}
 -->
 			<li><a class="icon-calender" href="/archive"><span>Archive</span></a></li>
+			<li>
+				<form class="search-box" id="search_box" action="/search" method="get" target="_self">
+					<fieldset><input type="text" class="inp-txt" name="q" id="inp_q" value="{SearchQuery}" /></fieldset>
+					<fieldset><input type="submit" id="search_submit" value="{lang:Search}"/><label class="btn-search icon-search" for="search_submit"></label></fieldset>
+				</form>
+			</li>
 		</ul>
 	</nav>
 

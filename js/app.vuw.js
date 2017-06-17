@@ -15,39 +15,12 @@
 	// [window]
 	.setProp({
 		onReady: function($window) {
-			$window
-			.on("resize", function(e, isTrigger) {
-				!!vuwer._resizeTimer && clearTimeout(vuwer._resizeTimer);
-				vuwer._resizeTimer = setTimeout(function() {
-					vuwer.centerX = $window.outerWidth() / 2;
-				}, !!isTrigger ? 0 : 100);
-			});
-			
-/*
-			if(app.device[0] === "sp") {
-				window.addEventListener("deviceorientation", function(e) {
-					!!vuwer._slopeTimer && clearTimeout(vuwer._slopeTimer);
-					vuwer._slopeTimer = setTimeout(function() {
-						vuwer.get("secTitle").setState({
-							slopeX: e.gamma / 4
-						});
-					}, 0);
-				}, false);
-			} else {
-				$window.on("mousemove", function(e) {
-					if( !vuwer.isNumber(vuwer.centerX) ) {
-						return true;
-					}
-					
-					!!vuwer._slopeTimer && clearTimeout(vuwer._slopeTimer);
-					vuwer._slopeTimer = setTimeout(function() {
-						vuwer.get("secTitle").setState({
-							slopeX: (e.clientX - vuwer.centerX) / 200
-						});
-					}, 0);
-				});
-			}
-*/
+//			$window
+//			.on("resize", function(e, isTrigger) {
+//				!!vuwer._resizeTimer && clearTimeout(vuwer._resizeTimer);
+//				vuwer._resizeTimer = setTimeout(function() {
+//				}, !!isTrigger ? 0 : 100);
+//			});
 		}
 	})
 	
@@ -371,15 +344,6 @@
 				this.$title.toggleClass("is-anime", !!state.anime);
 				delete state.anime;
 			}
-			
-			if("slopeX" in state) {
-				this.$title.css({
-					transform: "translateX(" + (state.slopeX * -0.1) + "%)"
-				});
-				this.$bgColor.css({
-					transform: "translateX(" + (state.slopeX * -0.3) + "%)"
-				});
-			}
 		}
 	})
 	
@@ -463,22 +427,20 @@
 				$thumb, bgi;
 			
 			if($post.data("type") === "audio" && $post.hasClass("soundcloud") ) {
-				if(window.SC) {
-					this.addLoadListener($post.find("iframe"), function() {
-						window.SC.Widget(this).getCurrentSound(function(music) {
-							bgi = "url(" + music.artwork_url.replace("-large", "-t500x500") + ")";
-							$("<div/>").addClass("post-background").css({
+				!!window.SC && this.addLoadListener($post.find("iframe"), function() {
+					window.SC.Widget(this).getCurrentSound(function(music) {
+						bgi = "url(" + music.artwork_url.replace("-large", "-t500x500") + ")";
+						$("<div/>").addClass("post-background").css({
+							"background-image": bgi
+						}).appendTo($post);
+						
+						$post.children(".entry-header").prepend(
+							$("<div/>").addClass("thumbnail").css({
 								"background-image": bgi
-							}).appendTo($post);
-							
-							$post.children(".entry-header").prepend(
-								$("<div/>").addClass("thumbnail").css({
-									"background-image": bgi
-								})
-							);
-						});
+							})
+						);
 					});
-				}
+				});
 			} else {
 				$thumb = $post.find("img").eq(0);
 				if($thumb.length) {
