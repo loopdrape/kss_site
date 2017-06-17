@@ -497,6 +497,7 @@
 		},
 		onReady: function($self) {
 			var vuw = this;
+			$self.children("script").remove();
 //			return this.checkLoaded().then(function() {
 				if( (/^index/).test(app.pageType) ) {
 					vuw.$posts = $self.children(".post").each(function() {
@@ -504,14 +505,21 @@
 					});
 					(/\.top/).test(app.pageType) && (function() {
 						var $more = $("<div/>").addClass("post more-box")
-							.append(
-								$("<a/>").addClass("load-next").attr("href", "./"),
-								$("<p/>").addClass("icon-more-after").append(
-									$("<span/>").text("more")
-								)
-							);
-						vuw.$posts.eq(5).before( $more.clone() );
-						vuw.$posts.eq(-1).after( $more );
+						.append( $("<a/>").addClass("load-next").attr("href", "./") );
+						
+						$more.clone().append(
+							$("<p/>").addClass("icon-more-after").append(
+								$("<span/>").text("more")
+							)
+						).insertBefore( vuw.$posts.eq(5) );
+						
+						$more.append(
+							$("<p/>").addClass("icon-arrow-after").attr({
+								"data-arrow": "r"
+							}).append(
+								$("<span/>").text("more")
+							)
+						).insertAfter( vuw.$posts.eq(-1) );
 						
 						$self.on("click", ".load-next", function(e) {
 							var $more = $(this).parent();

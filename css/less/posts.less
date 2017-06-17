@@ -6,11 +6,9 @@
 		// flex box
 		display: flex;
 		display: -webkit-flex;
-		flex-direction: row;
-		flex-wrap: wrap;
+		flex-flow: row wrap;
+		-webkit-flex-flow: row wrap;
 		justify-content: flex-start;
-		-webkit-flex-direction: row;
-		-webkit-flex-wrap: wrap;
 		-webkit-justify-content: flex-start;
 		
 		.more-box ~ .post {
@@ -37,20 +35,26 @@
 	}
 	
 	body.page-index & {
-		height: 24vw;
 		overflow: hidden;
-		@this_pad: (@block_pad * 3 / 4);
-		padding: @this_pad @this_pad (@this_pad + 2px);
 		position: relative;
 		width: 50%;
 		
 		@media (orientation: portrait) and (max-width: @mq_w) {
-			height: 42vw;
 		}
 		
 		@media (min-width: (@mq_w + 1px)) {
-			padding: @block_pad @block_pad (@block_pad + 2px);
 			width: 33.333%;
+			
+			&:nth-child(1),
+			&:nth-child(2) {
+				width: 50%;
+			}
+		}
+		
+		&:before {
+			content: "";
+			display: block;
+			padding-top: 56.25%;
 		}
 		
 		> a {
@@ -96,17 +100,21 @@
 		}
 		
 		.entry-header {
-			.box-shadow(0, 1px, 2px, 0, #000, .2);
+			.box-shadow(0, 1px, 2px, 0, #000, .4);
 			.transition(all .4s);
 			@this_c: #2f6f90;
+			bottom: 0;
 			color: @base_bgc;
-			height: 100%;
+			left: 0;
+			margin: (@block_pad / 4);
 			overflow: hidden;
-			position: relative;
+			position: absolute;
+			right: 0;
+			top: 0;
 			
 			&:before {
 				.transition(opacity .4s);
-				background-color: #000;
+				background-color: @base_bgc;
 				content: "";
 				display: block;
 				height: 100%;
@@ -121,9 +129,9 @@
 			.thumbnail {
 				&:extend(body.page-index .post>.post-background);
 				.box-sizing(content);
-				.filter( blur(8px) );
-				background-position: 45% 55%;
-				padding: @this_pad @this_pad (@this_pad + 2px);
+				.filter( blur(4px) );
+				background-position: 45% 50%;
+				padding: (@block_pad / 4);
 				z-index: 0;
 			}
 				
@@ -163,6 +171,14 @@
 		
 		&.more-box {
 			background-color: tint(@theme_c, 20%);
+			
+			&:nth-child(6) {
+				width: 100%;
+				
+				&:before {
+					padding-top: 50px;
+				}
+			}
 			
 			> a {
 				.box-shadow( inset, 1px, 1px, 6px, 0, #000, .3 );
