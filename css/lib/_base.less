@@ -1,0 +1,423 @@
+//out: null
+@charset "utf-8";
+/**
+ * LESS http://lesscss.org/
+ */
+
+/**------------------------------------
+* import */
+@import (less) "./_normalize";
+@import (less) "./_lib";
+@import (less) "./_cssLoader";
+
+/**------------------------------------
+* default setting */
+// テーマカラー
+@theme_c: #1d365d;
+
+// 基本色
+@base_bgc: #fffffc;		// background-color
+@base_bdc: lighten(@theme_c, 10%);		// border-color
+@base_txc: #333;		// color
+
+// デフォルトのボタンカラー
+@btn_c: @theme_c;
+
+// エラー表示用の強調色
+@err_c: #f20606;
+
+// media queriesのスイッチ (width)
+@mq_w: 768px;
+
+@cntnt_w: 1024px;	// for PC
+
+/**------------------------------------
+* global style */
+* {
+	margin: 0;
+	padding: 0;
+	
+	// [box-sizing] default: border-box
+	.box-sizing(border);
+	
+	&:before,
+	&:after {
+		.box-sizing(border);
+	}
+}
+
+html {
+	font-size: 62.5%; // 10px
+	
+	@media print, screen and (min-width: @mq_w_min) {
+		min-width: @cntnt_w;
+	}
+}
+
+body {
+	background-color: @base_bgc;
+	color: @base_txc;
+	
+	// 文字サイズ自動調整OFF タップ時のハイライトOFF
+	-webkit-tap-highlight-color: @clear_c;
+	-webkit-text-size-adjust: 100%;
+}
+
+var {
+	.transform(none);
+	font-style: normal;
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+}
+
+ol,
+ul {
+	list-style: none;
+	padding: 0;
+}
+
+iframe {
+	border-width: 0;
+}
+
+.media-flv {
+	display: inline-block;
+}
+
+.hide {
+	display: none !important;
+}
+
+.break-word {
+	overflow-wrap: break-word;
+	word-break: break-all;
+	word-wrap: break-word;
+}
+
+.template {
+	display: none;
+}
+
+.clearfix {
+	.clearfix();
+}
+
+.indent-down {
+	padding-left: 1em;
+}
+
+.indent-up {
+	margin-left: -1em;
+}
+
+.period-splitter {
+	display: inline-block;
+	margin-left: .5em;
+	margin-right: .5em;
+	
+	&:before {
+		content: "～";
+	}
+}
+
+.time-splitter {
+	display: inline-block;
+	margin-left: .1em;
+	margin-right: .1em;
+	
+	&:before {
+		content: "：";
+	}
+}
+
+.type-datetime {
+	.time {
+		margin-left: .5em;
+	}
+}
+
+.type-period {
+	&.is-same-date {
+		.period-splitter,
+		[data-period="end"] {
+			display: none;
+		}
+	}
+	
+	&.is-same-day {
+		[data-period="end"] {
+			.day {
+				display: none;
+			}
+			
+			.time {
+				margin-left: 0;
+			}
+		}
+	}
+}
+
+.content {
+	margin: 0 auto;
+	max-width: @cntnt_w;
+}
+
+@code_bgc: #f8f8f8;
+@code_bdc: #d9ddda;
+code,
+pre {
+	font-family: inherit;
+}
+
+code {
+	display: inline-block;
+	background-color: @code_bgc;
+	border: 1px solid @code_bdc;
+	border-radius: 2px;
+//	font-family: "Source Code Pro", "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", Meiryo, "メイリオ", sans-serif;
+	font-size: 14px;
+	font-size: 1.4rem;
+	margin: 0 2px;
+	padding: 0 5px 1px;
+	position: relative;
+	top: -.15em;
+}
+
+pre {
+	background-color: @code_bgc;
+	border: 1px solid @code_bdc;
+	border-radius: 2px;
+	font-size: 14px;
+	font-size: 1.4rem;
+	margin: 1em auto;
+	padding: .5em;
+	
+	code {
+		background-color: transparent;
+		border: none;
+		margin: 0;
+		padding: 0;
+		top: 0;
+	}
+}
+
+/**------------------------------------
+* for Klass Vuw */
+// [VuwFade]
+.vuw-fade {
+	.transition(opacity .4s);
+	
+	&[data-visible] {
+		opacity: 0;
+	}
+	
+	&[data-visible=""],
+	&[data-visible="0"] {
+		height: 0;
+	}
+	
+	&[data-visible="0"] {
+		overflow: hidden;
+	}
+	
+	&[data-visible="1"] {
+		opacity: 1;
+	}
+}
+
+
+/**------------------------------------
+* common mixin */
+// [UnderlineOnHover]
+.underline-on-hover {	// for extend
+	position: relative;
+	
+	&:after {
+		.transform( scale(0) );
+		.transition(transform .2s);
+		border-top: 1px solid @base_bdc;
+		bottom: 0;
+		content: "";
+		display: block;
+		left: 0;
+		position: absolute;
+		width: 100%;
+	}
+	
+	&.is-hover {
+		&:after {
+			.transform( scale(1) );
+		}
+	}
+}
+
+.styleUnderlineOnHover(@color) {
+	&:extend(.underline-on-hover all);
+	
+	&:after {
+		border-top-color: @color;
+	}
+}
+
+
+// [btn style]
+.style-btn(@nrml_c: @btn_c, @actv_c: lighten(@nrml_c, 10%)) {
+	@min_size: 44px;
+	@min_size_pc: 2em;
+	.transition(all .1s  ease 0s);
+	.user-select(none);
+	background-color: @nrml_c;
+	border: 1px transparent solid;
+	border-radius: 2px;
+	color: @base_bgc;
+	cursor: pointer;
+	display: table;
+	line-height: 1;
+	min-height: @min_size;
+	min-width: @min_size;
+	text-align: center;
+	text-decoration: none;
+	
+	.active() {
+		background-color: @actv_c;
+		color: @base_bgc;
+	}
+	
+	&.is-hover,
+	&.is-active {
+		.active();
+	}
+	
+	&:active {
+		.active();
+	}
+	
+	&.is-disable {
+		background-color: greyscale(lighten(@nrml_c, 15%));
+		cursor: default;
+		pointer-events: none;
+		
+		> * {
+			cursor: default;
+		}
+	}
+	
+	> * {
+		.user-select(none);
+		color: inherit;
+		cursor: pointer;
+		display: table-cell;
+		padding: .2em .5em;
+		vertical-align: middle;
+		
+		.browser-firefox & {
+			padding-bottom: .5em;
+			padding-top: .4em;
+		}
+	}
+	
+	> a {
+		text-decoration: none;
+	}
+	
+	@media print, screen and (min-width: @mq_w_min) {
+		min-height: @min_size_pc;
+		min-width: @min_size_pc;
+	}
+}
+
+/* for lt jbCMS ver.2.0 */
+.default-btn(@nrml_c: @btn_c, @actv_c: @btn_c_actv) {
+	.style-btn(@nrml_c, @actv_c);
+}
+
+.changeBtnColor(@nrml_c, @actv_c: lighten(@nrml_c, 15%)) {
+	background-color: @nrml_c;
+	
+	.active() {
+		background-color: @actv_c;
+	}
+	
+	&.is-hover,
+	&.is-active {
+		.active();
+	}
+	
+	&:active {
+		.active();
+	}
+	
+	&.is-disable {
+		background-color: greyscale( lighten(@nrml_c, 15%) );
+	}
+}
+
+.style-btns(@nrml_c: @btn_c, @actv_c: lighten(@nrml_c, 10%)) {
+	@min_size: 44px;
+	@min_size_pc: 2em;
+	border-collapse: separate;
+	display: table;
+	line-height: 1;
+	margin: auto;
+	min-height: @min_size;
+	text-align: center;
+	
+	@media print, screen and (min-width: @mq_w_min) {
+		min-height: @min_size_pc;
+	}
+	
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+	
+	> * {
+		.transition(all .1s  ease 0s);
+		.user-select(none);
+		background-color: @nrml_c;
+		border: 1px transparent solid;
+		border-radius: 2px;
+		color: @base_bgc;
+		cursor: pointer;
+		display: table-cell;
+		min-width: @min_size;
+		padding: .2em .5em;
+		vertical-align: middle;
+		white-space: nowrap;
+		
+		.browser-firefox & {
+			padding-bottom: .5em;
+			padding-top: .4em;
+		}
+		
+		.active() {
+			background-color: @actv_c;
+		}
+		
+		&.is-hover,
+		&.is-active {
+			.active();
+		}
+		
+		&:active {
+			.active();
+		}
+		
+		&.is-disable {
+			background-color: greyscale( lighten(@nrml_c, 15%) );
+			cursor: default;
+			pointer-events: none;
+			
+			> * {
+				cursor: default;
+			}
+		}
+		
+		@media print, screen and (min-width: @mq_w_min) {
+			min-height: @min_size_pc;
+		}
+	}
+}

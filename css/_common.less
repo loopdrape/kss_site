@@ -1,0 +1,155 @@
+// out:null;
+@import (less) "./lib/_base";
+@import (less) "./_icomoon";
+
+.importNotoSansJP();
+
+@import url(//fonts.googleapis.com/css?family=Poiret+One|Play|Inconsolata:400,700);
+.font-type-poiretone() {
+	font-family: 'Poiret One', cursive;
+}
+
+.font-type-play() {
+	font-family: 'Play', sans-serif;
+}
+
+.font-type-inconsolata() {
+	font-family: 'Inconsolata', sans-serif;
+}
+
+/**------------------------------------
+* base style */
+html {
+	background-color: @theme_c;
+	height:  100%;
+}
+
+body {
+	.font-type-play();
+	background-color: transparent;
+	color: @base_txc;
+	font-size: 1.4rem;
+	line-height: 1.4;
+	width: 100%;
+	-webkit-text-size-adjust: 100%;
+	
+	@media print, screen and (min-width: @mq_w_min){
+		font-size: 1.5rem;
+	}
+}
+
+.hx {
+	.user-select(none);
+	cursor: default;
+	line-height: 1.2;
+	margin: 0 auto (@block_pad / 2);
+}
+
+h1 {
+	&:extend(.hx);
+	font-size: 4rem;
+}
+
+h2 {
+	&:extend(.hx);
+	font-size: 3.2rem;
+}
+
+h3 {
+	&:extend(.hx);
+	border-bottom: 1px solid @theme_c;
+	color: @theme_c;
+	font-size: 2.4rem;
+	
+	@media (max-width: @mq_w) {
+		font-size: 2.0rem;
+	}
+}
+
+h4 {
+	&:extend(.hx);
+	font-size: 2rem;
+}
+
+h5 {
+	&:extend(.hx);
+	font-size: 1.8rem;
+}
+
+h6 {
+	&:extend(.hx);
+	font-size: 1.6rem;
+}
+
+p {
+	.font-type-noto();
+	line-height: 1.6;
+	
+	+ p {
+		margin-top: 1em;
+	}
+}
+
+dl,
+dd {
+	margin: 0;
+}
+
+a {
+	color: @link_txc;
+	
+	&.is-current {
+		pointer-events: none;
+	}
+	
+	@media (min-width: (@mq_w + 1px)) {
+		&:hover {
+			color: @link_hvc;
+		}
+	}
+}
+
+.btn {
+	.style-btn(@btn_bgc, lighten(@theme_c, 32%));
+	min-width: 150px;
+	
+	.browser-ie & {
+		> * {
+			padding-top: 1px;
+		}
+	}
+}
+
+.area-btns {
+	.style-btns(@btn_bgc, lighten(@theme_c, 32%));
+	border-spacing: @block_pad 0;
+	margin-top: @block_space * 2;
+	
+	> li {
+		min-width: 150px;
+		
+		@media screen and (max-width: @mq_w) {
+			min-width: 120px;
+		}
+	}
+	
+	.browser-ie & {
+		> * {
+			padding-bottom: 4px;
+		}
+	}
+}
+
+/**------------------------------------
+* mixin */
+.blur-text(@txt_c) {
+	color: transparent;
+	text-shadow:
+		0 0 2px rgba(red(@txt_c), green(@txt_c), blue(@txt_c), .9),
+		0 15px 25px rgba(0, 0, 0, .3),
+		0 -2px 3px rgba(0, 0, 0, .1),
+		0 -5px 10px rgba(255, 255, 255, .5),
+		0 5px 10px rgba(0, 0, 0, .3),
+		0 3px 4px rgba(255, 255, 255, .2),
+		0 0 20px rgba(255, 255, 255, .45);
+}

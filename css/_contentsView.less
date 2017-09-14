@@ -1,0 +1,165 @@
+// out:null
+/**------------------------------------
+* contents view */
+.contents-view {
+	position: absolute;
+	right: 0;
+	top: 100%;
+	
+	@media (orientation: portrait) and (max-width: @mq_w_max) {
+		left: 100%;
+		top: 0;
+		right: auto;
+	}
+}
+
+section[data-section="posts"] {
+	.transition(filter .4s);
+	
+	.site-body:not([data-view="posts"]) & {
+		.filter( blur(4px) );
+	}
+}
+
+section[data-section="description"] {
+	.transition(opacity .4s);
+	opacity: 0;
+	padding: 10vh 10vw 0;
+	pointer-events: none;
+	position: relative;
+	
+	.site-body[data-view="description"] & {
+		opacity: 1;
+		pointer-events: auto;
+	}
+	
+	.site-body[data-view="posts"] & {
+		z-index: -1;
+	}
+	
+	@media (min-width: (@mq_w + 1px)) {
+		padding-top: 80px;
+	}
+	
+	h3 {
+		position: relative;
+		text-align: center;
+	}
+	
+	.btn-close {
+		bottom: 2px;
+		font-size: 40px;
+		display: block;
+		line-height: 0;
+		position: absolute;
+		right: 0;
+		
+		@media (min-width: (@mq_w + 1px)) {
+			font-size: 30px;
+		}
+	}
+	
+	h4 {
+		margin-bottom: 0;
+		margin-top: @block_space;
+	}
+	
+	a {
+		.transition(color .2s);
+		color: inherit;
+		text-decoration: none;
+		
+		@media (min-width: (@mq_w + 1px)) {
+			&:hover {
+				color: lighten(@theme_c, 20%);
+			}
+		}
+	}
+	
+	.members {
+		margin: 0 auto;
+		
+		@media screen and (min-width: (@mq_w + 1px)) {
+			width: 260px;
+		}
+	}
+	
+	.member-list {
+		font-size: 1.8rem;
+		
+		> li {
+			margin-top: (@block_pad / 2);
+		}
+		
+		.name {
+			&:before {
+				color: @theme_c;
+				font-size: 1.5rem;
+				margin-right: 5px;
+			}
+			
+			&:after {
+				content: "[ " attr(data-part) " ]";
+				font-size: 1.5rem;
+				margin-left: 8px;
+			}
+		}
+		
+		.link-list {
+			&:extend(.clearfix all);
+			padding-left: (@block_pad / 2);
+			
+			> li {
+				float: left;
+			}
+			
+			a {
+				display: block;
+				font-size: 20px;
+				line-height: 0;
+				padding: 4px 8px;
+			}
+			
+			&:empty {
+				height: (20px + 4px * 2);
+				height: 28px;
+			}
+		}
+	}
+}
+
+section[data-section="posts"] {
+	background-color: @sub_c;
+	padding-bottom: 28px;
+	position: relative;
+	z-index: 1;
+	
+	@media (min-width: (@mq_w + 1px)) {
+		padding-bottom: 0;
+		margin-bottom: 0;
+		z-index: 2;
+	}
+	
+	&:before {
+		.filter( blur(2px) );
+		background-attachment: fixed;
+		background-image: url("@{img_dir}/bg_grey.jpg");
+		background-position: 50% -2%;
+		background-size: 110% auto;
+		content: "";
+		display: block;
+		height: 100%;
+		left: 0;
+		opacity: .6;
+		position: absolute;
+		top: 0;
+		width: 100%;
+		z-index: -1;
+	}
+	
+	body.page-index & {
+		.transform( skew(0, @base_skewY) );
+		.transform-origin(100% 0);
+	}
+}
+

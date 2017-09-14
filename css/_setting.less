@@ -1,0 +1,36 @@
+//out: null
+/**------------------------------------
+* override global setting */
+// 基本色
+@base_bgc: #fffffc;	// background-color
+@base_bdc: lighten(@theme_c, 10%);		// border-color
+@base_txc: #333;		// color
+
+// テーマカラー
+@theme_c: #053e5c;	//#040b1c;
+@sub_c: #bab8bf;
+
+@btn_bgc: @theme_c;
+@link_txc: #68a9cf;
+@link_hvc: #6cc;
+
+@block_space: 30px;
+@block_pad: 20px;
+
+// @cntnt_w: 1024px;
+
+@icon_size: 40px;
+@icon_size_pc: 30px;
+
+@base_skewX: -34deg;
+@base_skewY: 6deg;
+
+// [media query switch]
+@mq_w_max: 667px;
+@mq_w_min: (@mq_w_max + 1px);
+@mq_w: @mq_w_max;
+
+/**------------------------------------
+* path */
+// @img_dir: "//loopdrape.github.io/kss_site/img";
+@img_dir: "../img";
