@@ -141,6 +141,35 @@ a {
 }
 
 /**------------------------------------
+* overflow block */
+.overflow-block {
+	overflow: auto;
+	-webkit-overflow-scrolling: touch;
+	
+	&::-webkit-scrollbar {
+		background-color: tint(@base_bgc, 5%);
+		height: 6px;
+		width: 6px;
+	}
+	
+	&::-webkit-scrollbar-button {
+		background-color: transparent;
+		height: 2px;
+		width: 6px;
+	}
+	
+	&::-webkit-scrollbar-thumb {
+		background: tint(@base_bgc, 15%);
+		border-radius: 6px;
+	}
+	
+	&::-webkit-scrollbar-corner {
+		display: none;
+	}
+}
+
+
+/**------------------------------------
 * mixin */
 .blur-text(@txt_c) {
 	color: transparent;
