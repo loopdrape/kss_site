@@ -14,6 +14,12 @@
 		selector: "#site_nav",
 		onReady: function($self) {
 //			app.positionTracker.tracking(this, false, true);
+			
+			app.categories = [];
+			$self.children(".link-list").find("a[href^='/tagged/']").each(function() {
+				var arr = this.href.split("/");
+				app.categories.push( arr.pop() );
+			});
 		},
 		onChangeState: function(state) {
 			var tmp = {};

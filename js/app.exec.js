@@ -45,9 +45,9 @@
 //				vuwer.get("siteFooter").fixBottom();
 				csl.log.blue("**** app ready. ****");
 //			}, 0);
-			
-			return app.hideLoading();
-		});
+		}, function() {
+			csl.log.red("rejected.", app.getAsArray(arguments));
+		}).always( app.hideLoading.bind(this) );
 	};
 	
 	// attach execute callbacks

@@ -4,12 +4,20 @@
 
 /**------------------------------------
 * components style */
+// site header
+@import (less) "./_header";
+
+// menu view
+@import (less) "./_menuView";
+
+// contents view
+@import (less) "./_contentsView";
+
+@import (less) "./index";
+@import (less) "./posts";
+
 body {
-	height: 100vh;
-	overflow: hidden;
-	
 	&:not(.is-ready) {
-		.nav-view,
 		.contents-view {
 			height: 0;
 			margin: 0;
@@ -23,14 +31,25 @@ body {
 	}
 }
 
-// site header
-@import (less) "./_header";
+// layout change
+@media (orientation: portrait) and (max-width: 736px) {
+	body {
+		height: auto;
+		overflow: auto;
+	}
+	
+	.menu-view {
+		height: auto;
+		position: relative;
+		width: 100%;
+		
+		body:not(.is-ready) & {
+			.transform(none);
+		}
+	}
+	
+	.site-nav {
+		position: fixed;
+	}
+}
 
-// nav view
-@import (less) "./_navView";
-
-// nav view
-@import (less) "./_contentsView";
-
-@import (less) "./index";
-@import (less) "./posts";

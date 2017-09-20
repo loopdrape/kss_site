@@ -20,8 +20,10 @@
 /**------------------------------------
 * base style */
 html {
-	background-color: @theme_c;
+	background-color: @base_bgc;
 	height:  100%;
+	min-width: none;
+	min-width: initial;
 }
 
 body {
@@ -29,12 +31,15 @@ body {
 	background-color: transparent;
 	color: @base_txc;
 	font-size: 1.4rem;
+	height: 100vh;
 	line-height: 1.4;
+	overflow: hidden;
 	width: 100%;
 	-webkit-text-size-adjust: 100%;
 	
-	@media print, screen and (min-width: @mq_w_min){
+	@media print, screen and (min-width: @mq_w_min) {
 		font-size: 1.5rem;
+		padding: 5vh 0 5vh 20%;
 	}
 }
 
@@ -147,7 +152,7 @@ a {
 	-webkit-overflow-scrolling: touch;
 	
 	&::-webkit-scrollbar {
-		background-color: tint(@base_bgc, 5%);
+		background-color: transparent;
 		height: 6px;
 		width: 6px;
 	}
@@ -159,7 +164,7 @@ a {
 	}
 	
 	&::-webkit-scrollbar-thumb {
-		background: tint(@base_bgc, 15%);
+		background: tint(@base_bgc, 20%);
 		border-radius: 6px;
 	}
 	

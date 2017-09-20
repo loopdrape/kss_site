@@ -12,9 +12,10 @@
 			"//w.soundcloud.com/player/api.js"
 		],
 		"/js/modules/klass.Vuw.min.js",
+		"/js/components/common.min.js",
 		[
-			"/js/components/common.min.js",
 			"/js/components/nav.min.js",
+			"/js/components/thumbList.min.js",
 			"/js/components/posts.min.js"
 		],
 		"/js/app.exec.min.js"

@@ -1,0 +1,124 @@
+// out:null
+/**------------------------------------
+* menu view */
+.menu-view {
+	.transition(transform .4s);
+	background-color: fade(@sub_bgc, 80%);
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 35%;
+	z-index: 0;
+	
+	body:not(.is-ready) & {
+		.transform( translateX(-100%) );
+	}
+	
+	.menu-wrapper {
+		.transform( skew(0, @base_skewY) );
+		.transform-origin(0 0 0);
+		height: 100% + 100% * abs( sin(@base_skewY / 2) );
+		padding-top: 100% * abs( sin(@base_skewY) );
+	}
+}
+
+// site nav
+@import (less) "./__nav";
+
+// site body
+.site-body {
+	padding-top: 76px;
+	position: relative;
+	z-index: 1;
+}
+
+.thumb-list {
+	color: @theme_c;
+	
+	li {
+		@this_h: 120px;
+		@this_pad: (@block_pad / 2);
+		border-top: 1px solid @base_bdc;
+		height: @this_h;
+		padding: @this_pad;
+		
+		> a {
+			color: inherit;
+			display: block;
+			height: 100%;
+			padding-left: @this_h - @this_pad;
+			position: relative;
+			text-decoration: none;
+			
+			> span {
+				&:extend(.break-word);
+				display: block;
+			}
+			
+			.img-frame {
+				height: 100%;
+				left: 0;
+				overflow: hidden;
+				position: absolute;
+				top: 0;
+				width: @this_h - @this_pad * 2;
+				
+				> img {
+					.filter( grayscale(100%) );
+//					.transform( skew(0, (-1 * @base_skewY)) );
+					.transition(filter .2s);
+					display: block;
+					position: absolute;
+					right: -10%;
+					top: -5%;
+					max-width: 150%;
+					min-height: 110%;
+					min-width: 120%;
+				}
+				
+				body:not(.browser-ie) & {
+					&:after {
+						.transition(transform .2s);
+						background-color: @theme_c;
+						content: "";
+						display: block;
+						height: 100%;
+						left: 0;
+						mix-blend-mode: screen;
+						position: absolute;
+						top: 0;
+						width: 100%;
+					}
+				}
+			}
+			
+			.date {
+				color: #666;
+				font-size: smaller;
+				text-align: right;
+			}
+			
+			&.is-hover {
+				> .img-frame {
+					> img {
+						.filter(none);
+					}
+					
+					body:not(.browser-ie) & {
+						&:after {
+							.transform( translateX(-100%) );
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+// site footer
+@import (less) "./__footer";
+.site-footer {
+	padding-bottom: 100% * abs( sin(@base_skewY) );
+}
+	

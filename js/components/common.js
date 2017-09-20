@@ -151,8 +151,7 @@
 	.add("siteHeader", {
 		selector: "#site_header",
 		onReady: function($self) {
-			this.$title = $self.children(".main-title");
-			this.$bgColor = $self.find(".bg-color");
+			this.$title = $self.children(".site-title");
 		},
 		onChangeState: function(state) {
 			if("anime" in state) {

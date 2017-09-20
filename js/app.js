@@ -9,7 +9,7 @@
 		app = Klass.new_("WebAppBase", "KSS", {
 			prod: "keeshkassoundservice.tumblr.com",
 			test: "kss_site",
-			dev: "127.0.0.1"
+			dev: location.hostname === "127.0.0.1" ? location.host : false
 		}),
 		currentSctipt = (function() {
 			// get current <script/>

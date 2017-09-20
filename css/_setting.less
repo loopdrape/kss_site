@@ -2,13 +2,18 @@
 /**------------------------------------
 * override global setting */
 // 基本色
-@base_bgc: #fffffc;	// background-color
-@base_bdc: lighten(@theme_c, 10%);		// border-color
+@white: #fffffc;
+@black: #111;
+
+@base_bgc: @black;	// background-color
+@base_bdc: tint(@black, 70%);		// border-color
 @base_txc: #333;		// color
 
 // テーマカラー
 @theme_c: #053e5c;	//#040b1c;
 @sub_c: #bab8bf;
+@sub_bgc: @white;
+
 
 @btn_bgc: @theme_c;
 @link_txc: #68a9cf;
@@ -23,7 +28,7 @@
 @icon_size_pc: 30px;
 
 @base_skewX: -34deg;
-@base_skewY: 6deg;
+@base_skewY: -8deg;
 
 // [media query switch]
 @mq_w_max: 667px;
