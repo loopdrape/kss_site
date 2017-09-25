@@ -1,0 +1,33 @@
+//out: null
+/**------------------------------------
+* posts */
+.posts {
+}
+
+.post {
+	height: 0;
+	overflow: hidden;
+	position: relative;
+	z-index: -1;
+	
+	&.is-active {
+		height: auto;
+		z-index: 0;
+	}
+	
+	a {
+		text-decoration: none;
+		
+		&.is-hover {
+			text-decoration: underline;
+		}
+	}
+	
+	img,
+	video,
+	iframe {
+		display: block;
+		max-width: 100%;
+		margin: 0 auto;
+	}
+}

@@ -8,38 +8,53 @@
 	/******************
 	*    app start    *
 	******************/
-	$.Deferred(function(df) {
-		$(function() {
-			// コンポーネントの準備
-			vuwer.getReady().then(df.resolve);
-		});
-		return df.promise();
-	}).then(function() {
-		var args = Array.prototype.slice.call(arguments, 0);
-		csl.log.blue("vuwer ready.", args);
-		// app.onReadyで登録されたコールバックの実行
-		return $.when(
-			app.showLoading(),
-			$.when.apply($, app._execCallbacks.map(function(fn) {
-				return fn.apply(this, args);
-			}, app))
-		);
-	}).then(function() {
-		var df = $.Deferred();
-		vuwer.get("body").$self.addClass("is-ready");
-		vuwer.$window.trigger("resize", [true]);
-		setTimeout(df.resolve, 600);
-		return df.promise();
-	}).then(function() {
-		return app.hideLoading();
-	}).then(function() {
-		vuwer.$window.trigger("scroll", [true]);
-		
-//		setTimeout(function() {
-//			vuwer.get("siteFooter").fixBottom();
-			csl.log.blue("**** app ready. ****");
-//		}, 0);
-	});
+	app.exec = function() {
+		$.Deferred(function(df) {
+			$(function() {
+				// コンポーネントの準備
+				vuwer.getReady().then( df.resolve.bind(df) );
+			});
+			return df.promise();
+		}).then(function() {
+			var args = Array.prototype.slice.call(arguments, 0);
+			csl.log.blue("vuwer ready.", args);
+			
+			// app.onReadyで登録されたコールバックの実行
+			return $.when(
+				app.showLoading(),
+				$.when.apply( $, app._execCallbacks.map(function(fn) {
+					return fn.apply(app, args);
+				}) )
+			);
+		}).then(function() {
+			var df = $.Deferred();
+			vuwer.get("body").$self.addClass("is-ready");
+			vuwer.$window.trigger("resize", [true]);
+			setTimeout( df.resolve.bind(df), 600 );
+			return df.promise();
+		}).then(function() {
+			vuwer.$window.trigger("scroll", [true]);
+			
+			// [Google Analytics] pageviewイベントを送信
+			if(app.gaAutoSendPageview && window.ga) {
+				window.ga("send", "pageview");
+				csl.log.gray("**** send ga pageview.");
+			}
+			
+//			setTimeout(function() {
+//				vuwer.get("siteFooter").fixBottom();
+				csl.log.blue("**** app ready. ****");
+//			}, 0);
+		}, function() {
+			csl.log.red("rejected.", app.getAsArray(arguments));
+		}).always( app.hideLoading.bind(this) );
+	};
+	
+	// attach execute callbacks
+	app._execCallbacks = [];
+	app.onReady = function(fn) {
+		this.isFunction(fn) && this._execCallbacks.push(fn);
+	};
 	
 	// [position tracker]
 	app.positionTracker = {
@@ -126,12 +141,6 @@
 		});
 	});
 	
-	// attach execute callbacks
-	app._execCallbacks = [];
-	app.onReady = function(fn) {
-		this.isFunction(fn) && this._execCallbacks.push(fn);
-	};
-	
 	/*********************
 	* set util functions *
 	*********************/
@@ -140,7 +149,7 @@
 	* @return $.Deferred().promise()
 	*/
 	app.showLoading = function() {
-		return vuwer.get("secTitle").setState("anime", true);
+		return vuwer.get("siteHeader").setState("anime", true);
 	};
 	
 	/*----------------
@@ -148,13 +157,32 @@
 	* @return $.Deferred().promise()
 	*/
 	app.hideLoading = function() {
-		return vuwer.get("secTitle").setState("anime", false);
+		return vuwer.get("siteHeader").setState("anime", false);
 	};
 	
 	// ** override ** (for Google Analytics)
-	app.pushState = function(data, url) {
-		if( Klass("WebAppBase").prototype.pushState.call(app, data, url) ) {
+	app.pushState = function(data, url, opt) {
+		if( Klass(app.klass).prototype.pushState.call(app, data, url) ) {
+			if( this.isObject(opt) ) {
+				if( opt.title && this.isString(opt.title) ) {
+					document.title = opt.title;
+				}
+				
+				if( opt.description && this.isString(opt.description) ) {
+					app.parts.$head.children("meta[name='description']").attr({
+						content: opt.description.replace(/<("[^"]*"|'[^']*'|[^'">])*>/g, "")
+					});
+				}
+				
+				if( opt.keywords && this.isString(opt.keywords) ) {
+					app.parts.$head.children("meta[name='keywords']").attr({
+						content: opt.keywords
+					});
+				}
+			}
+			
 			!!window.ga && (function(ga) {
+				url = url.replace( ( new RegExp("^" + location.origin) ), "" );
 				ga("set", "page", url);
 				ga("send", "pageview");
 				csl.log.gray("**** send ga pageview.", url);
@@ -166,9 +194,28 @@
 	};
 	
 	// ** override ** (for Google Analytics)
-	app.replaceState = function(data, url) {
-		if( Klass("WebAppBase").prototype.replaceState.call(app, data, url) ) {
+	app.replaceState = function(data, url, opt) {
+		if( Klass(app.klass).prototype.replaceState.call(app, data, url) ) {
+			if( this.isObject(opt) ) {
+				if( opt.title && this.isString(opt.title) ) {
+					document.title = opt.title;
+				}
+				
+				if( opt.description && this.isString(opt.description) ) {
+					app.parts.$head.children("meta[name='description']").attr({
+						content: opt.description.replace(/<("[^"]*"|'[^']*'|[^'">])*>/g, "")
+					});
+				}
+				
+				if( opt.keywords && this.isString(opt.keywords) ) {
+					app.parts.$head.children("meta[name='keywords']").attr({
+						content: opt.keywords
+					});
+				}
+			}
+			
 			!!window.ga && (function(ga) {
+				url = url.replace( ( new RegExp("^" + location.origin) ), "" );
 				ga("set", "page", url);
 				ga("send", "pageview");
 				csl.log.gray("**** send ga pageview.", url);

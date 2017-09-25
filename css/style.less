@@ -1,0 +1,59 @@
+// compress: true, sourceMap: true;
+@import (less) "./_common";
+@import (less) "./_setting";
+
+/**------------------------------------
+* components style */
+// site header
+@import (less) "./_header";
+
+// menu view
+@import (less) "./_menuView";
+
+// contents view
+@import (less) "./_contentsView";
+
+@import (less) "./index";
+@import (less) "./posts";
+
+body {
+	&:not(.is-ready) {
+		.contents-view {
+			height: 0;
+			margin: 0;
+			overflow: hidden;
+			padding: 0;
+		}
+	}
+	
+	&.is-lock-scroll {
+		overflow: hidden;
+	}
+}
+
+// layout change
+@media screen and (orientation: portrait) and (max-width: 736px) {
+	body {
+		height: auto;
+		overflow: auto;
+	}
+	
+	.menu-view {
+		height: auto;
+		position: relative;
+		width: 100%;
+		
+		body:not(.is-ready) & {
+			.transform(none);
+		}
+	}
+	
+	.site-nav {
+		position: fixed;
+	}
+	
+	.contents-view {
+		width: 100%;
+	}
+}
+

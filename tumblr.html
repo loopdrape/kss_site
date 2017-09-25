@@ -13,13 +13,13 @@
 	<meta charset="UTF-8">
 
 	<!-- Variables -->
-	<meta name="text:Google Author" content="" />
+	<meta name="text:Google Author" content="loopdrape" />
 
 	<meta name="if:Enable Like Button" content="1" />
 	<meta name="if:Enable Tweet Button" content="1" />
 	<meta name="if:Enable Plus1 Button" content="1" />
 
-	<title>{block:PermalinkPage}{block:PostSummary}{PostSummary} // {/block:PostSummary}{/block:PermalinkPage}{Title}{block:SearchPage} ({lang:Search results for SearchQuery}){/block:SearchPage}</title>
+	<title>{block:PermalinkPage}{block:PostSummary}{PostSummary} // {/block:PostSummary}{/block:PermalinkPage}{Title}</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
 	<link rel="shortcut icon" href="{Favicon}">
 	<link rel="alternate" type="application/rss+xml" href="{RSS}">
@@ -66,34 +66,100 @@
 	<!--[if lt IE 9]>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
 	<![endif]-->
-	<script>Object.assign || document.write('<script src="//loopdrape.github.io/kss_site/js/polyfill.min.js"><\/script>');</script>
-	<script src="//loopdrape.github.io/kss_site/js/loadGoogleAnalytics.min.js"></script>
-	<script src="//loopdrape.github.io/kss_site/js/webAppBase.2.1.min.js"></script>
-	<script src="//loopdrape.github.io/kss_site/js/app.init.min.js"></script>
+	<script>Object.assign || document.write('<script src="//loopdrape.github.io/kss_site/js/modules/polyfill.min.js"><\/script>');</script>
+	<script src="//loopdrape.github.io/kss_site/js/modules/webAppBase.2.3.min.js"></script>
+	<script src="//loopdrape.github.io/kss_site/js/app.min.js" data-package="/js/require"></script>
 </head>
 <body class="{block:IndexPage}page-index{/block:IndexPage}{block:DayPage} page-day{/block:DayPage}{block:TagPage} page-tag{/block:TagPage}{block:SearchPage} page-search{/block:SearchPage}{block:PermalinkPage}page-permalink page-{PostID}{/block:PermalinkPage}" id="top">
-	<header class="site-header hoverTarget" id="site_header">
-		<h1 class="site-title">
-			<a href="/" class="icon-keeshkas" title="{Title}"></a>
+	<header class="site-header hoverTarget" id="site_header" role="banner">
+		<h1 class="site-title is-anime" title="{Title}">
+			<em class="title-main"><span>K</span><span>E</span><span>E</span><span>S</span><span>H</span><span>K</span><span>A</span><span>S</span></em>
+			<em class="title-sub">{block:IndexPage}{block:TagPage}<span class="tagged">{Tag}</span>{/block:TagPage}{/block:IndexPage}<span>sound</span><span>service</span></em>
 		</h1>
+		<div class="site-background">
+			<div class="bg-img"></div>
+			<div class="bg-cover"></div>
+		</div>
 	</header>
 
-	<div class="site-body" id="site_body" data-view="posts" role="main">
-		<div class="section" id="sec_title" data-section="title">
-			<div class="main-background">
-				<div class="bg-grey"></div>
-				<div class="bg-color"></div>
-				<div class="bg-cover"></div>
+	<section class="menu-view overflow-block" id="menu_view">
+		<nav class="site-nav" id="site_nav" data-fix="-200" role="navigation">
+			<fieldset class="btn-toggle hoverTarget"><input type="checkbox" id="show_nav_links"><label class="hoverTarget" for="show_nav_links"><span class="icon-keeshkas"></span><span class="icon"></span></label></fieldset>
+			<ul class="link-list">
+				<li><a class="icon-home" href="/"><span>Home</span></a></li>
+				<li><a class="icon-info" href="/tagged/info"><span>Info</span></a></li>
+				<li><a class="icon-blog" href="/tagged/blog"><span>Blog</span></a></li>
+				<li><a class="icon-sound" href="/tagged/sound"><span>Sound</span></a></li>
+				<!--			<li><a class="icon-movie" href="/tagged/movie"><span>Movie</span></a></li>-->
+				<li><a class="icon-discography" href="/tagged/release"><span>Release</span></a></li>
+				<li><a class="icon-goods" href="/tagged/goods"><span>Goods</span></a></li>
+			{block:Description}
+				<li><a class="icon-keeshkas" href="./?description=1" id="show_description"><span>About Us</span></a></li>
+			{/block:Description}
+			{block:HasPages}
+				{block:Pages}
+				<li><a href="{URL}"><span>{Label}</span></a></li>
+				{/block:Pages}
+			{/block:HasPages}
+				<li><a class="icon-calender" href="/archive"><span>Archive</span></a></li>
+				<li>
+					<form class="search-box" id="search_box" action="/search" method="get" target="_self">
+						<fieldset><input type="text" class="inp-txt" name="q" id="inp_q" value="{SearchQuery}" /></fieldset>
+						<fieldset><input type="submit" id="search_submit" value="{lang:Search}"/><label class="btn-search icon-search" for="search_submit"></label></fieldset>
+					</form>
+					{block:SearchPage}<p> ({lang:Search results for SearchQuery})</p>{/block:SearchPage}
+				</li>
+			</ul>
+		</nav>
+		<div class="menu-wrapper">
+			<div class="site-body" id="site_body" data-view="posts" role="complementary">
+				<h2>{block:IndexPage}{block:TagPage}<span class="tagged">{Tag}</span>{/block:TagPage}{/block:IndexPage}<span>Recent</span><span>Posts</span></h2>
+				<ul class="thumb-list" id="thumb_list"></ul>
+			{block:Pagination}
+				<!-- ページごとのページャ -->
+				<ul class="pagenation pagenation-index">
+				{block:PreviousPage}
+					<li class="prev"><a href="{PreviousPage}">Prev</a></li>
+				{/block:PreviousPage}
+				{block:JumpPagination length="5"}
+					{block:CurrentPage}
+					<li><span class="current-page">{PageNumber}</span></li>
+					{/block:CurrentPage}
+					{block:JumpPage}
+					<li><a class="jump-page" href="{URL}">{PageNumber}</a></li>
+					{/block:JumpPage}
+				{/block:JumpPagination}
+				{block:NextPage}
+					<li class="next"><a href="{NextPage}" rel="next">Next</a></li>
+				{/block:NextPage}
+				</ul>
+			{/block:Pagination}
 			</div>
-			<h2 class="main-title is-anime">
-				<em class="title-main"><span>K</span><span>E</span><span>E</span><span>S</span><span>H</span><span>K</span><span>A</span><span>S</span></em>
-				<em class="title-sub">{block:IndexPage}{block:TagPage}<span class="tagged">{Tag}</span>{/block:TagPage}{/block:IndexPage}<span>sound</span><span>service</span></em>
-			</h2>
+			<footer class="site-footer" id="site_footer" role="contentinfo">
+				<div class="content">
+					<div class="scroll-to-pageTop" id="scroll_to_pageTop" data-fix="100">
+						<a class="btn-exec" href="#top"><span class="icon-arrow" data-arrow="t"></span></a>
+					</div>
+					<div class="sns-links" id="sns_links">
+						<h4>Follow Us</h4>
+						<ul class="link-list">
+							<li><a href="https://www.facebook.com/keeshkas.s.s" class="icon-facebook" target="_blank"></a></li>
+							<li><a href="https://twitter.com/KEESHKAS_sndsvc" class="icon-twitter" target="_blank"></a></li>
+							<li><a href="https://www.instagram.com/keeshkas/" class="icon-instagram" target="_blank"></a></li>
+							<li><a href="https://soundcloud.com/keeshkas-soundservice" class="icon-soundcloud" target="_blank"></a></li>
+							<li><a href="https://www.youtube.com/channel/UCmWrlNVGJ9hoRJlwVW5NqOA" class="icon-youtube" target="_blank"></a></li>
+						</ul>
+					</div>
+				</div>
+				<p class="copyright">© 2017 KEESHKAS soundservice</p>
+			</footer>
 		</div>
+	</section>
 
+	<section class="contents-view" id="contents_view" role="main">
 	{block:Description}
-		<div class="section" id="sec_description" data-section="description">
-			<h3><span>About Us</span><a class="btn-close icon-close" href="./"></a></h3>
+		<section class="overflow-block" id="description_section" data-section="description">
+			<h2><span>About Us</span><a class="btn-close icon-close" href="./"></a></h2>
 			<div class="content">
 				<p class="text">{Description}</p>
 				<div class="members">
@@ -133,36 +199,21 @@
 					</ul>
 				</div>
 			</div>
-		</div>
+		</section>
 	{/block:Description}
 		
-		<div class="section" data-section="posts">
-			<div class="posts autopagerize_page_element" id="posts" >
+		<section class="overflow-block" id="posts_section" data-section="posts">
+			<div class="posts" id="posts" >
 		{block:Posts}
 				<!-- 投稿 -->
-				<article class="post {TagsAsClasses}" id="post_{PostID}" data-type="{PostType}">
-				{block:IndexPage}
+				<article class="post {TagsAsClasses}{block:PermalinkPage} is-active{/block:PermalinkPage}" id="post_{PostID}" data-type="{PostType}">
 					<a class="permalink" href="{Permalink}"></a>
-				{/block:IndexPage}
 					<header class="entry-header">
-					{block:IndexPage}
-						{block:Date}
-						<p class="date"><span>{Year}.{MonthNumberWithZero}.{DayOfMonthWithZero}</span></p>
-						{/block:Date}
-					{/block:IndexPage}
-					{block:PermalinkPage}
-						{block:Date}
-							<p class="date"><a href="{Permalink}">{Year}.{MonthNumberWithZero}.{DayOfMonthWithZero}</a></p>
-						{/block:Date}
-					{/block:PermalinkPage}
-					{block:Title}
-						<h3 class="entry-title"><span>{Title}</span></h3>
-					{/block:Title}
-					{block:Audio}
-						{block:TrackName}
-						<h3 class="entry-title trackname"><span>{TrackName}</span></h3>
-						{/block:TrackName}
-					{/block:Audio}
+						<h3 class="entry-title">
+							<a class="date" href="{BlogURL}/day/{Year}/{MonthNumberWithZero}/{DayOfMonthWithZero}"><span>{Year}.{MonthNumberWithZero}.{DayOfMonthWithZero}</span></a>
+							{block:Title}<span>{Title}</span>{/block:Title}
+							{block:Audio}{block:TrackName}<span>{TrackName}</span>{/block:TrackName}{/block:Audio}
+						</h3>
 					</header>
 
 				{block:Text}
@@ -173,14 +224,9 @@
 				{block:Photo}
 					<!-- post: 画像 -->
 					<div class="entry-content">
-					{block:IndexPage}
-						<img class="thumbnail" src="{PhotoURL-HighRes}" alt="{PhotoAlt}"/>
-					{/block:IndexPage}
-					{block:PermalinkPage}
-						{LinkOpenTag}
+					{LinkOpenTag}
 						<img src="{PhotoURL-HighRes}" alt="{PhotoAlt}"/>
-						{LinkCloseTag}
-					{block:PermalinkPage}
+					{LinkCloseTag}
 					{block:Caption}
 						<div class="caption">{Caption}</div>
 					{/block:Caption}
@@ -191,16 +237,9 @@
 					<!-- post: フォトセット -->
 					<div class="entry-content">
 					{block:Photos}
-						{block:IndexPage}
 						<img class="thumbnail" src="{PhotoURL-500}" alt="photo">
-						{/block:IndexPage}
-						{block:PermalinkPage}
-						<img src="{PhotoURL-700}" alt="photo">
-						{/block:PermalinkPage}
 					{/block:Photos}
-					{block:PermalinkPage}
 						{Photoset}
-					{/block:PermalinkPage}
 					{block:Caption}
 						<div class="caption">{Caption}</div>
 					{/block:Caption}
@@ -249,33 +288,22 @@
 				{block:Video}
 					<!-- post: ビデオ -->
 					<div class="entry-content">
-					{block:IndexPage}
-						{block:VideoThumbnail}
-						<img class="thumbnail" src="{VideoThumbnailURL}" alt="videoThumbnail"/>
-						{/block:VideoThumbnail}
-					{/block:IndexPage}
-					{block:PermalinkPage}
+					{block:VideoThumbnail}
+					<img class="thumbnail" src="{VideoThumbnailURL}" alt="videoThumbnail"/>
+					{/block:VideoThumbnail}
 						<div class="embed-box video-embed">{VideoEmbed-500}</div>
 						{block:Caption}
 						<div class="caption">{Caption}</div>
 						{/block:Caption}
-					{/block:PermalinkPage}
 					</div>
 				{/block:Video}
 
 				{block:Audio}
 					<!-- post: オーディオ -->
 					<div class="entry-content">
-					{block:IndexPage}
-						{block:AlbumArt}
-						<img class="thumbnail" src="{AlbumArtURL}" alt="album artwork"/>
-						{/block:AlbumArt}
-					{/block:IndexPage}
-					{block:PermalinkPage}
-						{block:AlbumArt}
-							<img class="album-art" src="{AlbumArtURL}" alt="album artwork"/>
-						{/block:AlbumArt}
-					{/block:PermalinkPage}
+					{block:AlbumArt}
+						<img class="album-art" src="{AlbumArtURL}" alt="album artwork"/>
+					{/block:AlbumArt}
 					{block:AudioEmbed}
 						<div class="embed-box audio-embed">{AudioEmbed}</div>
 					{/block:AudioEmbed}
@@ -293,16 +321,13 @@
 					<!-- post: Answer -->
 					<div class="entry-content">
 						<div class="question bubble">{Question}</div>
-					{block:PermalinkPage}
 						<div class="asker-group">
 							<img src="{AskerPortraitURL-24}" /> {Asker}
 						</div>
 						<div class="answer cont">{Answer}</div>
-					{/block:PermalinkPage}
 					</div>
 				{/block:Answer}
 
-				{block:PermalinkPage}
 					<!-- 記事フッタ -->
 					<footer class="entry-footer">
 					{block:ContentSource}
@@ -352,37 +377,11 @@
 							</ul>
 						</div>
 
-						<!-- ソーシャルボタン -->
-						<ul class="social-buttons">
-						{block:IfEnableTweetButton}
-							<li>
-								<a href="https://twitter.com/share" class="twitter-share-button" data-lang="ja">Tweet</a>
-								<script>
-									!function(d,s,id){
-										var js,fjs=d.getElementsByTagName(s)[0];
-										if(!d.getElementById(id)){
-											js=d.createElement(s);
-											js.id=id;
-											js.src="//platform.twitter.com/widgets.js";
-											fjs.parentNode.insertBefore(js,fjs);
-										}
-									}(document,"script","twitter-wjs");
-								</script>
-							</li>
-						{/block:IfEnableTweetButton}
-						{block:IfEnableLikeButton}
-							<li>
-								<div class="fb-like" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false"></div>
-							</li>
-						{/block:IfEnableLikeButton}
-						</ul>
-
 					{block:PostNotes}
 						<h3 class="notecount-header">{NoteCount} Notes</h3>
 						<div class="notecontainer">{PostNotes}</div>
 					{/block:PostNotes}
 					</footer>
-				{/block:PermalinkPage}
 				</article>
 		{/block:Posts}
 			</div>
@@ -398,92 +397,45 @@
 			{/block:NextPost}
 			</ul>
 		{/block:PermalinkPagination}
-		</div>
-
-	{block:Pagination}
-		<!-- ページごとのページャ -->
-		<ul class="pagenation pagenation-index">
-		{block:PreviousPage}
-			<li class="prev"><a href="{PreviousPage}">Prev</a></li>
-		{/block:PreviousPage}
-		{block:JumpPagination length="5"}
-			{block:CurrentPage}
-			<li><span class="current-page">{PageNumber}</span></li>
-			{/block:CurrentPage}
-			{block:JumpPage}
-			<li><a class="jump-page" href="{URL}">{PageNumber}</a></li>
-			{/block:JumpPage}
-		{/block:JumpPagination}
-		{block:NextPage}
-			<li class="next"><a href="{NextPage}" rel="next">Next</a></li>
-		{/block:NextPage}
-		</ul>
-	{/block:Pagination}
-	{block:DayPagination}
-		<!-- 日付ごとのページャ -->
-		<ul class="pagenation pagenation-day">
-		{block:PreviousDayPage}
-			<li class="prev"><a href="{PreviousDayPage}">&#171; {ShortMonth} {DayOfMonth}</a></li>
-		{/block:PreviousDayPage}
-		{block:NextDayPage}
-			<li class="next"><a href="{NextDayPage}" rel="next">{ShortMonth} {DayOfMonth} &#187;</a></li>
-		{/block:NextDayPage}
-		</ul>
-	{/block:DayPagination}
-	</div>
-
-	<nav class="site-nav" id="site_nav" role="navigation" data-fix="-200">
-		<fieldset class="btn-toggle hoverTarget"><input type="checkbox" id="show_nav_links"><label class="hoverTarget" for="show_nav_links"><span class="icon"></span></label></fieldset>
-		<ul class="link-list">
-			<li>
-				<form class="search-box" id="search_box" action="/search" method="get" target="_self">
-					<fieldset><input type="text" class="inp-txt" name="q" id="inp_q" value="{SearchQuery}" /></fieldset>
-					<fieldset><input type="submit" id="search_submit" value="{lang:Search}"/><label class="btn-search icon-search" for="search_submit"></label></fieldset>
-				</form>
-			</li>
-			<li><a class="icon-home" href="/"><span>Home</span></a></li>
-			<li><a class="icon-info" href="/tagged/info"><span>Info</span></a></li>
-			<li><a class="icon-blog" href="/tagged/blog"><span>Blog</span></a></li>
-			<li><a class="icon-sound" href="/tagged/sound"><span>Sound</span></a></li>
-			<!--			<li><a class="icon-movie" href="/tagged/movie"><span>Movie</span></a></li>-->
-			<li><a class="icon-discography" href="/tagged/release"><span>Release</span></a></li>
-			<li><a class="icon-goods" href="/tagged/goods"><span>Goods</span></a></li>
-		{block:Description}
-			<li><a class="icon-keeshkas" href="./" id="show_description"><span>About Us</span></a></li>
-		{/block:Description}
-		{block:HasPages}
-			{block:Pages}
-			<li><a href="{URL}"><span>{Label}</span></a></li>
-			{/block:Pages}
-		{/block:HasPages}
-			<li><a class="icon-calender" href="/archive"><span>Archive</span></a></li>
-		</ul>
-	</nav>
-
-	<footer class="site-footer" id="site_footer">
-		<div class="content">
-			<div class="scroll-to-pageTop" id="scroll_to_pageTop" data-fix="100">
-				<a class="btn-exec" href="#top"><span class="icon-arrow" data-arrow="t"></span></a>
-			</div>
-			<div class="sns-links" id="sns_links">
-				<h4>Follow Us</h4>
-				<ul class="link-list">
-					<li><a href="https://www.facebook.com/keeshkas.s.s" class="icon-facebook" target="_blank"></a></li>
-					<li><a href="https://twitter.com/KEESHKAS_sndsvc" class="icon-twitter" target="_blank"></a></li>
-					<li><a href="https://www.instagram.com/keeshkas/" class="icon-instagram" target="_blank"></a></li>
-					<li><a href="https://soundcloud.com/keeshkas-soundservice" class="icon-soundcloud" target="_blank"></a></li>
-					<li><a href="https://www.youtube.com/channel/UCmWrlNVGJ9hoRJlwVW5NqOA" class="icon-youtube" target="_blank"></a></li>
-				</ul>
-			</div>
-		</div>
-		<p class="copyright">© 2017 KEESHKAS soundservice</p>
-	</footer>
+		
+		{block:DayPagination}
+			<!-- 日付ごとのページャ -->
+			<ul class="pagenation pagenation-day">
+			{block:PreviousDayPage}
+				<li class="prev"><a href="{PreviousDayPage}">&#171; {ShortMonth} {DayOfMonth}</a></li>
+			{/block:PreviousDayPage}
+			{block:NextDayPage}
+				<li class="next"><a href="{NextDayPage}" rel="next">{ShortMonth} {DayOfMonth} &#187;</a></li>
+			{/block:NextDayPage}
+			</ul>
+		{/block:DayPagination}
+		</section>
+	</section>
 	
-	<script src="//code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
-	<script src="//w.soundcloud.com/player/api.js"></script>
-	<script src="//loopdrape.github.io/kss_site/js/klass.Vuw.min.js"></script>
-	<script src="//loopdrape.github.io/kss_site/js/app.vuw.min.js"></script>
-	<script src="//loopdrape.github.io/kss_site/js/app.exec.min.js"></script>
+	<!-- ソーシャルボタン -->
+	<ul class="social-buttons">
+	{block:IfEnableTweetButton}
+		<li>
+			<a href="https://twitter.com/share" class="twitter-share-button" data-lang="ja">Tweet</a>
+			<script>
+				!function(d,s,id){
+					var js,fjs=d.getElementsByTagName(s)[0];
+					if(!d.getElementById(id)){
+						js=d.createElement(s);
+						js.id=id;
+						js.src="//platform.twitter.com/widgets.js";
+						fjs.parentNode.insertBefore(js,fjs);
+					}
+				}(document,"script","twitter-wjs");
+			</script>
+		</li>
+	{/block:IfEnableTweetButton}
+	{block:IfEnableLikeButton}
+		<li>
+			<div class="fb-like" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false"></div>
+		</li>
+	{/block:IfEnableLikeButton}
+	</ul>
 
  {block:IfEnableLikeButton}
 	<div id="fb-root"></div>

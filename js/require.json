@@ -1,0 +1,28 @@
+{
+	"sync": [
+		[
+			{
+				"path": "//code.jquery.com/jquery-3.2.1.min.js",
+				"attr": {
+					"integrity": "sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=",
+					"crossorigin": "anonymous"
+				},
+				"fallback": "/js/modules/jquery-3.2.1.min.js"
+			},
+			"//w.soundcloud.com/player/api.js"
+		],
+		"/js/modules/klass.Vuw.min.js",
+		"/js/components/common.min.js",
+		[
+			"/js/components/nav.min.js",
+			"/js/components/thumbList.min.js",
+			{
+				"sync": [
+					"/js/components/contentsView.min.js",
+					"/js/components/posts.min.js"
+				]
+			}
+		],
+		"/js/app.exec.min.js"
+	]
+}
