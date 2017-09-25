@@ -22,7 +22,7 @@
 html {
 	background-color: @base_bgc;
 	height:  100%;
-	min-width: none;
+	min-width: auto;
 	min-width: initial;
 }
 
@@ -107,10 +107,8 @@ a {
 		pointer-events: none;
 	}
 	
-	@media (min-width: (@mq_w + 1px)) {
-		&:hover {
-			color: @link_hvc;
-		}
+	&.is-hover {
+		color: @link_hvc;
 	}
 }
 
@@ -133,7 +131,7 @@ a {
 	> li {
 		min-width: 150px;
 		
-		@media screen and (max-width: @mq_w) {
+		@media screen and (max-width: @mq_w_max) {
 			min-width: 120px;
 		}
 	}

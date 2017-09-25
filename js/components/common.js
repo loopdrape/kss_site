@@ -1,9 +1,13 @@
-;(function($) {
+;(function (global, factory) {
 	"use strict";
-	
-	if( !app || !Klass("Vuw") ) {
-		return false;
-	}
+	factory(
+		global.Klass,
+		global.app,
+		global.vuwer,
+		global.jQuery || global.$
+	);
+}(this, function(Klass, app, vuwer, $) {
+	"use strict";
 	
 	/******************
 	*    component    *
@@ -12,12 +16,97 @@
 	// [window]
 	.setProp({
 		onReady: function($window) {
-//			$window
+			$window
 //			.on("resize", function(e, isTrigger) {
 //				!!vuwer._resizeTimer && clearTimeout(vuwer._resizeTimer);
 //				vuwer._resizeTimer = setTimeout(function() {
 //				}, !!isTrigger ? 0 : 100);
-//			});
+//			})
+			.on("popstate", function(e) {
+				var state = e.originalEvent.state;
+				app.isObject(state) || (state = {});
+				csl.log.blue("** popstate **", state);
+				state.isPopstate = true;
+				vuwer.setState(state);
+			});
+		},
+		onChangeState: function(state) {
+			var
+				isPopstate = !!state.isPopstate,
+				methods = [],
+				childState = {},
+				url;
+			
+			isPopstate && delete state.isPopstate;
+			
+			app._GET = this.isString(state.query) ? app.parseQueryString(state.query) : {};
+			
+			childState.contentsView = {};
+			
+			if(state.param === "tagged") {
+				if(state.value === this.state.value) {
+					methods.push( app.posts.loadPosts(state.pathname) );
+				} else {
+					methods.push( app.posts.replacePosts(state.pathname) );
+				}
+			} else
+			if(state.param === "post") {
+				childState.contentsView.view = "posts";
+				childState.contentsView.active = state.value;
+			}
+			
+			if(app._GET.description) {
+				childState.contentsView.view = "description";
+			}
+			
+			methods = methods.concat( Object.keys(childState).map(function(vuwname) {
+				return this.get(vuwname).setState(childState[vuwname]);
+			}, this) );
+			
+			if(state.pathname !== this.state.pathname || state.query !== this.state.query) {
+				url = (state.pathname || "/") + (state.query || "");
+				app[isPopstate ? "replaceState" : "pushState"](
+					state,
+					location.origin + url,
+					{
+						title: (!!state.title ? state.title + " // " : "") + app.config.siteTitle
+					}
+				);
+			}
+			
+			csl.log.orange("vuwer:change", state, methods.length);
+			return $.when.apply($, methods);
+		},
+		changePathname: function(pathname, query) {
+			var arr, state;
+			
+			this.isString(pathname) || (pathname = "");
+			pathname = pathname.replace(/^\//, "");
+			
+			this.isString(query) || (query = "");
+			
+//			if( pathname === location.pathname.replace(/^\//, "") ) {
+//				return $.Deferred().resolve();
+//			} else {
+				// parse
+				arr = pathname.split("/");
+				state = {
+					pathname: "/" + pathname,
+					param: arr.shift() || ""
+				};
+				
+				!!query && (state.query = query);
+				
+				if(state.param) {
+					state.value = arr.shift() || "";
+					
+					if(arr.length) {
+						state.title = arr.join(" / ");
+					}
+				}
+				
+				return this.setState(state);
+//			}
 		}
 	})
 	
@@ -163,14 +252,7 @@
 	
 	// [siteBody]
 	.add("siteBody", {
-		selector: "#site_body",
-		onReady: function($self) {
-		},
-		onChangeState: function(state) {
-			this.$self.attr({
-				"data-view": state.view || ""
-			});
-		}
+		selector: "#site_body"
 	})
 	
 	// [scrollToPageTop] ページトップへスクロールするボタン
@@ -226,41 +308,6 @@
 			
 			return this;
 		}
-	})
-	
-	// [discription section]
-	.add("secDescription", {
-		selector: "#sec_description",
-		onReady: function($self) {
-			this._delay = parseFloat( $self.css("transition-duration") ) * 1000;
-			
-			$self.on("click", ".btn-close", function(e) {
-				e.preventDefault();
-				var vuw = $.data(e.delegateTarget, "vuw");
-				vuw.getOther("siteBody").setState("view", "")
-				.then( (function() {
-					var df = $.Deferred();
-					setTimeout(df.resolve, this._delay);
-					return df.promise();
-				}).bind(this) )
-				.then(function() {
-					vuw.getOther("siteBody").setState("view", "posts");
-				});
-			});
-		}
-	})
-	
-	// [link for show description]
-	.add("showDescription", {
-		selector: "#show_description",
-		onReady: function($self) {
-			$self.on("click", function(e) {
-				e.preventDefault();
-				vuwer.get("switchNavLinks.nav").$self.prop({
-					checked: false
-				}).trigger("change", ["description"]);
-			});
-		}
 	});
 	
-})(window.jQuery || window.$);
+}));

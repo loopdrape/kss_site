@@ -20,8 +20,8 @@
 	position: relative;
 	
 	.bg-img {
-		.filter( blur(2px) );
-		background-image: url("@{img_dir}/nightway.gif");
+		.filter( blur(4px) );
+		background-image: url("@{img_dir}/bg_anime.gif");
 		background-position: 50% 50%;
 		background-repeat: no-repeat;
 		background-size: auto 100%;
@@ -29,15 +29,8 @@
 		width: 100%;
 		
 		@media print, screen and (min-width: @mq_w_min) {
-			background-image: url("@{img_dir}/nightway.l.gif");
-		}
-		
-		> video {
-			display: none;
-			
-			@media print, screen and (min-width: @mq_w_min) {
-				display: block;
-			}
+			.filter( blur(0) );
+			background-image: url("@{img_dir}/bg_anime.l.gif");
 		}
 	}
 	
@@ -58,26 +51,26 @@
 	.user-select(none);
 	cursor: default;
 	margin: 0;
-	padding: 5px;
+	padding:  (@block_space / 4) 0;
 	position: absolute;
 	right: 0;
 	top: 0;
 	text-align: center;
 	z-index: 2;
 	
-	@media(max-width: @mq_w) {
+	@media screen and (orientation: portrait) and (max-width: 736px) {
 		padding-top: (@block_space * 2);
+		width: 100%;
 	}
 	
 	em {
 		font-style: normal;
 	}
 	
-	.title-tagged,
 	.title-main {
 		.blur-text(@white);
 		display: block;
-		font-size: 4rem;
+		font-size: 9vw;
 		line-height: 1;
 		margin: 0 10px;
 		text-transform: uppercase;
@@ -86,34 +79,19 @@
 		span + span {
 			margin-left: .3em;
 		}
-		
-		@media(min-width: (@mq_w + 1px)) {
-			font-size: 8rem;
-		}
 	}
 	
 	.title-sub {
 		.blur-text(@white);
 		display: block;
-		font-size: 2rem;
+		font-size: 6vw;
 		font-weight: 700;
 		letter-spacing: .1em;
 		line-height: 1;
 		margin: 2px 0 0;
 		
-		.tagged {
-			&:before,
-			&:after {
-				content: "\"";
-			}
-			
-			+ span {
-				display: none;
-			}
-		}
-		
-		@media(min-width: (@mq_w + 1px)) {
-			font-size: 4rem;
+	@media print, screen and (min-width: @mq_w_min) {
+			font-size: 5vw;
 		}
 	}
 	

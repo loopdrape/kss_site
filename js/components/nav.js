@@ -16,7 +16,17 @@
 //			app.positionTracker.tracking(this, false, true);
 			
 			app.categories = [];
-			$self.children(".link-list").find("a[href^='/tagged/']").each(function() {
+			$self
+			.on("click", "a", function(e) {
+				var vuw;
+				if( !(/archive$/).test(this.href) ) {
+					e.preventDefault();
+					vuw = $.data(e.delegateTarget, "vuw");
+					vuw.get("switchNavLinks").setState("isChecked", false);
+					vuwer.changePathname(this.pathname, this.search);
+				}
+			})
+			.children(".link-list").find("a[href^='/tagged/']").each(function() {
 				var arr = this.href.split("/");
 				app.categories.push( arr.pop() );
 			});
@@ -49,19 +59,13 @@
 			onReady: function($self) {
 				this.$link = $self.closest(".btn-toggle");
 				$self.on("change", function(e, isTrigger) {
-					var
-						vuw = $.data(this, "vuw"),
-						section = app.isString(isTrigger) ? isTrigger : "posts";
-					
-					vuw.setState("isChecked", this.checked);
-					vuwer.get("body").setState("lockScroll", this.checked);
-					vuwer.get("siteBody").setState("view", this.checked ? "" : section);
+					var vuw = $.data(this, "vuw");
+					vuw.$link.toggleClass("is-checked", this.checked);
 				});
 			},
 			onChangeState: function(state) {
 				if(typeof state.isChecked === "boolean") {
-					this.$link.toggleClass("is-checked", !!state.isChecked);
-					delete state.isChecked;
+					this.$self.prop("checked", !!state.isChecked).trigger("change", [true]);
 				}
 			}
 		})

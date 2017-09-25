@@ -19,7 +19,7 @@
 	<meta name="if:Enable Tweet Button" content="1" />
 	<meta name="if:Enable Plus1 Button" content="1" />
 
-	<title>Top</title>
+	<title>KEESHKAS soundservice</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
 <!--
 	<link rel="shortcut icon" href="{Favicon}">
@@ -101,7 +101,7 @@
 				<li><a class="icon-discography" href="/tagged/release"><span>Release</span></a></li>
 				<li><a class="icon-goods" href="/tagged/goods"><span>Goods</span></a></li>
 	<!--		{block:Description}-->
-				<li><a class="icon-keeshkas" href="./" id="show_description"><span>About Us</span></a></li>
+				<li><a class="icon-keeshkas" href="./?description=1" id="show_description"><span>About Us</span></a></li>
 	<!--		{/block:Description}-->
 	<!--
 			{block:HasPages}
@@ -121,6 +121,7 @@
 		</nav>
 		<div class="menu-wrapper overflow-block">
 			<div class="site-body" id="site_body" data-view="posts" role="complementary">
+				<h2><span>Recent</span><span>Posts</span></h2>
 				<ul class="thumb-list" id="thumb_list"></ul>
 			</div>
 			
@@ -147,7 +148,7 @@
 
 	<section class="contents-view" id="contents_view" role="main">
 <!--	{block:Description}-->
-		<section id="sec_description" data-section="description">
+		<section class="overflow-block" id="description_section" data-section="description">
 			<h2><span>About Us</span><a class="btn-close icon-close" href="./"></a></h2>
 			<div class="content">
 				<p class="text">{Description}</p>
@@ -191,7 +192,7 @@
 		</section>
 <!--	{/block:Description}-->
 		
-		<section id="sec_posts" data-section="posts">
+		<section class="overflow-block" id="posts_section" data-section="posts">
 <!--		{block:Posts}-->
 			<div class="posts" id="posts" >
 				<script>app.writeHTML("_postList.html")</script>

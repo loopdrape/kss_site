@@ -65,10 +65,8 @@
 		opacity: .9;
 	}
 	
-	@media screen and (min-width: (@mq_w + 1px)) {
-		&:hover {
-			opacity: .8;
-		}
+	&.is-hover {
+		opacity: .8;
 	}
 	
 	@btn_size: (@block_pad * 2);
@@ -84,7 +82,7 @@
 		text-decoration: none;
 		width: 150px;
 		
-		@media(min-width: (@mq_w + 1px)) {
+		@media print, screen and (min-width: @mq_w_min) {
 			width: (40px * 5);
 		}
 		
@@ -120,7 +118,7 @@
 		display: inline-block;
 		font-size: 30px;
 		
-		@media(min-width: (@mq_w + 1px)) {
+		@media print, screen and (min-width: @mq_w_min) {
 			font-size: 20px;
 		}
 		
@@ -136,12 +134,12 @@
 			padding: (@block_pad / 2) (@block_space / 2);
 			text-decoration: none;
 			
-			@media(min-width: (@mq_w + 1px)) {
+			&.is-hover {
+				color: lighten(@theme_c, 20%);
+			}
+			
+			@media print, screen and (min-width: @mq_w_min) {
 				padding: (@block_pad / 2);
-				
-				&:hover {
-					color: lighten(@theme_c, 20%);
-				}
 			}
 		}
 	}

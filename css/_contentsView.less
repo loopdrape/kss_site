@@ -2,39 +2,40 @@
 /**------------------------------------
 * contents view */
 .contents-view {
+	.transition(transform .4s);
+	background-color: @sub_bgc;
+	height: 100%;
 	left: 100%;
 	position: absolute;
 	top: 0;
-}
-
-section[data-section="posts"] {
-	.transition(filter .4s);
+	width: 65%;
 	
-	.site-body:not([data-view="posts"]) & {
-		.filter( blur(4px) );
+	mix-blend-mode: overlay;
+	
+	&.is-active {
+		.transform( translateX(-100%) );
 	}
+	
+	section {
+		.transition(left .2s);
+		left: 100%;
+		position: absolute;
+		top: 0;
+		width: 100%;
+	}
+	
+	.activeSectionStyle(@name) {
+		&[data-view="@{name}"] {
+			section[data-section="@{name}"] {
+				left: 0;
+			}
+		}
+	}
+	.activeSectionStyle("description");
+	.activeSectionStyle("posts");
 }
 
 section[data-section="description"] {
-	.transition(opacity .4s);
-	opacity: 0;
-	padding: 10vh 10vw 0;
-	pointer-events: none;
-	position: relative;
-	
-	.site-body[data-view="description"] & {
-		opacity: 1;
-		pointer-events: auto;
-	}
-	
-	.site-body[data-view="posts"] & {
-		z-index: -1;
-	}
-	
-	@media (min-width: (@mq_w + 1px)) {
-		padding-top: 80px;
-	}
-	
 	h3 {
 		position: relative;
 		text-align: center;
@@ -123,37 +124,9 @@ section[data-section="description"] {
 }
 
 section[data-section="posts"] {
-	background-color: @sub_c;
-	padding-bottom: 28px;
-	position: relative;
-	z-index: 1;
+	.transition(filter .4s);
 	
-	@media (min-width: (@mq_w + 1px)) {
-		padding-bottom: 0;
-		margin-bottom: 0;
-		z-index: 2;
-	}
-	
-	&:before {
-		.filter( blur(2px) );
-		background-attachment: fixed;
-		background-image: url("@{img_dir}/bg_grey.jpg");
-		background-position: 50% -2%;
-		background-size: 110% auto;
-		content: "";
-		display: block;
-		height: 100%;
-		left: 0;
-		opacity: .6;
-		position: absolute;
-		top: 0;
-		width: 100%;
-		z-index: -1;
-	}
-	
-	body.page-index & {
-		.transform( skew(0, @base_skewY) );
-		.transform-origin(100% 0);
+	.site-body:not([data-view="posts"]) & {
+		.filter( blur(4px) );
 	}
 }
-

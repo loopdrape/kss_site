@@ -19,7 +19,7 @@
 	<meta name="if:Enable Tweet Button" content="1" />
 	<meta name="if:Enable Plus1 Button" content="1" />
 
-	<title>{block:PermalinkPage}{block:PostSummary}{PostSummary} // {/block:PostSummary}{/block:PermalinkPage}{Title}{block:SearchPage} ({lang:Search results for SearchQuery}){/block:SearchPage}</title>
+	<title>{block:PermalinkPage}{block:PostSummary}{PostSummary} // {/block:PostSummary}{/block:PermalinkPage}{Title}</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
 	<link rel="shortcut icon" href="{Favicon}">
 	<link rel="alternate" type="application/rss+xml" href="{RSS}">
@@ -94,7 +94,7 @@
 				<li><a class="icon-discography" href="/tagged/release"><span>Release</span></a></li>
 				<li><a class="icon-goods" href="/tagged/goods"><span>Goods</span></a></li>
 			{block:Description}
-				<li><a class="icon-keeshkas" href="./" id="show_description"><span>About Us</span></a></li>
+				<li><a class="icon-keeshkas" href="./?description=1" id="show_description"><span>About Us</span></a></li>
 			{/block:Description}
 			{block:HasPages}
 				{block:Pages}
@@ -107,12 +107,33 @@
 						<fieldset><input type="text" class="inp-txt" name="q" id="inp_q" value="{SearchQuery}" /></fieldset>
 						<fieldset><input type="submit" id="search_submit" value="{lang:Search}"/><label class="btn-search icon-search" for="search_submit"></label></fieldset>
 					</form>
+					{block:SearchPage}<p> ({lang:Search results for SearchQuery})</p>{/block:SearchPage}
 				</li>
 			</ul>
 		</nav>
 		<div class="menu-wrapper">
 			<div class="site-body" id="site_body" data-view="posts" role="complementary">
+				<h2>{block:IndexPage}{block:TagPage}<span class="tagged">{Tag}</span>{/block:TagPage}{/block:IndexPage}<span>Recent</span><span>Posts</span></h2>
 				<ul class="thumb-list" id="thumb_list"></ul>
+			{block:Pagination}
+				<!-- ページごとのページャ -->
+				<ul class="pagenation pagenation-index">
+				{block:PreviousPage}
+					<li class="prev"><a href="{PreviousPage}">Prev</a></li>
+				{/block:PreviousPage}
+				{block:JumpPagination length="5"}
+					{block:CurrentPage}
+					<li><span class="current-page">{PageNumber}</span></li>
+					{/block:CurrentPage}
+					{block:JumpPage}
+					<li><a class="jump-page" href="{URL}">{PageNumber}</a></li>
+					{/block:JumpPage}
+				{/block:JumpPagination}
+				{block:NextPage}
+					<li class="next"><a href="{NextPage}" rel="next">Next</a></li>
+				{/block:NextPage}
+				</ul>
+			{/block:Pagination}
 			</div>
 			<footer class="site-footer" id="site_footer" role="contentinfo">
 				<div class="content">
@@ -137,7 +158,7 @@
 
 	<section class="contents-view" id="contents_view" role="main">
 	{block:Description}
-		<section id="sec_description" data-section="description">
+		<section class="overflow-block" id="description_section" data-section="description">
 			<h2><span>About Us</span><a class="btn-close icon-close" href="./"></a></h2>
 			<div class="content">
 				<p class="text">{Description}</p>
@@ -181,7 +202,7 @@
 		</section>
 	{/block:Description}
 		
-		<section data-section="posts">
+		<section class="overflow-block" id="posts_section" data-section="posts">
 			<div class="posts" id="posts" >
 		{block:Posts}
 				<!-- 投稿 -->
@@ -376,26 +397,6 @@
 			{/block:NextPost}
 			</ul>
 		{/block:PermalinkPagination}
-		
-		{block:Pagination}
-			<!-- ページごとのページャ -->
-			<ul class="pagenation pagenation-index">
-			{block:PreviousPage}
-				<li class="prev"><a href="{PreviousPage}">Prev</a></li>
-			{/block:PreviousPage}
-			{block:JumpPagination length="5"}
-				{block:CurrentPage}
-				<li><span class="current-page">{PageNumber}</span></li>
-				{/block:CurrentPage}
-				{block:JumpPage}
-				<li><a class="jump-page" href="{URL}">{PageNumber}</a></li>
-				{/block:JumpPage}
-			{/block:JumpPagination}
-			{block:NextPage}
-				<li class="next"><a href="{NextPage}" rel="next">Next</a></li>
-			{/block:NextPage}
-			</ul>
-		{/block:Pagination}
 		
 		{block:DayPagination}
 			<!-- 日付ごとのページャ -->

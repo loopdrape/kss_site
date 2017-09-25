@@ -16,7 +16,12 @@
 		[
 			"/js/components/nav.min.js",
 			"/js/components/thumbList.min.js",
-			"/js/components/posts.min.js"
+			{
+				"sync": [
+					"/js/components/contentsView.min.js",
+					"/js/components/posts.min.js"
+				]
+			}
 		],
 		"/js/app.exec.min.js"
 	]

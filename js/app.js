@@ -28,6 +28,7 @@
 	}
 	
 	app.config.ajaxTimeoutTime = 5000;
+	app.config.siteTitle = document.title.split(" // ").pop();
 	
 	// [Google Analytics]
 	!!gaTrackingID && app.require(endpoint + "/js/modules/loadGoogleAnalytics.min", function() {

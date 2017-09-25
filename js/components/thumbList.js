@@ -13,18 +13,41 @@
 	vuwer.get("siteBody")
 	.add("thumbList", {
 		selector: "#thumb_list",
+		onReady: function($self) {
+			!!$self && $self.on("click", ".permalink", function(e) {
+				e.preventDefault();
+				
+//				var $this = $(this);
+//				$("#" + $this.parent().data("id")).addClass("is-active")
+//				.siblings(".is-active").removeClass("is-active");
+				
+//				vuwer.setState( (function() {
+//					var arr = this.href.split("/");
+//					return {
+//						title: arr.pop(),
+//						view: "posts",
+//						postID: arr.pop()
+//					};
+//				}).call(this) );
+				
+				vuwer.changePathname(
+					(this.className.indexOf("is-active") < 0) ? this.pathname : "/"
+				);
+			});
+		},
 		onChangeState: function(state) {
 			var list;
-			if( !this.isArray(state.items) || !state.items.length ) {
+			if( !this.$self || !this.isArray(state.items) || !state.items.length ) {
 				return false;
 			}
 			
-			csl.log.blue(this.name + ": new items", state.items.length);
+			csl.log.orange(this.name + ": new items", state.items.length);
 			list = [];
-			state.items.forEach( (function($artcl) {
+			state.items.forEach(function($artcl) {
 				var
 					artclID = $artcl.attr("id"),
 					$li = $("<li/>").attr({
+						"id": artclID.replace(/^post/, "thumb"),
 						"data-id": artclID
 					}).addClass( $artcl.get(0).className.replace(/^post /, "") ),
 					$a = $artcl.children(".permalink").appendTo($li),
@@ -34,6 +57,11 @@
 				$ttl.children(".date").replaceWith(function() {
 					return $(this).children().addClass(this.className);
 				});
+				if(!$ttl.children(".date").next().length) {
+					$ttl.append(
+						$("<span/>").html( $a.attr("href").split("/").pop() )
+					);
+				}
 				$ttl.children().appendTo($a);
 				
 				$artcl.onInnerLoad(
@@ -44,14 +72,9 @@
 				);
 				
 				list.push($li);
-			}).bind(this) );
+			}, this);
 			
 			!!list.length && $.fn.append.apply(this.$self, list);
-		},
-		addItems: function(items) {
-			return this.setState({
-				items: items
-			});
 		},
 		_createThumbnail: function($artcl, callback) {
 			var postID = $artcl.attr("id");
@@ -89,6 +112,15 @@
 				
 				Klass.isFunction(callback) && callback($img);
 			});
+		},
+		addItems: function(items) {
+			return this.setState({
+				items: items
+			});
+		},
+		clearItems: function() {
+			!!this.$self && this.$self.empty();
+			return this;
 		}
 	}, function() {
 		// appからアクセス出来る様にする
