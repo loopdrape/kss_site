@@ -49,8 +49,7 @@
 					if(callback(v, isArray ? i : arr[i], target) === false) {
 						break;
 					}
-				} else
-				if( this.isObject(v) ) {
+				} else {
 					this.searchStringFromArray(v, callback);
 				}
 			}
@@ -69,9 +68,6 @@
 			return app.exec();
 		}, currentSctipt);
 	});
-	
-	
-	
 	
 	csl.log.gray("** init WebAppBase (version:" + app.getVersion() + ") **");
 	return app;
