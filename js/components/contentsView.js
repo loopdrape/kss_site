@@ -21,12 +21,12 @@
 				this.$self.toggleClass("is-active", !!state.view).attr({
 					"data-view": state.view
 				});
-				
-				if(state.view === "posts") {
-					return this.get("secPosts").setState({
-						active: state.active
-					});
-				}
+			}
+			
+			if(state.view === "posts") {
+				return this.get("secPosts").setState({
+					active: !!state.active && "post_" + state.active
+				});
 			}
 		}
 	}, function() {

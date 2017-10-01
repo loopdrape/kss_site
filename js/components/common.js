@@ -74,7 +74,7 @@
 				);
 			}
 			
-			csl.log.orange("vuwer:change", state, methods.length);
+			csl.log.orange("vuwer:change", state, childState, methods.length);
 			return $.when.apply($, methods);
 		},
 		changePathname: function(pathname, query) {

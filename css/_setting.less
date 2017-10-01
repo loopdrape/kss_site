@@ -5,15 +5,16 @@
 @white: #fffffc;
 @black: #111;
 
-@base_bgc: @black;	// background-color
-@base_bdc: tint(@black, 70%);		// border-color
-@base_txc: #333;		// color
-
 // テーマカラー
 @theme_c: #053e5c;	//#040b1c;
 @sub_c: #bab8bf;
-@sub_bgc: @white;
 
+@base_bgc: @theme_c;	// background-color
+@base_bdc: tint(@black, 70%);		// border-color
+@base_txc: @white;		// color
+
+@sub_bgc: @white;
+@sub_txc: #333;
 
 @btn_bgc: @theme_c;
 @link_txc: #68a9cf;

@@ -62,7 +62,7 @@
 	{/block:PermalinkPage}
 
 <!--	<style>{CustomCSS}</style>-->
-	<link rel="stylesheet" href="//loopdrape.github.io/kss_site/css/style.min.css" />
+	<link rel="stylesheet" href="//loopdrape.github.io/kss_site/css/style.css" />
 	<!--[if lt IE 9]>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
 	<![endif]-->
@@ -156,11 +156,11 @@
 		</div>
 	</section>
 
-	<section class="contents-view" id="contents_view" role="main">
+	<section class="contents-view{block:PermalinkPage} is-active{/block:PermalinkPage}" id="contents_view" data-view="{block:PermalinkPage}posts{/block:PermalinkPage}" role="main">
 	{block:Description}
 		<section class="overflow-block" id="description_section" data-section="description">
-			<h2><span>About Us</span><a class="btn-close icon-close" href="./"></a></h2>
 			<div class="content">
+				<h2><span>About Us</span><a class="btn-close icon-close" href="./"></a></h2>
 				<p class="text">{Description}</p>
 				<div class="members">
 					<h4>Members</h4>
@@ -203,212 +203,214 @@
 	{/block:Description}
 		
 		<section class="overflow-block" id="posts_section" data-section="posts">
-			<div class="posts" id="posts" >
-		{block:Posts}
-				<!-- 投稿 -->
-				<article class="post {TagsAsClasses}{block:PermalinkPage} is-active{/block:PermalinkPage}" id="post_{PostID}" data-type="{PostType}">
-					<a class="permalink" href="{Permalink}"></a>
-					<header class="entry-header">
-						<h3 class="entry-title">
-							<a class="date" href="{BlogURL}/day/{Year}/{MonthNumberWithZero}/{DayOfMonthWithZero}"><span>{Year}.{MonthNumberWithZero}.{DayOfMonthWithZero}</span></a>
-							{block:Title}<span>{Title}</span>{/block:Title}
-							{block:Audio}{block:TrackName}<span>{TrackName}</span>{/block:TrackName}{/block:Audio}
-						</h3>
-					</header>
+			<div class="content">
+				<div class="posts" id="posts" >
+			{block:Posts}
+					<!-- 投稿 -->
+					<article class="post {TagsAsClasses}{block:PermalinkPage} is-active{/block:PermalinkPage}" id="post_{PostID}" data-type="{PostType}">
+						<a class="permalink" href="{Permalink}"></a>
+						<header class="entry-header">
+							<h3 class="entry-title">
+								<a class="date" href="{BlogURL}/day/{Year}/{MonthNumberWithZero}/{DayOfMonthWithZero}"><span>{Year}.{MonthNumberWithZero}.{DayOfMonthWithZero}</span></a>
+								{block:Title}<span>{Title}</span>{/block:Title}
+								{block:Audio}{block:TrackName}<span>{TrackName}</span>{/block:TrackName}{/block:Audio}
+							</h3>
+						</header>
 
-				{block:Text}
-					<!-- post: テキスト -->
-					<div class="entry-content">{Body}</div>
-				{/block:Text}
+					{block:Text}
+						<!-- post: テキスト -->
+						<div class="entry-content">{Body}</div>
+					{/block:Text}
 
-				{block:Photo}
-					<!-- post: 画像 -->
-					<div class="entry-content">
-					{LinkOpenTag}
-						<img src="{PhotoURL-HighRes}" alt="{PhotoAlt}"/>
-					{LinkCloseTag}
-					{block:Caption}
-						<div class="caption">{Caption}</div>
-					{/block:Caption}
-					</div>
-				{/block:Photo}
-
-				{block:Photoset}
-					<!-- post: フォトセット -->
-					<div class="entry-content">
-					{block:Photos}
-						<img class="thumbnail" src="{PhotoURL-500}" alt="photo">
-					{/block:Photos}
-						{Photoset}
-					{block:Caption}
-						<div class="caption">{Caption}</div>
-					{/block:Caption}
-					</div>
-				{/block:Photoset}
-
-				{block:Quote}
-					<!-- post: 引用 -->
-					<div class="entry-content {Length}">
-						<blockquote>“{Quote}”</blockquote>
-					{block:Source}
-						<div class="quote-source">
-							{Source}
-						</div>
-					{/block:Source}
-					</div>
-				{/block:Quote}
-
-				{block:Link}
-					<!-- post: リンク -->
-					<div class="entry-content">
-						<p class="link-title"><a class="link-url" href="{URL}" {Target}><span>{Name}</span></a></p>
-					{block:Thumbnail}
-						{Thumbnail}
-					{/block:Thumbnail}
-					{block:Description}
-						<div class="link-description">{Description}</div>
-					{/block:Description}
-					</div>
-				{/block:Link}
-
-				{block:Chat}
-					<!-- post: チャット -->
-					<div class="entry-content">
-						<ul class="ul-chat">
-						{block:Lines}
-							<li class="{Alt} user_{UserNumber}">
-							{block:Label}<span class="label">{Label}</span>{/block:Label}
-							<span class="line">{Line}</span>
-							</li>
-						{/block:Lines}
-						</ul>
-					</div>
-				{/block:Chat}
-
-				{block:Video}
-					<!-- post: ビデオ -->
-					<div class="entry-content">
-					{block:VideoThumbnail}
-					<img class="thumbnail" src="{VideoThumbnailURL}" alt="videoThumbnail"/>
-					{/block:VideoThumbnail}
-						<div class="embed-box video-embed">{VideoEmbed-500}</div>
+					{block:Photo}
+						<!-- post: 画像 -->
+						<div class="entry-content">
+						{LinkOpenTag}
+							<img src="{PhotoURL-HighRes}" alt="{PhotoAlt}"/>
+						{LinkCloseTag}
 						{block:Caption}
-						<div class="caption">{Caption}</div>
+							<div class="caption">{Caption}</div>
 						{/block:Caption}
-					</div>
-				{/block:Video}
-
-				{block:Audio}
-					<!-- post: オーディオ -->
-					<div class="entry-content">
-					{block:AlbumArt}
-						<img class="album-art" src="{AlbumArtURL}" alt="album artwork"/>
-					{/block:AlbumArt}
-					{block:AudioEmbed}
-						<div class="embed-box audio-embed">{AudioEmbed}</div>
-					{/block:AudioEmbed}
-					{block:AudioPlayer}
-						<div class="audio-player">{AudioPlayer}</div>
-					{/block:AudioPlayer}
-						<p class="audio-info">{block:Artist}<span class="artist">{Artist}</span>{/block:Artist}{block:Album}<span class="album">{Album}</span>{/block:Album}</p>
-					{block:Caption}
-						<div class="caption">{Caption}</div>
-					{/block:Caption}
-					</div>
-				{/block:Audio}
-
-				{block:Answer}
-					<!-- post: Answer -->
-					<div class="entry-content">
-						<div class="question bubble">{Question}</div>
-						<div class="asker-group">
-							<img src="{AskerPortraitURL-24}" /> {Asker}
 						</div>
-						<div class="answer cont">{Answer}</div>
-					</div>
-				{/block:Answer}
+					{/block:Photo}
 
-					<!-- 記事フッタ -->
-					<footer class="entry-footer">
-					{block:ContentSource}
-						<!-- Content Source -->
-						<div class="content-source">
-							<a href="{SourceURL}" target="_blank">
-								<span class="source-lang">{lang:Source}:</span>
-							{block:SourceLogo}
-								<img class="source-logo" src="{BlackLogoURL}" alt="{SourceTitle}" />
-							{/block:SourceLogo}
-							{block:NoSourceLogo}
-								<span class="source-title">{SourceTitle}</span>
-							{/block:NoSourceLogo}
-							</a>
+					{block:Photoset}
+						<!-- post: フォトセット -->
+						<div class="entry-content">
+						{block:Photos}
+							<img class="thumbnail" src="{PhotoURL-500}" alt="photo">
+						{/block:Photos}
+							{Photoset}
+						{block:Caption}
+							<div class="caption">{Caption}</div>
+						{/block:Caption}
 						</div>
-					{/block:ContentSource}
+					{/block:Photoset}
 
-					{block:RebloggedFrom}
-						<div class="rebloggedfrom">
-							<span class="meta-elements reblog-parent-name">
-								<span>Reblogged from </span><a href="{ReblogParentURL}"><img src="{ReblogParentPortraitURL-16}" class="favicon"/> <span>{ReblogParentName}</span></a>
-							</span>
-							<span class="meta-elements reblog-root-name">
-								<span>Originally posted by </span><a href="{ReblogRootURL}"><img src="{ReblogRootPortraitURL-16}" class="favicon"/> <span>{ReblogRootName}</span></a>
-							</span>
+					{block:Quote}
+						<!-- post: 引用 -->
+						<div class="entry-content {Length}">
+							<blockquote>“{Quote}”</blockquote>
+						{block:Source}
+							<div class="quote-source">
+								{Source}
+							</div>
+						{/block:Source}
 						</div>
-					{/block:RebloggedFrom}
+					{/block:Quote}
 
-						<div class="meta meta-footer">
-							<a class="meta-elements timeago" href="{Permalink}"><span>{TimeAgo}</span></a>
-
-						{block:NoteCount}
-							<a class="meta-elements notecount" href="{Permalink}"><span>{NoteCount} Notes</span></a>
-						{/block:NoteCount}
-
-						{block:HasTags}
-							{block:Tags}
-							<a class="meta-elements hastags" href="{TagURL}"><span>#{Tag}</span></a>
-							{/block:Tags}
-						{/block:HasTags}
+					{block:Link}
+						<!-- post: リンク -->
+						<div class="entry-content">
+							<p class="link-title"><a class="link-url" href="{URL}" {Target}><span>{Name}</span></a></p>
+						{block:Thumbnail}
+							{Thumbnail}
+						{/block:Thumbnail}
+						{block:Description}
+							<div class="link-description">{Description}</div>
+						{/block:Description}
 						</div>
+					{/block:Link}
 
-						<div class="tumblr-controls">
-							<ul class="like-and-reblog-buttons">
-								<li>{ReblogButton}</li>
-								<li>{LikeButton}</li>
+					{block:Chat}
+						<!-- post: チャット -->
+						<div class="entry-content">
+							<ul class="ul-chat">
+							{block:Lines}
+								<li class="{Alt} user_{UserNumber}">
+								{block:Label}<span class="label">{Label}</span>{/block:Label}
+								<span class="line">{Line}</span>
+								</li>
+							{/block:Lines}
 							</ul>
 						</div>
+					{/block:Chat}
 
-					{block:PostNotes}
-						<h3 class="notecount-header">{NoteCount} Notes</h3>
-						<div class="notecontainer">{PostNotes}</div>
-					{/block:PostNotes}
-					</footer>
-				</article>
-		{/block:Posts}
+					{block:Video}
+						<!-- post: ビデオ -->
+						<div class="entry-content">
+						{block:VideoThumbnail}
+						<img class="thumbnail" src="{VideoThumbnailURL}" alt="videoThumbnail"/>
+						{/block:VideoThumbnail}
+							<div class="embed-box video-embed">{VideoEmbed-500}</div>
+							{block:Caption}
+							<div class="caption">{Caption}</div>
+							{/block:Caption}
+						</div>
+					{/block:Video}
+
+					{block:Audio}
+						<!-- post: オーディオ -->
+						<div class="entry-content">
+						{block:AlbumArt}
+							<img class="album-art" src="{AlbumArtURL}" alt="album artwork"/>
+						{/block:AlbumArt}
+						{block:AudioEmbed}
+							<div class="embed-box audio-embed">{AudioEmbed}</div>
+						{/block:AudioEmbed}
+						{block:AudioPlayer}
+							<div class="audio-player">{AudioPlayer}</div>
+						{/block:AudioPlayer}
+							<p class="audio-info">{block:Artist}<span class="artist">{Artist}</span>{/block:Artist}{block:Album}<span class="album">{Album}</span>{/block:Album}</p>
+						{block:Caption}
+							<div class="caption">{Caption}</div>
+						{/block:Caption}
+						</div>
+					{/block:Audio}
+
+					{block:Answer}
+						<!-- post: Answer -->
+						<div class="entry-content">
+							<div class="question bubble">{Question}</div>
+							<div class="asker-group">
+								<img src="{AskerPortraitURL-24}" /> {Asker}
+							</div>
+							<div class="answer cont">{Answer}</div>
+						</div>
+					{/block:Answer}
+
+						<!-- 記事フッタ -->
+						<footer class="entry-footer">
+						{block:ContentSource}
+							<!-- Content Source -->
+							<div class="content-source">
+								<a href="{SourceURL}" target="_blank">
+									<span class="source-lang">{lang:Source}:</span>
+								{block:SourceLogo}
+									<img class="source-logo" src="{BlackLogoURL}" alt="{SourceTitle}" />
+								{/block:SourceLogo}
+								{block:NoSourceLogo}
+									<span class="source-title">{SourceTitle}</span>
+								{/block:NoSourceLogo}
+								</a>
+							</div>
+						{/block:ContentSource}
+
+						{block:RebloggedFrom}
+							<div class="rebloggedfrom">
+								<span class="meta-elements reblog-parent-name">
+									<span>Reblogged from </span><a href="{ReblogParentURL}"><img src="{ReblogParentPortraitURL-16}" class="favicon"/> <span>{ReblogParentName}</span></a>
+								</span>
+								<span class="meta-elements reblog-root-name">
+									<span>Originally posted by </span><a href="{ReblogRootURL}"><img src="{ReblogRootPortraitURL-16}" class="favicon"/> <span>{ReblogRootName}</span></a>
+								</span>
+							</div>
+						{/block:RebloggedFrom}
+
+							<div class="meta meta-footer">
+								<a class="meta-elements timeago" href="{Permalink}"><span>{TimeAgo}</span></a>
+
+							{block:NoteCount}
+								<a class="meta-elements notecount" href="{Permalink}"><span>{NoteCount} Notes</span></a>
+							{/block:NoteCount}
+
+							{block:HasTags}
+								{block:Tags}
+								<a class="meta-elements hastags" href="{TagURL}"><span>#{Tag}</span></a>
+								{/block:Tags}
+							{/block:HasTags}
+							</div>
+
+							<div class="tumblr-controls">
+								<ul class="like-and-reblog-buttons">
+									<li>{ReblogButton}</li>
+									<li>{LikeButton}</li>
+								</ul>
+							</div>
+
+						{block:PostNotes}
+							<h3 class="notecount-header">{NoteCount} Notes</h3>
+							<div class="notecontainer">{PostNotes}</div>
+						{/block:PostNotes}
+						</footer>
+					</article>
+			{/block:Posts}
+				</div>
+				
+			{block:PermalinkPagination}
+			<!-- パーマリンクのページャ -->
+				<ul class="pagenation pagenation-permalink">
+				{block:PreviousPost}
+					<li class="prev"><a href="{PreviousPost}">Prev</a></li>
+				{/block:PreviousPost}
+				{block:NextPost}
+					<li class="next"><a href="{NextPost}" rel="next">Next</a></li>
+				{/block:NextPost}
+				</ul>
+			{/block:PermalinkPagination}
+				
+			{block:DayPagination}
+				<!-- 日付ごとのページャ -->
+				<ul class="pagenation pagenation-day">
+				{block:PreviousDayPage}
+					<li class="prev"><a href="{PreviousDayPage}">&#171; {ShortMonth} {DayOfMonth}</a></li>
+				{/block:PreviousDayPage}
+				{block:NextDayPage}
+					<li class="next"><a href="{NextDayPage}" rel="next">{ShortMonth} {DayOfMonth} &#187;</a></li>
+				{/block:NextDayPage}
+				</ul>
+			{/block:DayPagination}
 			</div>
-			
-		{block:PermalinkPagination}
-		<!-- パーマリンクのページャ -->
-			<ul class="pagenation pagenation-permalink">
-			{block:PreviousPost}
-				<li class="prev"><a href="{PreviousPost}">Prev</a></li>
-			{/block:PreviousPost}
-			{block:NextPost}
-				<li class="next"><a href="{NextPost}" rel="next">Next</a></li>
-			{/block:NextPost}
-			</ul>
-		{/block:PermalinkPagination}
-		
-		{block:DayPagination}
-			<!-- 日付ごとのページャ -->
-			<ul class="pagenation pagenation-day">
-			{block:PreviousDayPage}
-				<li class="prev"><a href="{PreviousDayPage}">&#171; {ShortMonth} {DayOfMonth}</a></li>
-			{/block:PreviousDayPage}
-			{block:NextDayPage}
-				<li class="next"><a href="{NextDayPage}" rel="next">{ShortMonth} {DayOfMonth} &#187;</a></li>
-			{/block:NextDayPage}
-			</ul>
-		{/block:DayPagination}
 		</section>
 	</section>
 	

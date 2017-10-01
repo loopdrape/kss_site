@@ -2,6 +2,7 @@
 /**------------------------------------
 * posts */
 .posts {
+	padding: (@block_pad * 2);
 }
 
 .post {
@@ -23,11 +24,46 @@
 		}
 	}
 	
-	img,
-	video,
+	.entry-content {
+		img,
+		video,
+		iframe {
+			display: block;
+			max-width: 100%;
+			margin: 0 auto;
+		}
+		
+		img,
+		video {
+			.box-shadow(0, 1px, 2px, 0, #000, .2);
+		}
+	}
+	
+	.entry-footer {
+		text-align: center;
+		
+		.meta-footer {
+			.meta-elements {
+				+ .meta-elements {
+					margin-left: 1em;
+				}
+			}
+		}
+	}
+}
+
+.embed-box {
+	padding-top: 100%;
+	position: relative;
+	
 	iframe {
-		display: block;
-		max-width: 100%;
-		margin: 0 auto;
+		left: 0;
+		max-height: 100%;
+		position: absolute;
+		top: 0;
+	}
+	
+	.youtube & {
+		padding-top: 56.25%;
 	}
 }

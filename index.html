@@ -149,8 +149,8 @@
 	<section class="contents-view" id="contents_view" role="main">
 <!--	{block:Description}-->
 		<section class="overflow-block" id="description_section" data-section="description">
-			<h2><span>About Us</span><a class="btn-close icon-close" href="./"></a></h2>
 			<div class="content">
+				<h2><span>About Us</span><a class="btn-close icon-close" href="./"></a></h2>
 				<p class="text">{Description}</p>
 				<div class="members">
 					<h4>Members</h4>
@@ -193,11 +193,13 @@
 <!--	{/block:Description}-->
 		
 		<section class="overflow-block" id="posts_section" data-section="posts">
-<!--		{block:Posts}-->
-			<div class="posts" id="posts" >
-				<script>app.writeHTML("_postList.html")</script>
+			<div class="content">
+<!--			{block:Posts}-->
+				<div class="posts" id="posts" >
+					<script>app.writeHTML("_postList.html")</script>
+				</div>
+<!--			{/block:Posts}-->
 			</div>
-<!--		{/block:Posts}-->
 		</section>
 	</section>
 

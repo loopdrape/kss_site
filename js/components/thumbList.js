@@ -96,6 +96,7 @@
 					}
 				} else {
 					$elm = $artcl.find("img").eq(0);
+					$elm.hasClass("thumbnail") && $elm.remove();
 					if($elm.length) {
 						df.resolve( $elm.attr("src") );
 					} else {
