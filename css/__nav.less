@@ -35,57 +35,65 @@
 			
 			+ label {
 				@this_size: ( @icon_size + 4px );
-				.transition(transform .4s);
 				color: @theme_c;
 				cursor: pointer;
 				display: block;
 				left: (@block_pad / 4);
 				height: @this_size;
 				line-height: 0;
-				padding: ( (@this_size - 2px) / 2 ) 7px 0;
 				position: absolute;
-				top: 0;
+				top: (@block_pad / 2);
 				width: @this_size;
 				z-index: 9;
 				
 				// hamburger icon
-				.icon {
-					.transition(background .4s);
-					background-color: @theme_c;
+				@bottom_h: 18px;
+				.icon-box {
+					.transition(transform .4s);
 					display: block;
-					height: 2px;
+					height: @icon_size;
+					margin: 2px auto;
+					overflow: hidden;
+					padding-top: (@icon_size - @bottom_h);
 					position: relative;
-					width: 100%;
+					width: 24px;
+				}
+				
+				.icon {
+					.transform-origin(0 100%);
+					.transform( skew(@base_skewX, 0) );
+					.transition(all .4s);
+					border-color: @theme_c transparent;
+					border-style: solid;
+					border-width: 0 23px @bottom_h 0;
+					display: block;
+					margin: 0 0 0 auto;
+					width: 0;
 					
 					&:before,
 					&:after {
 						.transition(all .4s);
 						background-color: @theme_c;
+						bottom: -@bottom_h;
 						content: "";
 						display: block;
-						height: 2px;
-						left: 0;
+						height: @icon_size;
 						position: absolute;
-						width: 100%;
+						width: 11px;
 					}
 					
 					&:before {
-						bottom: 8px;
+						left: -13px;
 					}
 					
 					&:after {
-						top: 8px;
+						left: -26px;
 					}
-				}
-				
-				.icon-keeshkas {
-					display: block;
-					font-size: @icon_size;
 				}
 				
 				&.is-hover {
 					.icon {
-						background-color: lighten(@theme_c, 15%);
+						border-bottom-color: lighten(@theme_c, 15%);
 						
 						&:before,
 						&:after {
@@ -96,19 +104,30 @@
 			}
 			
 			&:checked + label {
-				.transform( rotate(-180deg) );
+				.icon-box {
+					.transform( rotate(-180deg) );
+					padding-top: (@icon_size / 2);
+				}
 				
 				.icon {
-					background-color: transparent;
+					.transform( skew(0, 0) );
+					border-width: 0;
+					width: 100%;
+					
+					&:before,
+					&:after {
+						height: 2px;
+						left: 0;
+						bottom: 50%;
+						width: 100%;
+					}
 					
 					&:before {
 						.transform( rotate( 45deg ) );
-						bottom: 0;
 					}
 					
 					&:after {
 						.transform( rotate( -45deg ) );
-						top: 0;
 					}
 				}
 			}
@@ -117,7 +136,7 @@
 		&.is-checked {
 			&:before {
 				.box-shadow(none);
-				.transform( skew(0, 0) );
+				.transform( skew((@base_skewY * -1), 0) );
 				height: 100vh;
 				opacity: 1;
 				width: 100%;
@@ -131,6 +150,8 @@
 	}
 	
 	.link-list {
+		.transform( skew((@base_skewY * -1), 0) );
+		.transform-origin(0 0);
 		.transition(width .5s);
 		height: 0;
 		overflow: hidden;
@@ -155,8 +176,13 @@
 				vertical-align: middle;
 				z-index: 1;
 				
-				&:before {
+				&:before,
+				> span {
+					.transform( skew(@base_skewY, 0) );
 					display: inline-block;
+				}
+				
+				&:before {
 					font-size: inherit;
 					margin-right: 5px;
 				}
@@ -178,6 +204,7 @@
 		white-space: nowrap;
 		
 		fieldset {
+			.transform( skew(@base_skewY, 0) );
 			border: none;
 			display: inline-block;
 			margin: 0;
@@ -222,7 +249,7 @@
 			padding: 0 .5em;
 			width: 100%;
 			
-			@media(min-width: (@mq_w + 1px)) {
+			@media screen and (min-width: @mq_w_min) {
 				height: 30px;
 			}
 		}

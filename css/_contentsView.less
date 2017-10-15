@@ -4,13 +4,13 @@
 .contents-view {
 	.transition(transform .4s);
 	background-color: @sub_bgc;
+	color: @sub_txc;
 	height: 100%;
 	left: 100%;
 	position: absolute;
 	top: 0;
 	width: 65%;
-	
-	mix-blend-mode: overlay;
+	z-index: 0;
 	
 	&.is-active {
 		.transform( translateX(-100%) );

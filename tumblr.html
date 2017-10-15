@@ -70,7 +70,7 @@
 	<script src="//loopdrape.github.io/kss_site/js/modules/webAppBase.2.3.min.js"></script>
 	<script src="//loopdrape.github.io/kss_site/js/app.min.js" data-package="/js/require"></script>
 </head>
-<body class="{block:IndexPage}page-index{/block:IndexPage}{block:DayPage} page-day{/block:DayPage}{block:TagPage} page-tag{/block:TagPage}{block:SearchPage} page-search{/block:SearchPage}{block:PermalinkPage}page-permalink page-{PostID}{/block:PermalinkPage}" id="top">
+<body class="{block:DayPage}page-day{/block:DayPage}{block:SearchPage}page-search{/block:SearchPage}" data-page="{block:IndexPage}index{/block:IndexPage}{block:PermalinkPage}permalink{/block:PermalinkPage}" id="top">
 	<header class="site-header hoverTarget" id="site_header" role="banner">
 		<h1 class="site-title is-anime" title="{Title}">
 			<em class="title-main"><span>K</span><span>E</span><span>E</span><span>S</span><span>H</span><span>K</span><span>A</span><span>S</span></em>
@@ -135,25 +135,25 @@
 				</ul>
 			{/block:Pagination}
 			</div>
-			<footer class="site-footer" id="site_footer" role="contentinfo">
-				<div class="content">
-					<div class="scroll-to-pageTop" id="scroll_to_pageTop" data-fix="100">
-						<a class="btn-exec" href="#top"><span class="icon-arrow" data-arrow="t"></span></a>
-					</div>
-					<div class="sns-links" id="sns_links">
-						<h4>Follow Us</h4>
-						<ul class="link-list">
-							<li><a href="https://www.facebook.com/keeshkas.s.s" class="icon-facebook" target="_blank"></a></li>
-							<li><a href="https://twitter.com/KEESHKAS_sndsvc" class="icon-twitter" target="_blank"></a></li>
-							<li><a href="https://www.instagram.com/keeshkas/" class="icon-instagram" target="_blank"></a></li>
-							<li><a href="https://soundcloud.com/keeshkas-soundservice" class="icon-soundcloud" target="_blank"></a></li>
-							<li><a href="https://www.youtube.com/channel/UCmWrlNVGJ9hoRJlwVW5NqOA" class="icon-youtube" target="_blank"></a></li>
-						</ul>
-					</div>
-				</div>
-				<p class="copyright">© 2017 KEESHKAS soundservice</p>
-			</footer>
 		</div>
+		<footer class="site-footer" id="site_footer" role="contentinfo">
+			<div class="content">
+				<div class="scroll-to-pageTop" id="scroll_to_pageTop" data-fix="100">
+					<a class="btn-exec" href="#top"><span class="icon-arrow" data-arrow="t"></span></a>
+				</div>
+				<div class="sns-links" id="sns_links">
+					<h4>Follow Us</h4>
+					<ul class="link-list">
+						<li><a href="https://www.facebook.com/keeshkas.s.s" class="icon-facebook" target="_blank"></a></li>
+						<li><a href="https://twitter.com/KEESHKAS_sndsvc" class="icon-twitter" target="_blank"></a></li>
+						<li><a href="https://www.instagram.com/keeshkas/" class="icon-instagram" target="_blank"></a></li>
+						<li><a href="https://soundcloud.com/keeshkas-soundservice" class="icon-soundcloud" target="_blank"></a></li>
+						<li><a href="https://www.youtube.com/channel/UCmWrlNVGJ9hoRJlwVW5NqOA" class="icon-youtube" target="_blank"></a></li>
+					</ul>
+				</div>
+			</div>
+			<p class="copyright">© 2017 KEESHKAS soundservice</p>
+		</footer>
 	</section>
 
 	<section class="contents-view{block:PermalinkPage} is-active{/block:PermalinkPage}" id="contents_view" data-view="{block:PermalinkPage}posts{/block:PermalinkPage}" role="main">

@@ -41,21 +41,27 @@
 			
 			app._GET = this.isString(state.query) ? app.parseQueryString(state.query) : {};
 			
+			childState.body = {};
 			childState.contentsView = {};
 			
-			if(state.param === "tagged") {
-				if(state.value === this.state.value) {
-					methods.push( app.posts.loadPosts(state.pathname) );
-				} else {
-					methods.push( app.posts.replacePosts(state.pathname) );
-				}
-			} else
 			if(state.param === "post") {
+				childState.body.page = "permalink";
 				childState.contentsView.view = "posts";
 				childState.contentsView.active = state.value;
+			} else {
+				childState.body.page = "index";
+				
+				if(state.param === "tagged") {
+					if(state.value === this.state.value) {
+						methods.push( app.posts.loadPosts(state.pathname) );
+					} else {
+						methods.push( app.posts.replacePosts(state.pathname) );
+					}
+				}
 			}
 			
 			if(app._GET.description) {
+				childState.body.page = "permalink";
 				childState.contentsView.view = "description";
 			}
 			
@@ -232,6 +238,10 @@
 		onChangeState: function(state) {
 			if(typeof state.lockScroll === "boolean") {
 				this.$self.toggleClass("is-lock-scroll", state.lockScroll);
+			}
+			
+			if(state.page !== this.state.page) {
+				this.$self.attr("data-page", state.page || "index");
 			}
 		}
 	})

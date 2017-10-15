@@ -4,6 +4,7 @@
 	color: @sub_bgc;
 	font-size: 2rem;
 	line-height: 1;
+	padding-bottom: @block_pad;
 	position: relative;
 	text-align: center;
 	z-index: 0;
@@ -43,14 +44,14 @@
 		.filter( blur(4px) );
 	}
 */
-	background-color: @theme_c;
 	
-	.content,
-	.copyright {
-		.transform( skew(0, (-1 * @base_skewY)) );
-	}
+//	.content,
+//	.copyright {
+//		.transform( skew(0, (-1 * @base_skewY)) );
+//	}
 	
 	.copyright {
+		.transform( skew(@base_skewY, 0) );
 		color: @black;
 		font-size: 1.2rem;
 		line-height: 2;
@@ -88,19 +89,6 @@
 		> span {
 			display: block;
 			line-height: 0;
-		}
-	}
-	
-	&.is-fixed {
-		bottom: @block_space;
-		left: 50%;
-		position: fixed;
-		z-index: 996;
-		
-		.btn-exec {
-			.box-shadow(0, 4px, 4px, -4px, #000, .6);
-			margin-left: -50%;
-			text-shadow: 1px 2px 2px rgba(0, 0, 0, .1);
 		}
 	}
 }

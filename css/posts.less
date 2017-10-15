@@ -53,14 +53,16 @@
 }
 
 .embed-box {
+	background-color: @theme_c;
 	padding-top: 100%;
 	position: relative;
 	
 	iframe {
-		left: 0;
+		.transform( translate3d(-50%, -50%, 0) );
+		left: 50%;
 		max-height: 100%;
 		position: absolute;
-		top: 0;
+		top: 50%;
 	}
 	
 	.youtube & {

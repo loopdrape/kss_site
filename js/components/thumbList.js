@@ -17,21 +17,10 @@
 			!!$self && $self.on("click", ".permalink", function(e) {
 				e.preventDefault();
 				
-//				var $this = $(this);
-//				$("#" + $this.parent().data("id")).addClass("is-active")
-//				.siblings(".is-active").removeClass("is-active");
-				
-//				vuwer.setState( (function() {
-//					var arr = this.href.split("/");
-//					return {
-//						title: arr.pop(),
-//						view: "posts",
-//						postID: arr.pop()
-//					};
-//				}).call(this) );
+				$(this).toggleClass("is-active");
 				
 				vuwer.changePathname(
-					(this.className.indexOf("is-active") < 0) ? this.pathname : "/"
+					(this.className.indexOf("is-active") < 0) ? "/" :  this.pathname
 				);
 			});
 		},
@@ -106,12 +95,15 @@
 				return df.promise();
 			})
 			.then(function(imgURL) {
+				// [has img]
 				var $img = $("<img/>").attr({
 					src: imgURL,
 					alt: "thumbnail"
 				});
 				
 				Klass.isFunction(callback) && callback($img);
+			}, function() {
+				// [has no img]
 			});
 		},
 		addItems: function(items) {
