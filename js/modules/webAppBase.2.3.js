@@ -483,7 +483,6 @@
 			
 			img.src = src;
 			img.onerror = function(e) {
-				_self.cnWarn("preload error: " + src);
 				cb(false, src, img, e);
 			};
 			img.onload = function(e) {
@@ -652,7 +651,7 @@
 			return this;
 		},
 		// 第一引数で指定されたHTMLファイルを読み込み、DOMに追加する関数
-		writeHTML: function(path, async, cache, beforeElm) {
+		writeHTML: function(path, async, cache, beforeElm, leaveBeforeElm) {
 			var
 				xhr = new XMLHttpRequest(),
 				literal = /\{root\}/g;	// {root}
@@ -682,6 +681,7 @@
 						e.target.responseText.replace(literal, this._relativePath)
 					);
 				}
+				!leaveBeforeElm && beforeElm.parentNode.removeChild(beforeElm);
 			}).bind(this);
 			xhr.open("GET", path, async);
 			xhr.send(null);
